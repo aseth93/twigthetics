@@ -307,15 +307,7 @@ export default function Home() {
         </section>
 
         <section id="proof" className="section-shell">
-          <div className="page-reveal">
-            <SectionHeading
-              eyebrow="Proof of Work"
-              title="Proof the process works."
-              description="Client results backed by the same lean, athletic, aesthetic standard the coaching is built around."
-            />
-          </div>
-
-          <div className="mt-10 page-reveal" style={{ animationDelay: "120ms" }}>
+          <div className="page-reveal" style={{ animationDelay: "120ms" }}>
             <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
               <div>
                 <p className="eyebrow text-[var(--muted)]">Client Spotlights</p>
