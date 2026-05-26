@@ -203,7 +203,7 @@ export default function Home() {
               </div>
 
               <div className="mt-10 md:hidden">
-                <div className="flex items-end justify-between gap-4">
+                <div>
                   <div>
                     <p className="eyebrow text-[var(--muted)]">Client Proof</p>
                     <p className="mt-2 max-w-sm text-sm leading-6 text-[var(--muted)]">
@@ -211,15 +211,6 @@ export default function Home() {
                       from real clients.
                     </p>
                   </div>
-
-                  <a
-                    href={siteConfig.links.instagram}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="quiet-link shrink-0 text-sm text-[var(--muted)]"
-                  >
-                    View archive
-                  </a>
                 </div>
 
                 <div className="proof-rail mt-5 flex gap-4 overflow-x-auto pb-3">
@@ -259,7 +250,7 @@ export default function Home() {
               style={{ animationDelay: "120ms" }}
             >
               <div className="relative mx-auto max-w-3xl">
-                <div className="flex items-end justify-between gap-6">
+                <div>
                   <div>
                     <p className="eyebrow">Client Transformations</p>
                     <p className="mt-3 max-w-sm text-sm leading-6 text-[var(--muted)]">
@@ -267,15 +258,6 @@ export default function Home() {
                       and physique goals.
                     </p>
                   </div>
-
-                  <a
-                    href={siteConfig.links.instagram}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="quiet-link shrink-0 text-sm text-[var(--muted)]"
-                  >
-                    View archive
-                  </a>
                 </div>
 
                 <div className="proof-carousel mt-6 overflow-hidden rounded-[2rem]">
@@ -308,7 +290,7 @@ export default function Home() {
 
         <section id="proof" className="section-shell">
           <div className="page-reveal" style={{ animationDelay: "120ms" }}>
-            <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+            <div>
               <div>
                 <p className="eyebrow text-[var(--muted)]">Client Spotlights</p>
                 <h3 className="mt-2 text-3xl font-semibold text-[var(--ink)]">
@@ -319,15 +301,6 @@ export default function Home() {
                   from past clients.
                 </p>
               </div>
-
-              <a
-                href={siteConfig.links.instagram}
-                target="_blank"
-                rel="noreferrer"
-                className="btn-secondary"
-              >
-                View Instagram Archive
-              </a>
             </div>
 
             <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
