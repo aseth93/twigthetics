@@ -112,8 +112,8 @@ export default async function AdminDashboardPage() {
       </section>
 
       <section className="grid gap-6 xl:grid-cols-2">
-        <AdminPlanForm />
-        <AdminDocumentForm />
+        <AdminPlanForm allowSubmit={viewer.mode !== "demo"} />
+        <AdminDocumentForm allowSubmit={viewer.mode !== "demo"} />
       </section>
 
       <section className="grid gap-6">
@@ -131,6 +131,7 @@ export default async function AdminDashboardPage() {
                 </p>
               </article>
               <MessageThread
+                allowSubmit={viewer.mode !== "demo"}
                 memberId={conversation.member.id}
                 initialMessages={conversation.messages}
                 emptyLabel="No messages in this thread yet."

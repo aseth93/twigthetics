@@ -7,20 +7,21 @@ import { getSupabaseBrowserClient } from "@/lib/supabase/browser";
 
 type LoginPanelProps = {
   demoMode: boolean;
+  previewMode: boolean;
   supabaseConfigured: boolean;
-  nextPath: string;
 };
 
 export function LoginPanel({
   demoMode,
+  previewMode,
   supabaseConfigured,
-  nextPath,
 }: LoginPanelProps) {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isPending, setIsPending] = useState(false);
   const [status, setStatus] = useState("");
+  const nextPath = "/member";
 
   async function handleDemoLogin(role: "member" | "coach_admin") {
     try {
@@ -158,22 +159,35 @@ export function LoginPanel({
             </p>
           </div>
 
-          <button
-            type="button"
-            onClick={() => handleDemoLogin("member")}
-            className={demoMode ? "btn-ghost" : "btn-disabled"}
-            disabled={!demoMode || isPending}
-          >
-            Open member demo
-          </button>
-          <button
-            type="button"
-            onClick={() => handleDemoLogin("coach_admin")}
-            className={demoMode ? "btn-ghost" : "btn-disabled"}
-            disabled={!demoMode || isPending}
-          >
-            Open admin demo
-          </button>
+          {previewMode ? (
+            <>
+              <Link href="/member" className="btn-ghost">
+                Open member demo
+              </Link>
+              <Link href="/admin" className="btn-ghost">
+                Open admin demo
+              </Link>
+            </>
+          ) : (
+            <>
+              <button
+                type="button"
+                onClick={() => handleDemoLogin("member")}
+                className={demoMode ? "btn-ghost" : "btn-disabled"}
+                disabled={!demoMode || isPending}
+              >
+                Open member demo
+              </button>
+              <button
+                type="button"
+                onClick={() => handleDemoLogin("coach_admin")}
+                className={demoMode ? "btn-ghost" : "btn-disabled"}
+                disabled={!demoMode || isPending}
+              >
+                Open admin demo
+              </button>
+            </>
+          )}
 
           <p className="text-xs leading-6 text-white/60">
             Demo access is available only in local or preview mode before the live backend is

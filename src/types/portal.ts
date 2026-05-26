@@ -111,4 +111,5 @@ export type PortalRuntime = {
   stripePriceConfigured: boolean;
   serviceRoleConfigured: boolean;
   demoMode: boolean;
+  previewMode: boolean;
 };

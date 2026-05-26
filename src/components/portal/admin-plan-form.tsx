@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-export function AdminPlanForm() {
+export function AdminPlanForm({ allowSubmit = true }: { allowSubmit?: boolean }) {
   const [title, setTitle] = useState("");
   const [summary, setSummary] = useState("");
   const [cadence, setCadence] = useState("");
@@ -16,6 +16,11 @@ export function AdminPlanForm() {
     try {
       setIsSubmitting(true);
       setStatus("");
+
+      if (!allowSubmit) {
+        setStatus("Preview mode only. Live plan saving starts after backend setup.");
+        return;
+      }
 
       const response = await fetch("/api/admin/plans", {
         method: "POST",
@@ -61,18 +66,21 @@ export function AdminPlanForm() {
         value={title}
         onChange={(event) => setTitle(event.target.value)}
         placeholder="Plan title"
+        disabled={!allowSubmit}
         className="w-full rounded-[1rem] border border-[var(--line)] bg-white/80 px-4 py-3 text-[15px] text-[var(--ink)] outline-none focus:border-[var(--accent)]"
       />
       <input
         value={summary}
         onChange={(event) => setSummary(event.target.value)}
         placeholder="Short summary"
+        disabled={!allowSubmit}
         className="w-full rounded-[1rem] border border-[var(--line)] bg-white/80 px-4 py-3 text-[15px] text-[var(--ink)] outline-none focus:border-[var(--accent)]"
       />
       <input
         value={cadence}
         onChange={(event) => setCadence(event.target.value)}
         placeholder="Cadence, schedule, and main guardrails"
+        disabled={!allowSubmit}
         className="w-full rounded-[1rem] border border-[var(--line)] bg-white/80 px-4 py-3 text-[15px] text-[var(--ink)] outline-none focus:border-[var(--accent)]"
       />
       <textarea
@@ -80,11 +88,16 @@ export function AdminPlanForm() {
         onChange={(event) => setBody(event.target.value)}
         rows={6}
         placeholder="Plan notes, training split, nutrition guardrails..."
+        disabled={!allowSubmit}
         className="w-full rounded-[1rem] border border-[var(--line)] bg-white/80 px-4 py-3 text-[15px] text-[var(--ink)] outline-none focus:border-[var(--accent)]"
       />
       <div className="flex flex-wrap items-center gap-3">
-        <button type="submit" className="btn-primary" disabled={isSubmitting}>
-          {isSubmitting ? "Saving..." : "Save plan"}
+        <button
+          type="submit"
+          className={allowSubmit ? "btn-primary" : "btn-disabled"}
+          disabled={!allowSubmit || isSubmitting}
+        >
+          {allowSubmit ? (isSubmitting ? "Saving..." : "Save plan") : "Preview only"}
         </button>
         {status ? <p className="text-sm text-[var(--muted)]">{status}</p> : null}
       </div>

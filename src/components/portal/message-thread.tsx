@@ -5,12 +5,14 @@ import { formatPortalDateTime } from "@/lib/portal/format";
 import type { ConversationMessage } from "@/types/portal";
 
 type MessageThreadProps = {
+  allowSubmit?: boolean;
   memberId?: string;
   emptyLabel: string;
   initialMessages: ConversationMessage[];
 };
 
 export function MessageThread({
+  allowSubmit = true,
   memberId,
   emptyLabel,
   initialMessages,
@@ -25,7 +27,7 @@ export function MessageThread({
 
     const trimmedBody = body.trim();
 
-    if (!trimmedBody) {
+    if (!trimmedBody || !allowSubmit) {
       return;
     }
 
@@ -110,14 +112,24 @@ export function MessageThread({
           onChange={(event) => setBody(event.target.value)}
           rows={4}
           placeholder="Write a message..."
+          disabled={!allowSubmit}
           className="w-full rounded-[1.1rem] border border-[var(--line)] bg-white/80 px-4 py-3 text-[15px] text-[var(--ink)] outline-none focus:border-[var(--accent)]"
         />
         <div className="flex flex-wrap items-center gap-3">
-          <button type="submit" className="btn-primary" disabled={isSubmitting}>
-            {isSubmitting ? "Sending..." : "Send message"}
+          <button
+            type="submit"
+            className={allowSubmit ? "btn-primary" : "btn-disabled"}
+            disabled={!allowSubmit || isSubmitting}
+          >
+            {allowSubmit ? (isSubmitting ? "Sending..." : "Send message") : "Preview only"}
           </button>
           {status ? <p className="text-sm text-[#8a3c2d]">{status}</p> : null}
         </div>
+        {!allowSubmit ? (
+          <p className="text-xs leading-6 text-[var(--muted)]">
+            Message sending activates after the live backend is connected.
+          </p>
+        ) : null}
       </form>
     </div>
   );

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-export function AdminDocumentForm() {
+export function AdminDocumentForm({ allowSubmit = true }: { allowSubmit?: boolean }) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [memberIds, setMemberIds] = useState("");
@@ -12,6 +12,11 @@ export function AdminDocumentForm() {
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+
+    if (!allowSubmit) {
+      setStatus("Preview mode only. Live document uploads start after backend setup.");
+      return;
+    }
 
     if (!file) {
       setStatus("Choose a file before uploading.");
@@ -66,6 +71,7 @@ export function AdminDocumentForm() {
         value={title}
         onChange={(event) => setTitle(event.target.value)}
         placeholder="Document title"
+        disabled={!allowSubmit}
         className="w-full rounded-[1rem] border border-[var(--line)] bg-white/80 px-4 py-3 text-[15px] text-[var(--ink)] outline-none focus:border-[var(--accent)]"
       />
       <textarea
@@ -73,22 +79,29 @@ export function AdminDocumentForm() {
         onChange={(event) => setDescription(event.target.value)}
         rows={4}
         placeholder="What this file is for"
+        disabled={!allowSubmit}
         className="w-full rounded-[1rem] border border-[var(--line)] bg-white/80 px-4 py-3 text-[15px] text-[var(--ink)] outline-none focus:border-[var(--accent)]"
       />
       <input
         value={memberIds}
         onChange={(event) => setMemberIds(event.target.value)}
         placeholder="Assigned member IDs, comma separated"
+        disabled={!allowSubmit}
         className="w-full rounded-[1rem] border border-[var(--line)] bg-white/80 px-4 py-3 text-[15px] text-[var(--ink)] outline-none focus:border-[var(--accent)]"
       />
       <input
         type="file"
         onChange={(event) => setFile(event.target.files?.[0] || null)}
+        disabled={!allowSubmit}
         className="w-full rounded-[1rem] border border-[var(--line)] bg-white/80 px-4 py-3 text-[15px] text-[var(--ink)] outline-none file:mr-4 file:rounded-full file:border-0 file:bg-[var(--ink)] file:px-4 file:py-2 file:text-sm file:text-white"
       />
       <div className="flex flex-wrap items-center gap-3">
-        <button type="submit" className="btn-primary" disabled={isSubmitting}>
-          {isSubmitting ? "Uploading..." : "Upload document"}
+        <button
+          type="submit"
+          className={allowSubmit ? "btn-primary" : "btn-disabled"}
+          disabled={!allowSubmit || isSubmitting}
+        >
+          {allowSubmit ? (isSubmitting ? "Uploading..." : "Upload document") : "Preview only"}
         </button>
         {status ? <p className="text-sm text-[var(--muted)]">{status}</p> : null}
       </div>

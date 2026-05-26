@@ -23,6 +23,7 @@ export default async function MemberMessagesPage() {
       </article>
 
       <MessageThread
+        allowSubmit={viewer.mode !== "demo"}
         initialMessages={dashboard.messages}
         emptyLabel="No messages yet. Once coaching starts, your direct thread appears here."
       />

@@ -75,6 +75,10 @@ export async function getPortalViewer(): Promise<PortalViewer | null> {
     };
   }
 
+  if (runtime.previewMode) {
+    return null;
+  }
+
   if (!runtime.demoMode) {
     return null;
   }
@@ -103,6 +107,15 @@ export async function requirePortalViewer(options: {
   role?: ApplicationRole;
   returnTo: string;
 }) {
+  const runtime = getPortalRuntime();
+
+  if (!runtime.supabaseConfigured && runtime.previewMode && options.role) {
+    return {
+      mode: "demo" as const,
+      profile: options.role === "coach_admin" ? demoCoachProfile : demoMemberProfile,
+    };
+  }
+
   const viewer = await getPortalViewer();
 
   if (!viewer) {

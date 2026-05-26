@@ -3,36 +3,19 @@ import { requirePortalViewer } from "@/lib/portal/auth";
 import { getMemberDashboardData } from "@/lib/portal/data";
 import { formatBytes, formatPortalDate } from "@/lib/portal/format";
 
-type MemberDocumentsPageProps = {
-  searchParams: Promise<{
-    staged?: string;
-    missing?: string;
-  }>;
-};
-
-export default async function MemberDocumentsPage({
-  searchParams,
-}: MemberDocumentsPageProps) {
+export default async function MemberDocumentsPage() {
   const viewer = await requirePortalViewer({
     role: "member",
     returnTo: "/member/documents",
   });
   const dashboard = await getMemberDashboardData(viewer);
-  const params = await searchParams;
 
   return (
     <div className="grid gap-6">
-      {params.staged ? (
+      {viewer.mode === "demo" ? (
         <article className="rounded-[1.2rem] border border-[rgba(141,107,61,0.22)] bg-[rgba(141,107,61,0.08)] px-4 py-4 text-sm leading-6 text-[var(--ink)]">
-          Document storage is staged but not live yet. Connect Supabase storage on Render and
-          files will open directly from here.
-        </article>
-      ) : null}
-
-      {params.missing ? (
-        <article className="rounded-[1.2rem] border border-[rgba(138,60,45,0.18)] bg-[rgba(138,60,45,0.08)] px-4 py-4 text-sm leading-6 text-[#8a3c2d]">
-          That file could not be opened. Either access is missing or the storage record is not
-          connected yet.
+          Document storage is staged but not live yet. This page previews the member file
+          area before secure uploads are connected.
         </article>
       ) : null}
 
@@ -49,12 +32,16 @@ export default async function MemberDocumentsPage({
                   {document.description || "Secure coaching document"}
                 </p>
               </div>
-              <Link
-                href={`/api/member/documents/${document.id}`}
-                className="btn-secondary min-h-11"
-              >
-                Open file
-              </Link>
+              {viewer.mode === "demo" ? (
+                <span className="btn-disabled min-h-11">Preview only</span>
+              ) : (
+                <Link
+                  href={`/api/member/documents/${document.id}`}
+                  className="btn-secondary min-h-11"
+                >
+                  Open file
+                </Link>
+              )}
             </div>
 
             <div className="mt-5 grid gap-3 sm:grid-cols-3">

@@ -20,6 +20,7 @@ export function getPortalRuntime(): PortalRuntime {
     stripeConfigured,
     stripePriceConfigured: Boolean(stripePriceId),
     serviceRoleConfigured: Boolean(supabaseUrl && serviceRoleKey),
+    previewMode: portalPreviewMode,
     demoMode:
       !supabaseConfigured &&
       (process.env.NODE_ENV !== "production" || portalPreviewMode),
