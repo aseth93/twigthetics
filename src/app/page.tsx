@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ApplicationForm } from "@/components/application-form";
@@ -18,6 +19,15 @@ const approachPoints = [
   "Lean enough to look good shirtless.",
   "Athletic enough to move well outside the gym.",
   "Sustainable enough to keep without killing yourself for it.",
+];
+
+const heroProofLayouts = [
+  "md:col-span-2 md:mr-10 md:max-w-[17.5rem] md:justify-self-end md:-rotate-[5deg]",
+  "md:-mt-8 md:ml-2 md:max-w-[14rem] md:justify-self-start md:rotate-[4deg]",
+  "md:-mt-2 md:mr-6 md:max-w-[15rem] md:justify-self-end md:-rotate-[2deg]",
+  "md:-mt-10 md:max-w-[14.5rem] md:justify-self-start md:rotate-[5deg]",
+  "md:-mt-16 md:mr-12 md:max-w-[15.5rem] md:justify-self-end md:-rotate-[4deg]",
+  "md:-mt-6 md:ml-4 md:max-w-[14rem] md:justify-self-start md:rotate-[3deg]",
 ];
 
 function TransformationCard({
@@ -80,14 +90,47 @@ function TransformationCard({
       ) : null}
 
       <div className="border-t border-[var(--line)] px-5 py-4">
-        <p className="text-xs uppercase tracking-[0.24em] text-[var(--muted)]">
-          {transformation.timeframe}
-        </p>
-        <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
+        <p className="text-sm leading-6 text-[var(--muted)]">
           {transformation.result}
         </p>
       </div>
     </article>
+  );
+}
+
+function HeroTransformationCard({
+  transformation,
+  style,
+}: {
+  transformation: ClientTransformation;
+  style?: CSSProperties;
+}) {
+  return (
+    <a
+      href={transformation.sourceUrl}
+      target="_blank"
+      rel="noreferrer"
+      className="surface-panel proof-float group block overflow-hidden p-3"
+      style={style}
+    >
+      <div className="rounded-[1.45rem] border border-[var(--line)] bg-[#efe5d7] p-2">
+        <Image
+          src={transformation.image.src}
+          alt={transformation.image.alt}
+          width={640}
+          height={640}
+          sizes="(max-width: 767px) 70vw, (max-width: 1280px) 18rem, 15rem"
+          className="h-auto w-full rounded-[1rem]"
+        />
+      </div>
+
+      <div className="px-2 pb-1 pt-4">
+        <p className="eyebrow text-[var(--muted)]">Client Transformation</p>
+        <p className="mt-2 text-xl font-semibold text-[var(--ink)]">
+          {transformation.clientName}
+        </p>
+      </div>
+    </a>
   );
 }
 
@@ -101,25 +144,23 @@ function ClientTransformationCard({
       href={transformation.sourceUrl}
       target="_blank"
       rel="noreferrer"
-      className="surface-panel group block overflow-hidden transition duration-300 hover:-translate-y-1"
+      className="surface-panel group block overflow-hidden p-3 transition duration-300 hover:-translate-y-1"
     >
-      <div className="relative aspect-[4/5] overflow-hidden">
+      <div className="rounded-[1.45rem] border border-[var(--line)] bg-[#efe5d7] p-2">
         <Image
           src={transformation.image.src}
           alt={transformation.image.alt}
-          fill
-          sizes="(max-width: 640px) 50vw, (max-width: 1280px) 33vw, 20vw"
-          className="object-cover transition duration-700 group-hover:scale-[1.03]"
+          width={640}
+          height={640}
+          sizes="(max-width: 640px) 82vw, (max-width: 1280px) 33vw, 20vw"
+          className="h-auto w-full rounded-[1rem] transition duration-700 group-hover:scale-[1.02]"
         />
       </div>
 
-      <div className="border-t border-[var(--line)] px-4 py-4">
+      <div className="px-2 pb-2 pt-4">
         <p className="eyebrow text-[var(--muted)]">{transformation.clientName}</p>
         <p className="mt-2 text-sm leading-6 text-[var(--ink)]">
           {transformation.note}
-        </p>
-        <p className="mt-3 text-xs uppercase tracking-[0.22em] text-[var(--muted)]">
-          {transformation.timeframe}
         </p>
       </div>
     </a>
@@ -129,6 +170,7 @@ function ClientTransformationCard({
 export default function Home() {
   const hasGuideCheckout = Boolean(siteConfig.links.guideCheckout);
   const hasApplicationEndpoint = Boolean(siteConfig.links.applicationEndpoint);
+  const featuredClientTransformations = siteConfig.clientTransformations.slice(0, 6);
 
   return (
     <div className="relative overflow-x-hidden">
@@ -163,6 +205,44 @@ export default function Home() {
                 </Link>
               </div>
 
+              <div className="mt-10 md:hidden">
+                <div className="flex items-end justify-between gap-4">
+                  <div>
+                    <p className="eyebrow text-[var(--muted)]">Client Proof</p>
+                    <p className="mt-2 max-w-sm text-sm leading-6 text-[var(--muted)]">
+                      Real client transformations up front, not buried halfway
+                      down the page.
+                    </p>
+                  </div>
+
+                  <a
+                    href={siteConfig.links.instagram}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="quiet-link shrink-0 text-sm text-[var(--muted)]"
+                  >
+                    View archive
+                  </a>
+                </div>
+
+                <div className="proof-rail mt-5 flex gap-4 overflow-x-auto pb-3">
+                  {featuredClientTransformations.map((transformation, index) => (
+                    <div
+                      key={transformation.id}
+                      className="min-w-[74vw] max-w-[19rem] snap-start first:pl-px"
+                    >
+                      <HeroTransformationCard
+                        transformation={transformation}
+                        style={{
+                          animationDelay: `${index * 140}ms`,
+                          animationDuration: `${7200 + index * 220}ms`,
+                        }}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+
               <div className="mt-10 grid gap-4 sm:grid-cols-3">
                 {siteConfig.coach.metrics.map((metric) => (
                   <div key={metric.label} className="stat-chip">
@@ -177,45 +257,48 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="page-reveal lg:pl-8" style={{ animationDelay: "120ms" }}>
-              <div className="relative mx-auto max-w-xl">
-                <div className="absolute -left-6 top-10 hidden h-36 w-36 rounded-full bg-[radial-gradient(circle,_rgba(141,107,61,0.26),_transparent_72%)] blur-2xl md:block" />
-                <div className="absolute -right-8 bottom-12 hidden h-48 w-48 rounded-full bg-[radial-gradient(circle,_rgba(39,49,39,0.18),_transparent_74%)] blur-3xl md:block" />
+            <div
+              className="page-reveal hidden md:block lg:pl-8"
+              style={{ animationDelay: "120ms" }}
+            >
+              <div className="relative mx-auto max-w-2xl">
+                <div className="absolute -left-6 top-10 hidden h-36 w-36 rounded-full bg-[radial-gradient(circle,_rgba(141,107,61,0.26),_transparent_72%)] blur-2xl lg:block" />
+                <div className="absolute -right-8 bottom-12 hidden h-48 w-48 rounded-full bg-[radial-gradient(circle,_rgba(39,49,39,0.18),_transparent_74%)] blur-3xl lg:block" />
 
-                <div className="hero-frame relative overflow-hidden">
-                  <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.02),rgba(0,0,0,0.36))]" />
-                  <Image
-                    src={siteConfig.coach.heroImage.src}
-                    alt={siteConfig.coach.heroImage.alt}
-                    width={1080}
-                    height={1129}
-                    priority
-                    className="h-auto w-full object-cover object-top"
-                  />
-                </div>
+                <div className="flex items-end justify-between gap-6">
+                  <div>
+                    <p className="eyebrow">Client Transformations</p>
+                    <p className="mt-3 max-w-sm text-sm leading-6 text-[var(--muted)]">
+                      Real physique changes should be visible the moment the site
+                      opens.
+                    </p>
+                  </div>
 
-                <div className="surface-panel absolute -left-3 bottom-6 max-w-[15rem] px-4 py-4 md:-left-8">
-                  <p className="eyebrow text-[var(--muted)]">Coach Proof</p>
-                  <p className="mt-2 text-base leading-6 text-[var(--ink)]">
-                    Lean enough to look sharp, athletic enough to move well,
-                    and healthy enough to keep without living on extremes.
-                  </p>
-                </div>
-
-                <div className="dark-panel absolute -right-2 top-8 max-w-[14rem] px-4 py-4 md:-right-8">
-                  <p className="eyebrow text-white/60">Instagram</p>
                   <a
                     href={siteConfig.links.instagram}
                     target="_blank"
                     rel="noreferrer"
-                    className="mt-2 block text-lg font-semibold text-white transition hover:text-white/80"
+                    className="quiet-link shrink-0 text-sm text-[var(--muted)]"
                   >
-                    @{siteConfig.coach.handle}
+                    View archive
                   </a>
-                  <p className="mt-2 text-sm leading-6 text-white/70">
-                    Public physique updates and leaner-look proof used as
-                    launch assets on this site.
-                  </p>
+                </div>
+
+                <div className="mt-6 grid items-start gap-4 md:grid-cols-2">
+                  {featuredClientTransformations.map((transformation, index) => (
+                    <div
+                      key={transformation.id}
+                      className={heroProofLayouts[index % heroProofLayouts.length]}
+                    >
+                      <HeroTransformationCard
+                        transformation={transformation}
+                        style={{
+                          animationDelay: `${index * 160}ms`,
+                          animationDuration: `${7600 + index * 260}ms`,
+                        }}
+                      />
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
@@ -226,24 +309,12 @@ export default function Home() {
           <div className="page-reveal">
             <SectionHeading
               eyebrow="Proof of Work"
-              title="Proof that the lane is lean, athletic, and aesthetic."
-              description="Start with the coach's own physique proof, then back it up with a deeper archive of real client spotlight posts."
+              title="Client transformations first. Coach proof right behind them."
+              description="The site now opens with client results up front, then backs that up with the coach's own physique proof and current look."
             />
           </div>
 
-          <div className="mt-10 grid gap-6 xl:grid-cols-2">
-            {siteConfig.transformations.map((transformation, index) => (
-              <div
-                key={transformation.id}
-                className="page-reveal"
-                style={{ animationDelay: `${120 + index * 80}ms` }}
-              >
-                <TransformationCard transformation={transformation} />
-              </div>
-            ))}
-          </div>
-
-          <div className="mt-14 page-reveal" style={{ animationDelay: "260ms" }}>
+          <div className="mt-10 page-reveal" style={{ animationDelay: "120ms" }}>
             <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
               <div>
                 <p className="eyebrow text-[var(--muted)]">Client Spotlights</p>
@@ -251,8 +322,8 @@ export default function Home() {
                   Long-term proof from real client transformations.
                 </h3>
                 <p className="mt-3 max-w-2xl text-sm leading-6 text-[var(--muted)]">
-                  These are pulled directly from older public spotlight posts and
-                  show the kind of physique changes this coaching lane was built on.
+                  These are pulled directly from public spotlight posts and kept
+                  image-first so the transformations land immediately.
                 </p>
               </div>
 
@@ -271,9 +342,39 @@ export default function Home() {
                 <div
                   key={transformation.id}
                   className="page-reveal"
-                  style={{ animationDelay: `${300 + index * 50}ms` }}
+                  style={{ animationDelay: `${160 + index * 50}ms` }}
                 >
                   <ClientTransformationCard transformation={transformation} />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="mt-16">
+            <div className="page-reveal" style={{ animationDelay: "260ms" }}>
+              <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+                <div>
+                  <p className="eyebrow text-[var(--muted)]">Coach Proof</p>
+                  <h3 className="mt-2 text-3xl font-semibold text-[var(--ink)]">
+                    The coaching lane still starts with living it.
+                  </h3>
+                  <p className="mt-3 max-w-2xl text-sm leading-6 text-[var(--muted)]">
+                    Client proof leads the page now, but the coach&apos;s own physique
+                    still anchors the standard: lean, athletic, aesthetic, and
+                    maintainable.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-8 grid gap-6 xl:grid-cols-2">
+              {siteConfig.transformations.map((transformation, index) => (
+                <div
+                  key={transformation.id}
+                  className="page-reveal"
+                  style={{ animationDelay: `${320 + index * 80}ms` }}
+                >
+                  <TransformationCard transformation={transformation} />
                 </div>
               ))}
             </div>
