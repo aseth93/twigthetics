@@ -11,6 +11,7 @@ export function getPortalRuntime(): PortalRuntime {
   const stripeWebhookSecret = getTrimmedEnv("STRIPE_WEBHOOK_SECRET");
   const stripePriceId = getTrimmedEnv("STRIPE_COACHING_PRICE_ID");
   const serviceRoleKey = getTrimmedEnv("SUPABASE_SERVICE_ROLE_KEY");
+  const portalPreviewMode = getTrimmedEnv("PORTAL_PREVIEW_MODE") === "1";
   const supabaseConfigured = Boolean(supabaseUrl && supabaseAnonKey);
   const stripeConfigured = Boolean(stripeSecretKey && stripeWebhookSecret);
 
@@ -19,7 +20,9 @@ export function getPortalRuntime(): PortalRuntime {
     stripeConfigured,
     stripePriceConfigured: Boolean(stripePriceId),
     serviceRoleConfigured: Boolean(supabaseUrl && serviceRoleKey),
-    demoMode: !supabaseConfigured && process.env.NODE_ENV !== "production",
+    demoMode:
+      !supabaseConfigured &&
+      (process.env.NODE_ENV !== "production" || portalPreviewMode),
   };
 }
 

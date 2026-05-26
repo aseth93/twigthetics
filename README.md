@@ -25,6 +25,8 @@ If Supabase is not configured, the portal runs in demo mode locally so you can s
 - billing screens
 - inbox UI
 
+Set `PORTAL_PREVIEW_MODE=1` on Render if you want the deployed site to keep showing the demo member/admin portal before live auth and billing are connected.
+
 ## Environment variables
 
 Copy `.env.example` to `.env.local` and fill in what you have available.
