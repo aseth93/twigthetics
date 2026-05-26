@@ -29,9 +29,9 @@ export const siteConfig: SiteConfig = {
       "Twigthetics is for lifters who care about looking lean, moving well, and keeping the physique they build without turning fitness into a full-time job.",
     bio: "The lane is simple: stay lean enough to look good, athletic enough to move well, and realistic enough to maintain without living on extreme cardio, food obsession, or bodybuilding effort year-round.",
     metrics: [
-      { value: "45 lb", label: "recent physique shift" },
-      { value: "10k+", label: "daily steps" },
-      { value: "4-5x", label: "weekly lifts" },
+      { value: "Sustainable", label: "results that hold" },
+      { value: "Structured", label: "organized approach" },
+      { value: "Adaptable", label: "built for real life" },
     ],
     portrait: {
       src: "/images/abe-profile.jpg",
