@@ -21,15 +21,6 @@ const approachPoints = [
   "Sustainable enough to keep without killing yourself for it.",
 ];
 
-const heroProofLayouts = [
-  "md:col-span-2 md:mr-10 md:max-w-[17.5rem] md:justify-self-end md:-rotate-[5deg]",
-  "md:-mt-8 md:ml-2 md:max-w-[14rem] md:justify-self-start md:rotate-[4deg]",
-  "md:-mt-2 md:mr-6 md:max-w-[15rem] md:justify-self-end md:-rotate-[2deg]",
-  "md:-mt-10 md:max-w-[14.5rem] md:justify-self-start md:rotate-[5deg]",
-  "md:-mt-16 md:mr-12 md:max-w-[15.5rem] md:justify-self-end md:-rotate-[4deg]",
-  "md:-mt-6 md:ml-4 md:max-w-[14rem] md:justify-self-start md:rotate-[3deg]",
-];
-
 function TransformationCard({
   transformation,
 }: {
@@ -171,6 +162,10 @@ export default function Home() {
   const hasGuideCheckout = Boolean(siteConfig.links.guideCheckout);
   const hasApplicationEndpoint = Boolean(siteConfig.links.applicationEndpoint);
   const featuredClientTransformations = siteConfig.clientTransformations.slice(0, 6);
+  const desktopHeroTransformations = [
+    ...featuredClientTransformations,
+    ...featuredClientTransformations,
+  ];
 
   return (
     <div className="relative overflow-x-hidden">
@@ -261,10 +256,7 @@ export default function Home() {
               className="page-reveal hidden md:block lg:pl-8"
               style={{ animationDelay: "120ms" }}
             >
-              <div className="relative mx-auto max-w-2xl">
-                <div className="absolute -left-6 top-10 hidden h-36 w-36 rounded-full bg-[radial-gradient(circle,_rgba(141,107,61,0.26),_transparent_72%)] blur-2xl lg:block" />
-                <div className="absolute -right-8 bottom-12 hidden h-48 w-48 rounded-full bg-[radial-gradient(circle,_rgba(39,49,39,0.18),_transparent_74%)] blur-3xl lg:block" />
-
+              <div className="relative mx-auto max-w-3xl">
                 <div className="flex items-end justify-between gap-6">
                   <div>
                     <p className="eyebrow">Client Transformations</p>
@@ -284,22 +276,29 @@ export default function Home() {
                   </a>
                 </div>
 
-                <div className="mt-6 grid items-start gap-4 md:grid-cols-2">
-                  {featuredClientTransformations.map((transformation, index) => (
-                    <div
-                      key={transformation.id}
-                      className={heroProofLayouts[index % heroProofLayouts.length]}
-                    >
-                      <HeroTransformationCard
-                        transformation={transformation}
-                        style={{
-                          animationDelay: `${index * 160}ms`,
-                          animationDuration: `${7600 + index * 260}ms`,
-                        }}
-                      />
-                    </div>
-                  ))}
+                <div className="proof-carousel mt-6 overflow-hidden rounded-[2rem]">
+                  <div className="proof-carousel-track flex w-max gap-4 py-2">
+                    {desktopHeroTransformations.map((transformation, index) => (
+                      <div
+                        key={`${transformation.id}-${index}`}
+                        className="w-[15rem] shrink-0"
+                      >
+                        <HeroTransformationCard
+                          transformation={transformation}
+                          style={{
+                            animationDelay: `${(index % featuredClientTransformations.length) * 160}ms`,
+                            animationDuration: `${7600 + (index % featuredClientTransformations.length) * 260}ms`,
+                          }}
+                        />
+                      </div>
+                    ))}
+                  </div>
                 </div>
+
+                <div className="pointer-events-none absolute inset-y-[4.75rem] left-0 hidden w-12 bg-[linear-gradient(90deg,var(--canvas)_0%,rgba(246,239,230,0)_100%)] lg:block" />
+                <div className="pointer-events-none absolute inset-y-[4.75rem] right-0 hidden w-12 bg-[linear-gradient(270deg,var(--canvas)_0%,rgba(246,239,230,0)_100%)] lg:block" />
+                <div className="absolute -left-6 top-10 hidden h-36 w-36 rounded-full bg-[radial-gradient(circle,_rgba(141,107,61,0.26),_transparent_72%)] blur-2xl lg:block" />
+                <div className="absolute -right-8 bottom-12 hidden h-48 w-48 rounded-full bg-[radial-gradient(circle,_rgba(39,49,39,0.18),_transparent_74%)] blur-3xl lg:block" />
               </div>
             </div>
           </div>

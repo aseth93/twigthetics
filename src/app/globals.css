@@ -243,6 +243,15 @@ summary {
   display: none;
 }
 
+.proof-carousel:hover .proof-carousel-track {
+  animation-play-state: paused;
+}
+
+.proof-carousel-track {
+  animation: proof-carousel 28s linear infinite;
+  will-change: transform;
+}
+
 .proof-float {
   animation: proof-float 7.8s ease-in-out infinite;
   will-change: transform;
@@ -271,8 +280,19 @@ summary {
   }
 }
 
+@keyframes proof-carousel {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+
+  to {
+    transform: translate3d(calc(-50% - 0.5rem), 0, 0);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .page-reveal,
+  .proof-carousel-track,
   .proof-float {
     animation: none;
   }
