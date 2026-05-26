@@ -243,7 +243,7 @@ export default function Home() {
               <div className="mt-10 grid gap-4 sm:grid-cols-3">
                 {siteConfig.coach.metrics.map((metric) => (
                   <div key={metric.label} className="stat-chip">
-                    <p className="type-display text-3xl uppercase leading-none text-[var(--ink)]">
+                    <p className="type-display text-[1.55rem] uppercase leading-[0.92] tracking-[-0.03em] text-[var(--ink)] sm:text-[1.8rem]">
                       {metric.value}
                     </p>
                     <p className="mt-2 text-xs uppercase tracking-[0.2em] text-[var(--muted)]">
