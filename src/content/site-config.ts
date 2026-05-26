@@ -14,7 +14,7 @@ export const siteConfig: SiteConfig = {
     eyebrow: "Lean Aesthetic Coaching",
     headline: "Lean. Athletic. Aesthetic.",
     subheadline:
-      "Online coaching for people who want an aesthetic physique that looks sharp year-round, feels athletic in real life, and stays maintainable without killing yourself with effort.",
+      "Online coaching for people who want to achieve an aesthetic physique that looks sharp year-round, feels athletic in real life, and can be maintained without killing yourself with effort.",
   },
   links: {
     instagram: instagramUrl,
