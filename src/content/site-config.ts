@@ -151,6 +151,118 @@ export const siteConfig: SiteConfig = {
       },
     },
   ],
+  clientTransformations: [
+    {
+      id: "jake-hudson",
+      clientName: "Jake",
+      note: "First prep and almost show-ready after following the plan all the way through.",
+      timeframe: "April 2021",
+      sourceUrl: "https://www.instagram.com/p/CNdgJ5fjp0T/",
+      image: {
+        src: "/images/client-transformations/jake-hudson.jpg",
+        alt: "Client transformation spotlight featuring Jake.",
+      },
+    },
+    {
+      id: "rony-polanco",
+      clientName: "Rony",
+      note: "Peak bulk to current condition, showing a sharper look without losing the size built.",
+      timeframe: "April 2021",
+      sourceUrl: "https://www.instagram.com/p/CNjVBxHDCbC/",
+      image: {
+        src: "/images/client-transformations/rony-polanco.jpg",
+        alt: "Client transformation spotlight featuring Rony Polanco.",
+      },
+    },
+    {
+      id: "sudie-progress",
+      clientName: "Sudie",
+      note: "A bigger, stronger physique after a year of steady progress.",
+      timeframe: "October 2019",
+      sourceUrl: "https://www.instagram.com/p/B3F-EhbjE6v/",
+      image: {
+        src: "/images/client-transformations/sudie-progress.jpg",
+        alt: "Client progress spotlight featuring Sudie.",
+      },
+    },
+    {
+      id: "gordan-progress",
+      clientName: "Gordan",
+      note: "Thirteen months of consistency turned fitness into a lifestyle change.",
+      timeframe: "October 2019",
+      sourceUrl: "https://www.instagram.com/p/B3LeYCgjd_E/",
+      image: {
+        src: "/images/client-transformations/gordan-progress.jpg",
+        alt: "Client transformation spotlight featuring Gordan.",
+      },
+    },
+    {
+      id: "maxwell-12-weeks",
+      clientName: "Maxwell",
+      note: "A 12-week transformation built by following the protocol exactly.",
+      timeframe: "June 2018",
+      sourceUrl: "https://www.instagram.com/p/BkjFZ8NHBXT/",
+      image: {
+        src: "/images/client-transformations/maxwell-12-weeks.jpg",
+        alt: "Client transformation spotlight featuring Maxwell.",
+      },
+    },
+    {
+      id: "aaron-progress",
+      clientName: "Aaron",
+      note: "No excuses, full buy-in, and visible results from executing the basics well.",
+      timeframe: "October 2017",
+      sourceUrl: "https://www.instagram.com/p/BaH6uKjnX7d/",
+      image: {
+        src: "/images/client-transformations/aaron-progress.jpg",
+        alt: "Client progress spotlight featuring Aaron.",
+      },
+    },
+    {
+      id: "cameron-lifestyle",
+      clientName: "Cameron",
+      note: "A full lifestyle shift built from applying a simple plan consistently.",
+      timeframe: "October 2017",
+      sourceUrl: "https://www.instagram.com/p/BaCZH82HVn1/",
+      image: {
+        src: "/images/client-transformations/cameron-lifestyle.jpg",
+        alt: "Client transformation spotlight featuring Cameron.",
+      },
+    },
+    {
+      id: "mike-durkot",
+      clientName: "Mike",
+      note: "Prep progress proof from a client who knew how to work.",
+      timeframe: "July 2017",
+      sourceUrl: "https://www.instagram.com/p/BWlrWDgHIwT/",
+      image: {
+        src: "/images/client-transformations/mike-durkot.jpg",
+        alt: "Client prep progress spotlight featuring Mike Durkot.",
+      },
+    },
+    {
+      id: "camilo-jimenez",
+      clientName: "Camilo",
+      note: "A client spotlight centered on clear physique change under coach Twigthetics.",
+      timeframe: "July 2017",
+      sourceUrl: "https://www.instagram.com/p/BXOVRpCnWtB/",
+      image: {
+        src: "/images/client-transformations/camilo-jimenez.jpg",
+        alt: "Client transformation spotlight featuring Camilo Jimenez.",
+      },
+    },
+    {
+      id: "kelly-results",
+      clientName: "Kelly",
+      note: "Results from a smart training and nutrition approach applied consistently.",
+      timeframe: "July 2017",
+      sourceUrl: "https://www.instagram.com/p/BWla2q5HAQf/",
+      image: {
+        src: "/images/client-transformations/kelly-results.jpg",
+        alt: "Client results spotlight featuring Kelly.",
+      },
+    },
+  ],
   testimonials: [],
   faq: [
     {

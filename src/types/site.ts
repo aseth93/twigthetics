@@ -71,6 +71,15 @@ export type Transformation = {
   };
 };
 
+export type ClientTransformation = {
+  id: string;
+  clientName: string;
+  note: string;
+  timeframe: string;
+  sourceUrl: string;
+  image: ImageAsset;
+};
+
 export type Testimonial = {
   quote: string;
   name: string;
@@ -104,6 +113,7 @@ export type SiteConfig = {
   coachingOffer: CoachingOffer;
   guideOffer: GuideOffer;
   transformations: Transformation[];
+  clientTransformations: ClientTransformation[];
   testimonials: Testimonial[];
   faq: FaqItem[];
   process: ProcessStep[];

@@ -4,7 +4,7 @@ import { ApplicationForm } from "@/components/application-form";
 import { SectionHeading } from "@/components/section-heading";
 import { SiteHeader } from "@/components/site-header";
 import { siteConfig } from "@/content/site-config";
-import type { Transformation } from "@/types/site";
+import type { ClientTransformation, Transformation } from "@/types/site";
 
 const navItems = [
   { href: "#proof", label: "Proof" },
@@ -88,6 +88,41 @@ function TransformationCard({
         </p>
       </div>
     </article>
+  );
+}
+
+function ClientTransformationCard({
+  transformation,
+}: {
+  transformation: ClientTransformation;
+}) {
+  return (
+    <a
+      href={transformation.sourceUrl}
+      target="_blank"
+      rel="noreferrer"
+      className="surface-panel group block overflow-hidden transition duration-300 hover:-translate-y-1"
+    >
+      <div className="relative aspect-[4/5] overflow-hidden">
+        <Image
+          src={transformation.image.src}
+          alt={transformation.image.alt}
+          fill
+          sizes="(max-width: 640px) 50vw, (max-width: 1280px) 33vw, 20vw"
+          className="object-cover transition duration-700 group-hover:scale-[1.03]"
+        />
+      </div>
+
+      <div className="border-t border-[var(--line)] px-4 py-4">
+        <p className="eyebrow text-[var(--muted)]">{transformation.clientName}</p>
+        <p className="mt-2 text-sm leading-6 text-[var(--ink)]">
+          {transformation.note}
+        </p>
+        <p className="mt-3 text-xs uppercase tracking-[0.22em] text-[var(--muted)]">
+          {transformation.timeframe}
+        </p>
+      </div>
+    </a>
   );
 }
 
@@ -192,7 +227,7 @@ export default function Home() {
             <SectionHeading
               eyebrow="Proof of Work"
               title="Proof that the lane is lean, athletic, and aesthetic."
-              description="The visual proof stays simple: a real body-composition shift and a current physique that still looks athletic, not like life has to revolve around prep."
+              description="Start with the coach's own physique proof, then back it up with a deeper archive of real client spotlight posts."
             />
           </div>
 
@@ -206,6 +241,42 @@ export default function Home() {
                 <TransformationCard transformation={transformation} />
               </div>
             ))}
+          </div>
+
+          <div className="mt-14 page-reveal" style={{ animationDelay: "260ms" }}>
+            <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+              <div>
+                <p className="eyebrow text-[var(--muted)]">Client Spotlights</p>
+                <h3 className="mt-2 text-3xl font-semibold text-[var(--ink)]">
+                  Long-term proof from real client transformations.
+                </h3>
+                <p className="mt-3 max-w-2xl text-sm leading-6 text-[var(--muted)]">
+                  These are pulled directly from older public spotlight posts and
+                  show the kind of physique changes this coaching lane was built on.
+                </p>
+              </div>
+
+              <a
+                href={siteConfig.links.instagram}
+                target="_blank"
+                rel="noreferrer"
+                className="btn-secondary"
+              >
+                View Instagram Archive
+              </a>
+            </div>
+
+            <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+              {siteConfig.clientTransformations.map((transformation, index) => (
+                <div
+                  key={transformation.id}
+                  className="page-reveal"
+                  style={{ animationDelay: `${300 + index * 50}ms` }}
+                >
+                  <ClientTransformationCard transformation={transformation} />
+                </div>
+              ))}
+            </div>
           </div>
         </section>
 
