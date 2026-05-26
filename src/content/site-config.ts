@@ -141,10 +141,10 @@ export const siteConfig: SiteConfig = {
       label: "Lean Athletic Look",
       title: "A physique that still looks good when life is normal.",
       summary:
-        "The target is not just getting shredded once. It is staying lean, aesthetic, and active without needing bodybuilder-level effort to hold the look.",
+        "The target is not just getting in shape once. It is staying lean, athletic, and healthy without needing bodybuilder-level effort to hold the look.",
       timeframe: "Current 2026 post",
       result:
-        "Recent physique content supports the brand lane: lean, athletic, aesthetic, and sustainable.",
+        "Recent physique content supports the brand lane: lean, athletic, healthy, and sustainable.",
       image: {
         src: "/images/topspin.jpg",
         alt: "Abe Seth in a lean athletic physique during a tennis session.",
