@@ -11,7 +11,7 @@ export default async function MemberDocumentsPage() {
   const dashboard = await getMemberDashboardData(viewer);
 
   return (
-    <div className="grid gap-6">
+    <div className="grid grid-cols-1 gap-6">
       {viewer.mode === "demo" ? (
         <article className="rounded-[1.2rem] border border-[rgba(141,107,61,0.22)] bg-[rgba(141,107,61,0.08)] px-4 py-4 text-sm leading-6 text-[var(--ink)]">
           Document storage is staged but not live yet. This page previews the member file
@@ -44,7 +44,7 @@ export default async function MemberDocumentsPage() {
               )}
             </div>
 
-            <div className="mt-5 grid gap-3 sm:grid-cols-3">
+            <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-3">
               <div className="rounded-[1rem] border border-[var(--line)] bg-white/70 px-4 py-3 text-sm text-[var(--muted)]">
                 Added {formatPortalDate(document.createdAt)}
               </div>

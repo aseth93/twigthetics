@@ -39,7 +39,7 @@ function TransformationCard({
       </div>
 
       {transformation.comparison ? (
-        <div className="grid gap-px bg-[var(--line)] md:grid-cols-2">
+        <div className="grid grid-cols-1 gap-px bg-[var(--line)] md:grid-cols-2">
           {[
             {
               caption: transformation.comparison.before.caption,
@@ -168,6 +168,7 @@ export default function Home() {
     ...featuredClientTransformations,
     ...featuredClientTransformations,
   ];
+  const heroHeadlineWords = siteConfig.brand.headline.split(" ");
 
   return (
     <div className="relative overflow-x-hidden">
@@ -182,27 +183,37 @@ export default function Home() {
       />
 
       <main>
-        <section id="top" className="section-shell pt-28 md:pt-32">
-          <div className="grid items-end gap-12 lg:grid-cols-[1.1fr_0.9fr]">
+        <section id="top" className="section-shell pt-40 md:pt-32">
+          <div className="grid grid-cols-1 items-end gap-12 lg:grid-cols-[1.1fr_0.9fr]">
             <div className="page-reveal">
-              <p className="eyebrow">{siteConfig.brand.eyebrow}</p>
+              <p className="eyebrow hidden sm:block">{siteConfig.brand.eyebrow}</p>
               <h1 className="display-headline mt-5 max-w-4xl">
-                {siteConfig.brand.headline}
+                {heroHeadlineWords.map((word, index) => (
+                  <span
+                    key={`${word}-${index}`}
+                    className={`block sm:inline ${index < heroHeadlineWords.length - 1 ? "sm:mr-[0.18em]" : ""}`}
+                  >
+                    {word}
+                  </span>
+                ))}
               </h1>
               <p className="mt-6 max-w-2xl text-lg leading-8 text-[var(--muted)] md:text-xl">
                 {siteConfig.brand.subheadline}
               </p>
 
-              <div className="mt-8 flex flex-col gap-4 sm:flex-row">
-                <Link href="#apply" className="btn-primary">
+              <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
+                <Link href="#apply" className="btn-primary w-full text-white sm:w-auto">
                   Apply for Coaching
                 </Link>
-                <Link href="#guide" className="btn-secondary">
+                <Link
+                  href="#guide"
+                  className="btn-secondary w-full text-[var(--ink)] sm:w-auto"
+                >
                   Get the Guide
                 </Link>
               </div>
 
-              <div className="mt-10 md:hidden">
+              <div className="mt-9 md:hidden">
                 <div>
                   <div>
                     <p className="eyebrow text-[var(--muted)]">Client Proof</p>
@@ -217,7 +228,7 @@ export default function Home() {
                   {featuredClientTransformations.map((transformation, index) => (
                     <div
                       key={transformation.id}
-                      className="min-w-[74vw] max-w-[19rem] snap-start first:pl-px"
+                      className="min-w-[78vw] max-w-[17rem] snap-start first:pl-px"
                     >
                       <HeroTransformationCard
                         transformation={transformation}
@@ -231,13 +242,13 @@ export default function Home() {
                 </div>
               </div>
 
-              <div className="mt-10 grid gap-4 sm:grid-cols-3">
+              <div className="mt-8 grid grid-cols-1 gap-3 sm:mt-10 sm:gap-4 sm:grid-cols-3">
                 {siteConfig.coach.metrics.map((metric) => (
                   <div key={metric.label} className="stat-chip">
-                    <p className="type-display text-[1.18rem] uppercase leading-[0.88] tracking-[-0.045em] text-[var(--ink)] sm:text-[1.34rem] lg:text-[1.46rem]">
+                    <p className="type-display text-[1.02rem] uppercase leading-[0.88] tracking-[-0.045em] text-[var(--ink)] sm:text-[1.34rem] lg:text-[1.46rem]">
                       {metric.value}
                     </p>
-                    <p className="mt-2 text-[0.68rem] uppercase tracking-[0.18em] text-[var(--muted)] sm:text-[0.74rem]">
+                    <p className="mt-2 text-[0.62rem] uppercase tracking-[0.18em] text-[var(--muted)] sm:text-[0.74rem]">
                       {metric.label}
                     </p>
                   </div>
@@ -293,7 +304,7 @@ export default function Home() {
             <div>
               <div>
                 <p className="eyebrow text-[var(--muted)]">Client Spotlights</p>
-                <h3 className="mt-2 text-3xl font-semibold text-[var(--ink)]">
+                <h3 className="mt-2 text-2xl font-semibold text-[var(--ink)] sm:text-3xl">
                   Long-term proof from real client transformations.
                 </h3>
                 <p className="mt-3 max-w-2xl text-sm leading-6 text-[var(--muted)]">
@@ -303,7 +314,19 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+            <div className="proof-rail mt-8 flex gap-4 overflow-x-auto pb-3 md:hidden">
+              {siteConfig.clientTransformations.map((transformation, index) => (
+                <div
+                  key={transformation.id}
+                  className="min-w-[78vw] max-w-[18rem] snap-start"
+                  style={{ animationDelay: `${160 + index * 50}ms` }}
+                >
+                  <ClientTransformationCard transformation={transformation} />
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-8 hidden gap-4 md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
               {siteConfig.clientTransformations.map((transformation, index) => (
                 <div
                   key={transformation.id}
@@ -321,7 +344,7 @@ export default function Home() {
               <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
                 <div>
                   <p className="eyebrow text-[var(--muted)]">Coach Proof</p>
-                  <h3 className="mt-2 text-3xl font-semibold text-[var(--ink)]">
+                  <h3 className="mt-2 text-2xl font-semibold text-[var(--ink)] sm:text-3xl">
                     The standard starts with the coach.
                   </h3>
                   <p className="mt-3 max-w-2xl text-sm leading-6 text-[var(--muted)]">
@@ -332,7 +355,7 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="mt-8 grid gap-6 xl:grid-cols-2">
+            <div className="mt-8 grid grid-cols-1 gap-6 xl:grid-cols-2">
               {siteConfig.transformations.map((transformation, index) => (
                 <div
                   key={transformation.id}
@@ -347,7 +370,7 @@ export default function Home() {
         </section>
 
         <section id="coaching" className="section-shell">
-          <div className="dark-panel page-reveal grid gap-10 overflow-hidden p-8 md:p-12 lg:grid-cols-[0.9fr_1.1fr]">
+          <div className="dark-panel page-reveal grid grid-cols-1 gap-8 overflow-hidden p-6 sm:p-8 md:p-12 lg:grid-cols-[0.9fr_1.1fr]">
             <div>
               <SectionHeading
                 eyebrow="Online Coaching"
@@ -359,7 +382,7 @@ export default function Home() {
               <p className="mt-8 text-sm uppercase tracking-[0.22em] text-white/55">
                 Best fit
               </p>
-              <p className="mt-3 max-w-xl text-lg leading-8 text-white/80">
+              <p className="mt-3 max-w-xl text-base leading-7 text-white/80 sm:text-lg sm:leading-8">
                 {siteConfig.coachingOffer.audience}
               </p>
 
@@ -370,8 +393,8 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="grid gap-6 md:grid-cols-2">
-              <div className="rounded-[1.6rem] border border-white/10 bg-white/5 p-6">
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+              <div className="rounded-[1.6rem] border border-white/10 bg-white/5 p-5 sm:p-6">
                 <p className="eyebrow text-white/55">Included</p>
                 <ul className="mt-5 space-y-4 text-sm leading-7 text-white/80">
                   {siteConfig.coachingOffer.deliverables.map((item) => (
@@ -383,7 +406,7 @@ export default function Home() {
                 </ul>
               </div>
 
-              <div className="rounded-[1.6rem] border border-white/10 bg-white/5 p-6">
+              <div className="rounded-[1.6rem] border border-white/10 bg-white/5 p-5 sm:p-6">
                 <p className="eyebrow text-white/55">Expectation</p>
                 <ul className="mt-5 space-y-4 text-sm leading-7 text-white/80">
                   {siteConfig.coachingOffer.commitments.map((item) => (
@@ -399,8 +422,8 @@ export default function Home() {
         </section>
 
         <section id="guide" className="section-shell">
-          <div className="page-reveal grid gap-8 lg:grid-cols-[0.86fr_1.14fr]">
-            <div className="surface-panel p-8 md:p-10">
+          <div className="page-reveal grid grid-cols-1 gap-8 lg:grid-cols-[0.86fr_1.14fr]">
+            <div className="surface-panel p-6 sm:p-8 md:p-10">
               <SectionHeading
                 eyebrow="Digital Guide"
                 title={siteConfig.guideOffer.title}
@@ -440,11 +463,11 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="grid gap-4 sm:grid-cols-2">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               {siteConfig.guideOffer.modules.map((module, index) => (
                 <article
                   key={module.title}
-                  className="surface-panel page-reveal p-6"
+                  className="surface-panel page-reveal p-5 sm:p-6"
                   style={{ animationDelay: `${80 + index * 60}ms` }}
                 >
                   <p className="eyebrow text-[var(--muted)]">
@@ -471,11 +494,11 @@ export default function Home() {
             />
           </div>
 
-          <div className="mt-10 grid gap-4 lg:grid-cols-3">
+          <div className="mt-10 grid grid-cols-1 gap-4 lg:grid-cols-3">
             {siteConfig.process.map((step, index) => (
               <article
                 key={step.title}
-                className="surface-panel page-reveal p-6"
+                className="surface-panel page-reveal p-5 sm:p-6"
                 style={{ animationDelay: `${120 + index * 80}ms` }}
               >
                 <p className="type-display text-5xl leading-none text-[var(--accent)]">
@@ -493,8 +516,8 @@ export default function Home() {
         </section>
 
         <section id="about" className="section-shell">
-          <div className="page-reveal grid gap-8 lg:grid-cols-[0.85fr_1.15fr]">
-            <div className="surface-panel p-8 md:p-10">
+          <div className="page-reveal grid grid-cols-1 gap-8 lg:grid-cols-[0.85fr_1.15fr]">
+            <div className="surface-panel p-6 sm:p-8 md:p-10">
               <div className="flex items-center gap-4">
                 <div className="relative h-20 w-20 overflow-hidden rounded-full border border-[var(--line)]">
                   <Image
@@ -516,18 +539,18 @@ export default function Home() {
                 </div>
               </div>
 
-              <p className="mt-8 text-lg leading-8 text-[var(--ink)]">
+              <p className="mt-8 text-base leading-7 text-[var(--ink)] sm:text-lg sm:leading-8">
                 {siteConfig.coach.summary}
               </p>
             </div>
 
-            <div className="dark-panel p-8 md:p-10">
+            <div className="dark-panel p-6 sm:p-8 md:p-10">
               <p className="eyebrow text-white/55">Approach</p>
-              <p className="mt-4 text-lg leading-8 text-white/80">
+              <p className="mt-4 text-base leading-7 text-white/80 sm:text-lg sm:leading-8">
                 {siteConfig.coach.bio}
               </p>
 
-              <div className="mt-8 grid gap-3">
+              <div className="mt-8 grid grid-cols-1 gap-3">
                 {approachPoints.map((point) => (
                   <div
                     key={point}
@@ -559,14 +582,14 @@ export default function Home() {
             />
           </div>
 
-          <div className="mt-10 grid gap-4">
+          <div className="mt-10 grid grid-cols-1 gap-4">
             {siteConfig.faq.map((item, index) => (
               <details
                 key={item.question}
-                className="surface-panel page-reveal group px-6 py-5"
+                className="surface-panel page-reveal group px-5 py-4 sm:px-6 sm:py-5"
                 style={{ animationDelay: `${80 + index * 60}ms` }}
               >
-                <summary className="flex cursor-pointer list-none items-center justify-between gap-6 text-lg font-semibold text-[var(--ink)]">
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-base font-semibold leading-6 text-[var(--ink)] sm:gap-6 sm:text-lg">
                   <span>{item.question}</span>
                   <span className="type-display text-3xl leading-none text-[var(--accent)] transition group-open:rotate-45">
                     +
@@ -581,15 +604,15 @@ export default function Home() {
         </section>
 
         <section id="apply" className="section-shell pb-16">
-          <div className="page-reveal grid gap-8 lg:grid-cols-[0.9fr_1.1fr]">
-            <div className="surface-panel p-8 md:p-10">
+          <div className="page-reveal grid grid-cols-1 gap-8 lg:grid-cols-[0.9fr_1.1fr]">
+            <div className="surface-panel p-6 sm:p-8 md:p-10">
               <SectionHeading
                 eyebrow="Apply"
                 title="If you want direct oversight, start here."
                 description="The form below is the first filter. Share your current situation, your goal, and what has been blocking the leaner, athletic, aesthetic look you want."
               />
 
-              <div className="mt-8 rounded-[1.5rem] border border-[var(--line)] bg-white/50 p-5 text-sm leading-7 text-[var(--muted)]">
+              <div className="mt-8 rounded-[1.5rem] border border-[var(--line)] bg-white/50 p-4 text-sm leading-7 text-[var(--muted)] sm:p-5">
                 <p>
                   Coaching is for people who want structure, accountability, and
                   precise adjustments. If you only need the playbook, the guide

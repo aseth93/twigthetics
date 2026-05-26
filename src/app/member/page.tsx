@@ -22,7 +22,7 @@ export default async function MemberDashboardPage() {
         demoMode={runtime.demoMode}
       />
 
-      <section className="grid gap-4 md:grid-cols-3">
+      <section className="grid grid-cols-1 gap-4 md:grid-cols-3">
         <article className="surface-panel p-6">
           <p className="eyebrow">Active plan</p>
           <h2 className="mt-4 text-2xl font-semibold text-[var(--ink)]">
@@ -59,7 +59,7 @@ export default async function MemberDashboardPage() {
         </article>
       </section>
 
-      <section className="grid gap-6 xl:grid-cols-[1.15fr_0.85fr]">
+      <section className="grid grid-cols-1 gap-6 xl:grid-cols-[1.15fr_0.85fr]">
         <article className="surface-panel p-6">
           <div className="flex items-center justify-between gap-4">
             <div>
@@ -80,7 +80,7 @@ export default async function MemberDashboardPage() {
 
         <article className="dark-panel p-6">
           <p className="eyebrow text-white/55">Quick links</p>
-          <div className="mt-5 grid gap-3">
+          <div className="mt-5 grid grid-cols-1 gap-3">
             <Link href="/member/messages" className="btn-ghost">
               Open inbox
             </Link>

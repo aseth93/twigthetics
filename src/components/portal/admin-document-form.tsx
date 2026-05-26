@@ -61,7 +61,7 @@ export function AdminDocumentForm({ allowSubmit = true }: { allowSubmit?: boolea
   }
 
   return (
-    <form onSubmit={handleSubmit} className="surface-panel grid gap-4 p-6">
+    <form onSubmit={handleSubmit} className="surface-panel grid grid-cols-1 gap-4 p-6">
       <div>
         <p className="eyebrow">Documents</p>
         <h3 className="mt-3 text-2xl font-semibold text-[var(--ink)]">Upload a client file</h3>

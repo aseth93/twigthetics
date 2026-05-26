@@ -56,7 +56,7 @@ export function AdminPlanForm({ allowSubmit = true }: { allowSubmit?: boolean })
   }
 
   return (
-    <form onSubmit={handleSubmit} className="surface-panel grid gap-4 p-6">
+    <form onSubmit={handleSubmit} className="surface-panel grid grid-cols-1 gap-4 p-6">
       <div>
         <p className="eyebrow">Admin</p>
         <h3 className="mt-3 text-2xl font-semibold text-[var(--ink)]">Create a coaching plan</h3>

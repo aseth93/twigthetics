@@ -106,7 +106,7 @@ export function MessageThread({
         )}
       </div>
 
-      <form onSubmit={handleSubmit} className="mt-6 grid gap-3">
+      <form onSubmit={handleSubmit} className="mt-6 grid grid-cols-1 gap-3">
         <textarea
           value={body}
           onChange={(event) => setBody(event.target.value)}

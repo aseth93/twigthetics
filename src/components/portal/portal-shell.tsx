@@ -20,7 +20,7 @@ export function PortalShell({
 }: PortalShellProps) {
   return (
     <div className="min-h-screen bg-[linear-gradient(180deg,#fbf7f2_0%,var(--canvas)_56%,#efe1cf_100%)]">
-      <div className="mx-auto grid min-h-screen w-full max-w-7xl gap-6 px-5 py-5 lg:grid-cols-[18rem_1fr] lg:px-8">
+      <div className="mx-auto grid min-h-screen w-full max-w-7xl grid-cols-1 gap-6 px-5 py-5 lg:grid-cols-[18rem_1fr] lg:px-8">
         <aside className="surface-panel h-fit overflow-hidden lg:sticky lg:top-5">
           <div className="border-b border-[var(--line)] px-5 py-5">
             <div className="flex items-center justify-between gap-4">
@@ -37,7 +37,7 @@ export function PortalShell({
             </p>
           </div>
 
-          <nav className="grid gap-2 px-3 py-4">
+          <nav className="grid grid-cols-1 gap-2 px-3 py-4">
             {navItems.map((item) => (
               <Link
                 key={item.href}

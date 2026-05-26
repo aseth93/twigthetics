@@ -24,7 +24,7 @@ export default async function AdminDashboardPage() {
         demoMode={runtime.demoMode}
       />
 
-      <section className="grid gap-4 md:grid-cols-4">
+      <section className="grid grid-cols-1 gap-4 md:grid-cols-4">
         <article className="surface-panel p-6">
           <p className="eyebrow">Members</p>
           <h2 className="mt-4 text-3xl font-semibold text-[var(--ink)]">
@@ -51,10 +51,10 @@ export default async function AdminDashboardPage() {
         </article>
       </section>
 
-      <section className="grid gap-6 xl:grid-cols-[1fr_0.95fr]">
+      <section className="grid grid-cols-1 gap-6 xl:grid-cols-[1fr_0.95fr]">
         <article className="surface-panel p-6">
           <p className="eyebrow">Client roster</p>
-          <div className="mt-5 grid gap-4">
+          <div className="mt-5 grid grid-cols-1 gap-4">
             {dashboard.members.length ? (
               dashboard.members.map((member) => (
                 <div
@@ -88,7 +88,7 @@ export default async function AdminDashboardPage() {
 
         <article className="dark-panel p-6">
           <p className="eyebrow text-white/55">Recent billing states</p>
-          <div className="mt-5 grid gap-3">
+          <div className="mt-5 grid grid-cols-1 gap-3">
             {dashboard.billingAccounts.length ? (
               dashboard.billingAccounts.map((account) => (
                 <div
@@ -111,15 +111,15 @@ export default async function AdminDashboardPage() {
         </article>
       </section>
 
-      <section className="grid gap-6 xl:grid-cols-2">
+      <section className="grid grid-cols-1 gap-6 xl:grid-cols-2">
         <AdminPlanForm allowSubmit={viewer.mode !== "demo"} />
         <AdminDocumentForm allowSubmit={viewer.mode !== "demo"} />
       </section>
 
-      <section className="grid gap-6">
+      <section className="grid grid-cols-1 gap-6">
         {dashboard.conversations.length ? (
           dashboard.conversations.map((conversation) => (
-            <div key={conversation.thread.id} className="grid gap-4">
+            <div key={conversation.thread.id} className="grid grid-cols-1 gap-4">
               <article className="surface-panel p-6">
                 <p className="eyebrow">Coach inbox</p>
                 <h2 className="mt-4 text-2xl font-semibold text-[var(--ink)]">

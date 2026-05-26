@@ -10,7 +10,7 @@ export default async function MemberPlansPage() {
   const dashboard = await getMemberDashboardData(viewer);
 
   return (
-    <div className="grid gap-6">
+    <div className="grid grid-cols-1 gap-6">
       {dashboard.assignments.length ? (
         dashboard.assignments.map((assignment) => (
           <article key={assignment.id} className="surface-panel p-6">

@@ -152,8 +152,12 @@ export function ApplicationForm({
   }
 
   return (
-    <form onSubmit={handleSubmit} noValidate className="surface-panel p-8 md:p-10">
-      <div className="grid gap-5 md:grid-cols-2">
+    <form
+      onSubmit={handleSubmit}
+      noValidate
+      className="surface-panel p-6 sm:p-8 md:p-10"
+    >
+      <div className="grid grid-cols-1 gap-4 sm:gap-5 md:grid-cols-2">
         {fields.map((field) => (
           <label
             key={field.name}
@@ -178,7 +182,7 @@ export function ApplicationForm({
         ))}
       </div>
 
-      <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center">
+      <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
         <button
           type="submit"
           disabled={!hasEndpoint || isSubmitting}

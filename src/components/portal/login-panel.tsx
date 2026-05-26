@@ -100,8 +100,8 @@ export function LoginPanel({
         documents, and direct messaging.
       </p>
 
-      <div className="mt-8 grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
-        <form onSubmit={handleLiveLogin} className="grid gap-4 rounded-[1.6rem] border border-[var(--line)] bg-white/72 p-5">
+      <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-[1.1fr_0.9fr]">
+        <form onSubmit={handleLiveLogin} className="grid grid-cols-1 gap-4 rounded-[1.6rem] border border-[var(--line)] bg-white/72 p-5">
           <div>
             <label htmlFor="email" className="mb-2 block text-sm font-medium text-[var(--ink)]">
               Email
@@ -149,7 +149,7 @@ export function LoginPanel({
           </p>
         </form>
 
-        <div className="dark-panel grid gap-4 p-5">
+        <div className="dark-panel grid grid-cols-1 gap-4 p-5">
           <div>
             <p className="eyebrow text-white/60">Preview Access</p>
             <h3 className="mt-3 text-2xl font-semibold text-white">Demo portal roles</h3>

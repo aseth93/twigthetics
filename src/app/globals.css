@@ -66,13 +66,15 @@ summary {
 .section-shell {
   margin-inline: auto;
   width: min(100%, 84rem);
-  padding-inline: 1.25rem;
-  padding-block: 3.5rem;
+  padding-inline: 1rem;
+  padding-block: 3rem;
+  scroll-margin-top: 8.5rem;
 }
 
 @media (min-width: 640px) {
   .section-shell {
     padding-inline: 1.5rem;
+    scroll-margin-top: 8rem;
   }
 }
 
@@ -80,6 +82,7 @@ summary {
   .section-shell {
     padding-inline: 2rem;
     padding-block: 4.75rem;
+    scroll-margin-top: 6.5rem;
   }
 }
 
@@ -98,17 +101,19 @@ summary {
 }
 
 .display-headline {
-  font-size: clamp(3.5rem, 9vw, 7.8rem);
-  line-height: 0.92;
+  font-size: clamp(2.8rem, 12vw, 7.8rem);
+  line-height: 0.9;
   text-transform: uppercase;
-  letter-spacing: -0.04em;
+  letter-spacing: -0.055em;
+  text-wrap: balance;
 }
 
 .display-title {
-  font-size: clamp(2.4rem, 5vw, 4.4rem);
-  line-height: 0.96;
+  font-size: clamp(2rem, 10vw, 4.4rem);
+  line-height: 0.94;
   text-transform: uppercase;
   letter-spacing: -0.035em;
+  text-wrap: balance;
 }
 
 .surface-panel {
@@ -139,7 +144,7 @@ summary {
   border: 1px solid var(--line);
   border-radius: 1.4rem;
   background: rgba(255, 255, 255, 0.65);
-  padding: 1rem 1.1rem;
+  padding: 0.95rem 1rem;
   backdrop-filter: blur(14px);
 }
 
@@ -157,6 +162,8 @@ summary {
   text-transform: uppercase;
   letter-spacing: 0.12em;
   text-align: center;
+  font-size: 0.8rem;
+  line-height: 1;
 }
 
 .btn-primary {
@@ -236,6 +243,7 @@ summary {
 
 .proof-rail {
   scroll-snap-type: x mandatory;
+  scroll-padding-inline: 1rem;
   scrollbar-width: none;
 }
 
@@ -295,5 +303,19 @@ summary {
   .proof-carousel-track,
   .proof-float {
     animation: none;
+  }
+}
+
+@media (min-width: 640px) {
+  .btn-primary,
+  .btn-secondary,
+  .btn-disabled,
+  .btn-ghost,
+  .btn-header {
+    font-size: 0.88rem;
+  }
+
+  .stat-chip {
+    padding: 1rem 1.1rem;
   }
 }

@@ -12,7 +12,7 @@ export default async function MemberBillingPage() {
   const billing = dashboard.billing;
 
   return (
-    <div className="grid gap-6">
+    <div className="grid grid-cols-1 gap-6">
       {viewer.mode === "demo" ? (
         <article className="rounded-[1.2rem] border border-[rgba(141,107,61,0.22)] bg-[rgba(141,107,61,0.08)] px-4 py-4 text-sm leading-6 text-[var(--ink)]">
           Stripe billing is staged but not live yet. This previews the billing area before
@@ -20,7 +20,7 @@ export default async function MemberBillingPage() {
         </article>
       ) : null}
 
-      <div className="grid gap-6 xl:grid-cols-[1fr_0.95fr]">
+      <div className="grid grid-cols-1 gap-6 xl:grid-cols-[1fr_0.95fr]">
       <article className="surface-panel p-6">
         <p className="eyebrow">Billing</p>
         <h2 className="mt-4 text-2xl font-semibold text-[var(--ink)]">
@@ -30,7 +30,7 @@ export default async function MemberBillingPage() {
           Members can manage cards, invoices, and subscription status directly from here.
         </p>
 
-        <div className="mt-6 grid gap-3">
+        <div className="mt-6 grid grid-cols-1 gap-3">
           <div className="rounded-[1.1rem] border border-[var(--line)] bg-white/70 px-4 py-3 text-sm text-[var(--muted)]">
             Status: <span className="text-[var(--ink)]">{billing?.status || "Not connected"}</span>
           </div>
@@ -51,7 +51,7 @@ export default async function MemberBillingPage() {
 
       <article className="dark-panel p-6">
         <p className="eyebrow text-white/55">Actions</p>
-        <div className="mt-5 grid gap-3">
+        <div className="mt-5 grid grid-cols-1 gap-3">
           {viewer.mode === "demo" ? (
             <>
               <span className="btn-disabled">Portal staging</span>
