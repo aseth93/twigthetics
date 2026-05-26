@@ -207,8 +207,8 @@ export default function Home() {
                   <div>
                     <p className="eyebrow text-[var(--muted)]">Client Proof</p>
                     <p className="mt-2 max-w-sm text-sm leading-6 text-[var(--muted)]">
-                      Real client transformations up front, not buried halfway
-                      down the page.
+                      Fat loss, recomposition, and physique-building results
+                      from real clients.
                     </p>
                   </div>
 
@@ -263,8 +263,8 @@ export default function Home() {
                   <div>
                     <p className="eyebrow">Client Transformations</p>
                     <p className="mt-3 max-w-sm text-sm leading-6 text-[var(--muted)]">
-                      Real physique changes should be visible the moment the site
-                      opens.
+                      Real results across different starting points, timelines,
+                      and physique goals.
                     </p>
                   </div>
 
@@ -310,8 +310,8 @@ export default function Home() {
           <div className="page-reveal">
             <SectionHeading
               eyebrow="Proof of Work"
-              title="Client transformations first. Coach proof right behind them."
-              description="The site now opens with client results up front, then backs that up with the coach's own physique proof and current look."
+              title="Proof the process works."
+              description="Client results backed by the same lean, athletic, aesthetic standard the coaching is built around."
             />
           </div>
 
@@ -323,8 +323,8 @@ export default function Home() {
                   Long-term proof from real client transformations.
                 </h3>
                 <p className="mt-3 max-w-2xl text-sm leading-6 text-[var(--muted)]">
-                  These are pulled directly from public spotlight posts and kept
-                  image-first so the transformations land immediately.
+                  A mix of fat loss, recomposition, and muscle-building results
+                  from past clients.
                 </p>
               </div>
 
@@ -357,12 +357,11 @@ export default function Home() {
                 <div>
                   <p className="eyebrow text-[var(--muted)]">Coach Proof</p>
                   <h3 className="mt-2 text-3xl font-semibold text-[var(--ink)]">
-                    The coaching lane still starts with living it.
+                    The standard starts with the coach.
                   </h3>
                   <p className="mt-3 max-w-2xl text-sm leading-6 text-[var(--muted)]">
-                    Client proof leads the page now, but the coach&apos;s own physique
-                    still anchors the standard: lean, athletic, aesthetic, and
-                    maintainable.
+                    Lean, athletic, aesthetic, and maintainable without needing
+                    bodybuilding-level effort year-round.
                   </p>
                 </div>
               </div>
