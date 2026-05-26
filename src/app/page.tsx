@@ -184,20 +184,20 @@ export default function Home() {
 
       <main>
         <section id="top" className="section-shell pt-40 md:pt-32">
-          <div className="grid grid-cols-1 items-end gap-12 lg:grid-cols-[1.1fr_0.9fr]">
-            <div className="page-reveal">
+          <div className="grid grid-cols-1 gap-12 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,0.78fr)] lg:items-start">
+            <div className="page-reveal min-w-0 lg:pr-6">
               <p className="eyebrow hidden sm:block">{siteConfig.brand.eyebrow}</p>
-              <h1 className="display-headline mt-5 max-w-4xl">
+              <h1 className="display-headline mt-5 max-w-[8.9ch]">
                 {heroHeadlineWords.map((word, index) => (
                   <span
                     key={`${word}-${index}`}
-                    className={`block sm:inline ${index < heroHeadlineWords.length - 1 ? "sm:mr-[0.18em]" : ""}`}
+                    className="block"
                   >
                     {word}
                   </span>
                 ))}
               </h1>
-              <p className="mt-6 max-w-2xl text-lg leading-8 text-[var(--muted)] md:text-xl">
+              <p className="mt-6 max-w-2xl text-lg leading-8 text-[var(--muted)] md:max-w-[36rem] md:text-xl">
                 {siteConfig.brand.subheadline}
               </p>
 
@@ -257,10 +257,10 @@ export default function Home() {
             </div>
 
             <div
-              className="page-reveal hidden md:block lg:pl-8"
+              className="page-reveal hidden min-w-0 md:block lg:pl-4 xl:pl-8"
               style={{ animationDelay: "120ms" }}
             >
-              <div className="relative mx-auto max-w-3xl">
+              <div className="relative ml-auto w-full max-w-[34rem] xl:max-w-[38rem]">
                 <div>
                   <div>
                     <p className="eyebrow">Client Transformations</p>
@@ -276,7 +276,7 @@ export default function Home() {
                     {desktopHeroTransformations.map((transformation, index) => (
                       <div
                         key={`${transformation.id}-${index}`}
-                        className="w-[15rem] shrink-0"
+                        className="w-[13rem] shrink-0 xl:w-[14rem]"
                       >
                         <HeroTransformationCard
                           transformation={transformation}
