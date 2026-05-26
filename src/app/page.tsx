@@ -104,15 +104,16 @@ function HeroTransformationCard({
       className="surface-panel proof-float group block overflow-hidden p-3"
       style={style}
     >
-      <div className="rounded-[1.45rem] border border-[var(--line)] bg-[#efe5d7] p-2">
-        <Image
-          src={transformation.image.src}
-          alt={transformation.image.alt}
-          width={640}
-          height={640}
-          sizes="(max-width: 767px) 70vw, (max-width: 1280px) 18rem, 15rem"
-          className="h-auto w-full rounded-[1rem]"
-        />
+      <div className="h-[11.25rem] rounded-[1.45rem] border border-[var(--line)] bg-[#efe5d7] p-2">
+        <div className="relative h-full w-full overflow-hidden rounded-[1rem]">
+          <Image
+            src={transformation.image.src}
+            alt={transformation.image.alt}
+            fill
+            sizes="(max-width: 767px) 70vw, (max-width: 1280px) 18rem, 15rem"
+            className="object-contain object-center"
+          />
+        </div>
       </div>
 
       <div className="px-2 pb-1 pt-4">
@@ -137,15 +138,16 @@ function ClientTransformationCard({
       rel="noreferrer"
       className="surface-panel group block overflow-hidden p-3 transition duration-300 hover:-translate-y-1"
     >
-      <div className="rounded-[1.45rem] border border-[var(--line)] bg-[#efe5d7] p-2">
-        <Image
-          src={transformation.image.src}
-          alt={transformation.image.alt}
-          width={640}
-          height={640}
-          sizes="(max-width: 640px) 82vw, (max-width: 1280px) 33vw, 20vw"
-          className="h-auto w-full rounded-[1rem] transition duration-700 group-hover:scale-[1.02]"
-        />
+      <div className="h-[15rem] rounded-[1.45rem] border border-[var(--line)] bg-[#efe5d7] p-2 sm:h-[16rem]">
+        <div className="relative h-full w-full overflow-hidden rounded-[1rem]">
+          <Image
+            src={transformation.image.src}
+            alt={transformation.image.alt}
+            fill
+            sizes="(max-width: 640px) 82vw, (max-width: 1280px) 33vw, 20vw"
+            className="object-contain object-center"
+          />
+        </div>
       </div>
 
       <div className="px-2 pb-2 pt-4">
