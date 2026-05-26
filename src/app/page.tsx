@@ -104,7 +104,7 @@ function HeroTransformationCard({
       className="surface-panel proof-float group block overflow-hidden p-3"
       style={style}
     >
-      <div className="h-[11.25rem] rounded-[1.45rem] border border-[var(--line)] bg-[#efe5d7] p-2">
+      <div className="aspect-square w-full rounded-[1.45rem] border border-[var(--line)] bg-[#efe5d7] p-2">
         <div className="relative h-full w-full overflow-hidden rounded-[1rem]">
           <Image
             src={transformation.image.src}
@@ -138,7 +138,7 @@ function ClientTransformationCard({
       rel="noreferrer"
       className="surface-panel group block overflow-hidden p-3 transition duration-300 hover:-translate-y-1"
     >
-      <div className="h-[15rem] rounded-[1.45rem] border border-[var(--line)] bg-[#efe5d7] p-2 sm:h-[16rem]">
+      <div className="aspect-square w-full rounded-[1.45rem] border border-[var(--line)] bg-[#efe5d7] p-2">
         <div className="relative h-full w-full overflow-hidden rounded-[1rem]">
           <Image
             src={transformation.image.src}
