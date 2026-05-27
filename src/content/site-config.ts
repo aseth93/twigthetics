@@ -23,7 +23,7 @@ export const siteConfig: SiteConfig = {
   },
   coach: {
     name: "Abe Seth",
-    title: "Online coach for lean, aesthetic physiques",
+    title: "Online coach for lean, athletic physiques",
     handle: "twigthetics",
     summary:
       "Twigthetics is for lifters who care about looking lean, moving well, and keeping the physique they build without turning fitness into a full-time job.",
@@ -34,16 +34,16 @@ export const siteConfig: SiteConfig = {
       { value: "Adaptable", label: "built for real life" },
     ],
     portrait: {
-      src: "/images/abe-profile.jpg",
-      alt: "Profile photo of IFBB Pro Abe Seth.",
+      src: "/images/coach/coach-window-selfie.jpg",
+      alt: "Close-up mirror selfie portrait of Abe Seth.",
     },
     heroImage: {
-      src: "/images/current-look.jpg",
-      alt: "Abe Seth in a current lean, athletic physique photo.",
+      src: "/images/coach/coach-gym-mirror.jpg",
+      alt: "Abe Seth in a lean gym mirror check-in photo.",
     },
     aboutImage: {
-      src: "/images/tennis-action.jpg",
-      alt: "Abe Seth playing tennis.",
+      src: "/images/coach/coach-stage-checkin.jpg",
+      alt: "Abe Seth in a stage-prep check-in photo.",
     },
   },
   coachingOffer: {
@@ -115,39 +115,39 @@ export const siteConfig: SiteConfig = {
   },
   transformations: [
     {
-      id: "body-composition-shift",
-      label: "Body Composition",
-      title: "Lighter, sharper, more athletic.",
+      id: "coach-everyday-standard",
+      label: "Coach Proof",
+      title: "Sharp in normal conditions, not just perfect ones.",
       summary:
-        "Recent proof that a large visual swing does not have to look depleted or fragile when the process is managed correctly.",
-      timeframe: "Recent public post",
+        "Different mirrors, different lighting, same standard: lean, athletic, and healthy enough to keep when life is normal.",
+      timeframe: "Current coach check-ins",
       result:
-        "Anchored by Abe's own 45-pound shift and framed around keeping the final look athletic rather than just smaller.",
+        "The point is not one perfect photo. It is looking clearly in shape across ordinary settings without having to live on extremes.",
       comparison: {
         before: {
-          src: "/images/transformation-before.jpg",
-          alt: "Earlier physique image from Abe Seth's recent 45-pound transformation post.",
-          caption: "Earlier phase",
+          src: "/images/coach/coach-floor-mirror.jpg",
+          alt: "Abe Seth in a full-body mirror check-in wearing joggers.",
+          caption: "Full-body check-in",
         },
         after: {
-          src: "/images/transformation-current.jpg",
-          alt: "Current physique image from Abe Seth's recent 45-pound transformation post.",
-          caption: "Current look",
+          src: "/images/coach/coach-portrait-mirror.jpg",
+          alt: "Abe Seth in a close-up mirror check-in photo.",
+          caption: "Close-up check-in",
         },
       },
     },
     {
-      id: "lean-athletic-look",
-      label: "Lean Athletic Look",
-      title: "A physique that still looks good when life is normal.",
+      id: "current-conditioning",
+      label: "Current Look",
+      title: "Lean enough to hold without living on extremes.",
       summary:
-        "The target is not just getting in shape once. It is staying lean, athletic, and healthy without needing bodybuilder-level effort to hold the look.",
-      timeframe: "Current 2026 post",
+        "Current coach photos stay in the same lane: athletic shape, visible condition, and a look that still feels realistic outside of peak-week effort.",
+      timeframe: "Current coach photo",
       result:
-        "Recent physique content supports the brand lane: lean, athletic, healthy, and sustainable.",
+        "This is the standard the coaching is built around: sharp, healthy, and repeatable.",
       image: {
-        src: "/images/topspin.jpg",
-        alt: "Abe Seth in a lean athletic physique during a tennis session.",
+        src: "/images/coach/coach-gym-mirror.jpg",
+        alt: "Abe Seth in a gym mirror photo showing a lean athletic physique.",
       },
     },
   ],

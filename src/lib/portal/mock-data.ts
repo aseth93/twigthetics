@@ -17,7 +17,7 @@ export const demoCoachProfile: PortalProfile = {
   fullName: "Abe Seth",
   email: "coach@twigthetics.com",
   instagramHandle: "@twigthetics",
-  avatarUrl: "/images/abe-profile.jpg",
+  avatarUrl: "/images/coach/coach-window-selfie.jpg",
   joinedAt: "2026-01-05T12:00:00.000Z",
 };
 
