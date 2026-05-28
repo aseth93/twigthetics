@@ -125,12 +125,12 @@ export const siteConfig: SiteConfig = {
         "The point is not one perfect photo. It is looking clearly in shape across ordinary settings without having to live on extremes.",
       comparison: {
         before: {
-          src: "/images/coach/coach-floor-mirror.jpg",
+          src: "/images/coach/coach-floor-mirror.jpg?v=2",
           alt: "Abe Seth in a full-body mirror check-in wearing joggers.",
           caption: "Full-body check-in",
         },
         after: {
-          src: "/images/coach/coach-portrait-mirror.jpg",
+          src: "/images/coach/coach-portrait-mirror.jpg?v=2",
           alt: "Abe Seth in a close-up mirror check-in photo.",
           caption: "Close-up check-in",
         },

@@ -56,6 +56,8 @@ function TransformationCard({
                   src={item.image.src}
                   alt={item.image.alt}
                   fill
+                  unoptimized
+                  loading="eager"
                   sizes="(max-width: 768px) 100vw, 50vw"
                   className="object-cover"
                 />
