@@ -163,6 +163,10 @@ function ClientTransformationCard({
 }
 
 export default function Home() {
+  const hasCoachingCheckout = Boolean(
+    process.env.STRIPE_SECRET_KEY?.trim() &&
+      process.env.STRIPE_COACHING_PRICE_ID?.trim(),
+  );
   const hasGuideCheckout = Boolean(siteConfig.links.guideCheckout);
   const hasApplicationEndpoint = Boolean(siteConfig.links.applicationEndpoint);
   const featuredClientTransformations = siteConfig.clientTransformations.slice(0, 6);
@@ -171,6 +175,8 @@ export default function Home() {
     ...featuredClientTransformations,
   ];
   const heroHeadlineWords = siteConfig.brand.headline.split(" ");
+  const primaryCtaHref = hasCoachingCheckout ? "/api/coaching/checkout" : "#apply";
+  const primaryCtaLabel = hasCoachingCheckout ? "Start Coaching" : "Apply";
 
   return (
     <div className="relative overflow-x-hidden">
@@ -178,8 +184,8 @@ export default function Home() {
       <SiteHeader
         brandName={siteConfig.brand.name}
         navItems={navItems}
-        primaryHref="#apply"
-        primaryLabel="Apply"
+        primaryHref={primaryCtaHref}
+        primaryLabel={primaryCtaLabel}
         secondaryHref="/login"
         secondaryLabel="Member Login"
       />
@@ -204,14 +210,14 @@ export default function Home() {
               </p>
 
               <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
-                <Link href="#apply" className="btn-primary w-full text-white sm:w-auto">
-                  Apply for Coaching
+                <Link href={primaryCtaHref} className="btn-primary w-full text-white sm:w-auto">
+                  {hasCoachingCheckout ? "Start Coaching" : "Apply for Coaching"}
                 </Link>
                 <Link
                   href="#guide"
                   className="btn-secondary w-full text-[var(--ink)] sm:w-auto"
                 >
-                  Get the Guide
+                  Guide Coming Soon
                 </Link>
               </div>
 
@@ -389,8 +395,8 @@ export default function Home() {
               </p>
 
               <div className="mt-8">
-                <Link href="#apply" className="btn-ghost">
-                  {siteConfig.coachingOffer.ctaLabel}
+                <Link href={primaryCtaHref} className="btn-ghost">
+                  {hasCoachingCheckout ? "Start Coaching" : siteConfig.coachingOffer.ctaLabel}
                 </Link>
               </div>
             </div>

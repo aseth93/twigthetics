@@ -4,7 +4,6 @@ const instagramUrl =
   process.env.NEXT_PUBLIC_INSTAGRAM_URL?.trim() ||
   "https://www.instagram.com/twigthetics/";
 
-const guideCheckoutUrl = process.env.NEXT_PUBLIC_GUIDE_CHECKOUT_URL?.trim() || "";
 const applicationEndpoint =
   process.env.NEXT_PUBLIC_APPLICATION_ENDPOINT?.trim() || "";
 
@@ -18,7 +17,7 @@ export const siteConfig: SiteConfig = {
   },
   links: {
     instagram: instagramUrl,
-    guideCheckout: guideCheckoutUrl,
+    guideCheckout: "",
     applicationEndpoint,
   },
   coach: {
@@ -69,12 +68,9 @@ export const siteConfig: SiteConfig = {
     title: "The Lean Aesthetic Guide",
     summary:
       "A practical digital guide for staying lean, athletic, and visually sharp year-round without turning maintenance into another form of prep.",
-    statusNote:
-      guideCheckoutUrl
-        ? "External checkout is live."
-        : "Checkout link plugs in here as soon as the hosted purchase flow is connected.",
+    statusNote: "Coming soon.",
     ctaLabel: "Buy the guide",
-    placeholderLabel: "Guide link dropping soon",
+    placeholderLabel: "Coming soon",
     features: [
       "A framework for staying lean enough to look good year-round without running yourself into the ground.",
       "Clear rules for food structure, training, steps, cardio, and weekly adjustments.",
