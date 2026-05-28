@@ -34,8 +34,8 @@ export const siteConfig: SiteConfig = {
       { value: "Adaptable", label: "built for real life" },
     ],
     portrait: {
-      src: "/images/coach/coach-window-selfie.jpg",
-      alt: "Close-up mirror selfie portrait of Abe Seth.",
+      src: "/images/coach/coach-d93-checkin.jpg",
+      alt: "Abe Seth in a lean mirror check-in photo near a window.",
     },
     heroImage: {
       src: "/images/coach/coach-gym-mirror.jpg",
@@ -146,8 +146,8 @@ export const siteConfig: SiteConfig = {
       result:
         "This is the standard the coaching is built around: sharp, healthy, and repeatable.",
       image: {
-        src: "/images/coach/coach-gym-mirror.jpg",
-        alt: "Abe Seth in a gym mirror photo showing a lean athletic physique.",
+        src: "/images/coach/coach-d93-checkin.jpg",
+        alt: "Abe Seth in a lean mirror check-in photo showing an athletic physique.",
       },
     },
   ],
