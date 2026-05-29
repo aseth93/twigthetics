@@ -87,6 +87,27 @@ export type BillingAccount = {
   updatedAt: string;
 };
 
+export type CoachingApplicationAttachment = {
+  id: string;
+  fieldName: string;
+  fileName: string;
+  mimeType?: string | null;
+  sizeBytes: number;
+  createdAt: string;
+  downloadUrl: string;
+};
+
+export type CoachingApplication = {
+  id: string;
+  fullName: string;
+  email: string;
+  instagramHandle?: string | null;
+  status: string;
+  submittedAt: string;
+  payload: Record<string, string>;
+  attachments: CoachingApplicationAttachment[];
+};
+
 export type MemberDashboardData = {
   assignments: PlanAssignment[];
   documents: PortalDocument[];
@@ -103,6 +124,7 @@ export type AdminDashboardData = {
   recentMessages: ConversationMessage[];
   conversations: AdminConversation[];
   billingAccounts: BillingAccount[];
+  applications: CoachingApplication[];
 };
 
 export type PortalRuntime = {

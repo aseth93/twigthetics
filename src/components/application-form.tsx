@@ -5,7 +5,6 @@ import type { ApplicationFormField } from "@/types/site";
 
 type ApplicationFormProps = {
   fields: ApplicationFormField[];
-  hasEndpoint: boolean;
   instagramUrl: string;
 };
 
@@ -80,7 +79,6 @@ function getVisibleFields(fields: ApplicationFormField[], values: FormState) {
 
 export function ApplicationForm({
   fields,
-  hasEndpoint,
   instagramUrl,
 }: ApplicationFormProps) {
   const initialState = useMemo(() => buildInitialState(fields), [fields]);
@@ -162,7 +160,7 @@ export function ApplicationForm({
     event.preventDefault();
     setStatus({ tone: "idle", message: "" });
 
-    if (!validate(values, files) || !hasEndpoint) {
+    if (!validate(values, files)) {
       return;
     }
 
@@ -326,14 +324,10 @@ export function ApplicationForm({
       <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
         <button
           type="submit"
-          disabled={!hasEndpoint || isSubmitting}
-          className={hasEndpoint ? "btn-primary" : "btn-disabled"}
+          disabled={isSubmitting}
+          className="btn-primary"
         >
-          {isSubmitting
-            ? "Submitting..."
-            : hasEndpoint
-              ? "Submit Intake"
-              : "Intake Reopens Soon"}
+          {isSubmitting ? "Submitting..." : "Submit Intake"}
         </button>
 
         <a href={instagramUrl} target="_blank" rel="noreferrer" className="quiet-link">

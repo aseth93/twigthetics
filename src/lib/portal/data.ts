@@ -2,6 +2,8 @@ import { asc, desc, eq, inArray } from "drizzle-orm";
 import { getDb } from "@/db";
 import {
   billingAccounts,
+  coachingApplicationAttachments,
+  coachingApplications,
   conversations,
   documentAccess,
   documents,
@@ -14,6 +16,8 @@ import type {
   AdminConversation,
   AdminDashboardData,
   BillingAccount,
+  CoachingApplication,
+  CoachingApplicationAttachment,
   ConversationMessage,
   ConversationThread,
   MemberDashboardData,
@@ -123,6 +127,36 @@ function mapBillingRow(row: typeof billingAccounts.$inferSelect): BillingAccount
   };
 }
 
+function mapApplicationAttachmentRow(
+  row: typeof coachingApplicationAttachments.$inferSelect,
+): CoachingApplicationAttachment {
+  return {
+    id: row.id,
+    fieldName: row.fieldName,
+    fileName: row.fileName,
+    mimeType: row.mimeType,
+    sizeBytes: row.sizeBytes,
+    createdAt: toIsoDate(row.createdAt) || new Date().toISOString(),
+    downloadUrl: `/api/admin/applications/${row.applicationId}/attachments/${row.id}`,
+  };
+}
+
+function mapApplicationRow(
+  row: typeof coachingApplications.$inferSelect,
+  attachments: CoachingApplicationAttachment[],
+): CoachingApplication {
+  return {
+    id: row.id,
+    fullName: row.fullName || "Unnamed applicant",
+    email: row.email || "No email provided",
+    instagramHandle: row.instagramHandle,
+    status: row.status,
+    submittedAt: toIsoDate(row.submittedAt) || new Date().toISOString(),
+    payload: row.payload || {},
+    attachments,
+  };
+}
+
 export async function getMemberDashboardData(
   viewer: PortalViewer,
 ): Promise<MemberDashboardData> {
@@ -205,10 +239,21 @@ export async function getAdminDashboardData(
       recentMessages: [],
       conversations: [],
       billingAccounts: [],
+      applications: [],
     };
   }
 
-  const [memberRows, planRows, assignmentRows, documentRows, accessRows, billingRows, threadRows] =
+  const [
+    memberRows,
+    planRows,
+    assignmentRows,
+    documentRows,
+    accessRows,
+    billingRows,
+    threadRows,
+    applicationRows,
+    applicationAttachmentRows,
+  ] =
     await Promise.all([
       db
         .select()
@@ -228,6 +273,11 @@ export async function getAdminDashboardData(
       db.select().from(documentAccess),
       db.select().from(billingAccounts).orderBy(desc(billingAccounts.updatedAt)),
       db.select().from(conversations).orderBy(desc(conversations.updatedAt)),
+      db.select().from(coachingApplications).orderBy(desc(coachingApplications.submittedAt)),
+      db
+        .select()
+        .from(coachingApplicationAttachments)
+        .orderBy(asc(coachingApplicationAttachments.createdAt)),
     ]);
 
   const members = memberRows.map((row) => mapProfileRow(row));
@@ -248,6 +298,7 @@ export async function getAdminDashboardData(
   const mappedMessages = messageRows.map((row) => mapMessageRow(row));
   const messagesByConversation = new Map<string, ConversationMessage[]>();
   const assignedMembersByDocument = new Map<string, string[]>();
+  const attachmentsByApplication = new Map<string, CoachingApplicationAttachment[]>();
 
   accessRows.forEach((row) => {
     const group = assignedMembersByDocument.get(row.documentId) || [];
@@ -259,6 +310,12 @@ export async function getAdminDashboardData(
     const group = messagesByConversation.get(message.conversationId) || [];
     group.push(message);
     messagesByConversation.set(message.conversationId, group);
+  });
+
+  applicationAttachmentRows.forEach((row) => {
+    const group = attachmentsByApplication.get(row.applicationId) || [];
+    group.push(mapApplicationAttachmentRow(row));
+    attachmentsByApplication.set(row.applicationId, group);
   });
 
   const memberMap = new Map(members.map((member) => [member.id, member]));
@@ -288,6 +345,9 @@ export async function getAdminDashboardData(
     recentMessages: [...mappedMessages].reverse().slice(0, 8),
     conversations: conversationsData,
     billingAccounts: billingRows.map((row) => mapBillingRow(row)),
+    applications: applicationRows.map((row) =>
+      mapApplicationRow(row, attachmentsByApplication.get(row.id) || []),
+    ),
   };
 }
 

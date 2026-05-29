@@ -1,7 +1,7 @@
 import type { CSSProperties } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ApplicationForm } from "@/components/application-form";
+import { CoachingIntakeModal } from "@/components/coaching-intake-modal";
 import { SectionHeading } from "@/components/section-heading";
 import { SiteHeader } from "@/components/site-header";
 import { siteConfig } from "@/content/site-config";
@@ -164,19 +164,22 @@ function ClientTransformationCard({
 
 export default function Home() {
   const hasGuideCheckout = Boolean(siteConfig.links.guideCheckout);
-  const hasApplicationEndpoint = Boolean(process.env.DATABASE_URL?.trim());
   const featuredClientTransformations = siteConfig.clientTransformations.slice(0, 6);
   const desktopHeroTransformations = [
     ...featuredClientTransformations,
     ...featuredClientTransformations,
   ];
   const heroHeadlineWords = siteConfig.brand.headline.split(" ");
-  const primaryCtaHref = "#apply";
+  const primaryCtaHref = "#coaching-intake-modal";
   const primaryCtaLabel = "Sign up for coaching";
 
   return (
     <div className="relative overflow-x-hidden">
       <div className="grain pointer-events-none fixed inset-0 opacity-50" />
+      <CoachingIntakeModal
+        fields={siteConfig.applicationFields}
+        instagramUrl={siteConfig.links.instagram}
+      />
       <SiteHeader
         brandName={siteConfig.brand.name}
         navItems={navItems}
@@ -374,7 +377,7 @@ export default function Home() {
         </section>
 
         <section id="coaching" className="section-shell">
-          <div className="dark-panel page-reveal grid grid-cols-1 gap-8 overflow-hidden p-6 sm:p-8 md:p-12 lg:grid-cols-[0.9fr_1.1fr]">
+            <div className="dark-panel page-reveal grid grid-cols-1 gap-8 overflow-hidden p-6 sm:p-8 md:p-12 lg:grid-cols-[0.9fr_1.1fr]">
             <div>
               <SectionHeading
                 eyebrow="Online Coaching"
@@ -608,35 +611,77 @@ export default function Home() {
         </section>
 
         <section id="apply" className="section-shell pb-16">
-          <div className="page-reveal grid grid-cols-1 gap-8 lg:grid-cols-[0.9fr_1.1fr]">
+          <div className="page-reveal grid grid-cols-1 gap-8 lg:grid-cols-[0.92fr_1.08fr]">
             <div className="surface-panel p-6 sm:p-8 md:p-10">
               <SectionHeading
                 eyebrow="Apply"
-                title="If you want coaching, sign up here."
-                description="The intake below covers training, nutrition, recovery, current physique, and start-date fit so the coaching decision is made on real context instead of guesswork."
+                title="Sign up once. Start from real context."
+                description="The intake covers your goals, current training, food structure, recovery, schedule, and progress photos so the coaching decision starts with actual information."
               />
 
-              <div className="mt-8 rounded-[1.5rem] border border-[var(--line)] bg-white/50 p-4 text-sm leading-7 text-[var(--muted)] sm:p-5">
+              <div className="mt-8 rounded-[1.5rem] border border-[var(--line)] bg-white/50 p-5 text-sm leading-7 text-[var(--muted)] sm:p-6 sm:text-base">
                 <p>
-                  Coaching is for people who want structure, accountability,
-                  and precise adjustments. The intake is detailed on purpose so
-                  the plan starts from your real training, food, recovery, and
-                  current physique instead of a generic template.
+                  This is meant to be detailed. The point is to see your real
+                  situation up front instead of forcing you into a generic
+                  program.
                 </p>
-                <p className="mt-4">
-                  {hasApplicationEndpoint
-                    ? "Intake is live."
-                    : "The form is built and ready. Until the submission endpoint is connected, the fallback contact route is Instagram DM."}
-                </p>
+                <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2">
+                  <div className="rounded-[1.25rem] border border-[var(--line)] bg-white/70 px-4 py-4">
+                    Goals, training history, schedule, food setup, and current
+                    plan
+                  </div>
+                  <div className="rounded-[1.25rem] border border-[var(--line)] bg-white/70 px-4 py-4">
+                    Front, rear, and side relaxed progress photos attached in
+                    the form
+                  </div>
+                </div>
+                <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
+                  <Link href={primaryCtaHref} className="btn-primary text-white">
+                    Sign up for coaching
+                  </Link>
+                  <a
+                    href={siteConfig.links.instagram}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="quiet-link"
+                  >
+                    DM on Instagram instead
+                  </a>
+                </div>
               </div>
             </div>
 
-            <div className="page-reveal" style={{ animationDelay: "120ms" }}>
-              <ApplicationForm
-                fields={siteConfig.applicationFields}
-                hasEndpoint={hasApplicationEndpoint}
-                instagramUrl={siteConfig.links.instagram}
-              />
+            <div className="page-reveal surface-panel overflow-hidden" style={{ animationDelay: "120ms" }}>
+              <div className="border-b border-[var(--line)] bg-white/55 px-6 py-5 sm:px-8">
+                <p className="eyebrow text-[var(--muted)]">Inside the intake</p>
+                <h3 className="mt-2 text-2xl font-semibold text-[var(--ink)]">
+                  Enough detail to build the plan properly.
+                </h3>
+                <p className="mt-3 max-w-2xl text-sm leading-6 text-[var(--muted)]">
+                  You’ll cover goals, preferred food structure, training split,
+                  recovery, injuries, supplements, activity level, and preferred
+                  Monday start date.
+                </p>
+              </div>
+              <div className="grid grid-cols-1 gap-px bg-[var(--line)] sm:grid-cols-2">
+                <div className="bg-[var(--canvas)] px-6 py-5 sm:px-8">
+                  <p className="eyebrow text-[var(--muted)]">What you send</p>
+                  <ul className="mt-4 space-y-3 text-sm leading-6 text-[var(--ink)]">
+                    <li>Current weight, height, goals, and timeline context</li>
+                    <li>Training availability and current program structure</li>
+                    <li>Food preference: calorie tracking or fixed meal plan</li>
+                    <li>Front, rear, and side relaxed progress pictures</li>
+                  </ul>
+                </div>
+                <div className="bg-[var(--canvas)] px-6 py-5 sm:px-8">
+                  <p className="eyebrow text-[var(--muted)]">What happens next</p>
+                  <ul className="mt-4 space-y-3 text-sm leading-6 text-[var(--ink)]">
+                    <li>The full response is saved in the admin side for review</li>
+                    <li>Coaching fit gets reviewed from actual context, not guesswork</li>
+                    <li>If the fit is right, the next coaching step comes directly after</li>
+                  </ul>
+                </div>
+              </div>
             </div>
           </div>
         </section>
@@ -663,7 +708,7 @@ export default function Home() {
             >
               Instagram
             </a>
-            <Link href="#apply" className="quiet-link">
+            <Link href={primaryCtaHref} className="quiet-link">
               Contact
             </Link>
             <Link href="/privacy" className="quiet-link">
