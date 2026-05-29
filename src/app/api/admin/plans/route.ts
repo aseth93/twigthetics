@@ -2,6 +2,10 @@ import { NextResponse } from "next/server";
 import { getDbReady } from "@/db";
 import { planAssignments, plans } from "@/db/schema";
 import { getPortalViewer } from "@/lib/portal/auth";
+import {
+  serializePlanSections,
+  type PlanSections,
+} from "@/lib/portal/plan-sections";
 
 export async function POST(request: Request) {
   const viewer = await getPortalViewer();
@@ -13,18 +17,31 @@ export async function POST(request: Request) {
   const payload = (await request.json().catch(() => null)) as
     | {
         title?: string;
-        summary?: string;
-        cadence?: string;
-        body?: string;
-        memberId?: string;
-        startsOn?: string;
-        notes?: string;
-      }
+      summary?: string;
+      cadence?: string;
+      body?: string;
+      sections?: Partial<PlanSections>;
+      memberId?: string;
+      startsOn?: string;
+      notes?: string;
+    }
     | null;
 
-  if (!payload?.title?.trim() || !payload?.body?.trim()) {
+  const structuredBody = payload?.sections
+    ? serializePlanSections(payload.sections)
+    : payload?.body?.trim() || "";
+  const hasContent =
+    Boolean(payload?.body?.trim()) ||
+    Boolean(
+      payload?.sections &&
+        Object.values(payload.sections).some(
+          (value) => typeof value === "string" && value.trim().length,
+        ),
+    );
+
+  if (!payload?.title?.trim() || !hasContent) {
     return NextResponse.json(
-      { error: "Title and body are required to create a plan." },
+      { error: "Title and at least one plan section are required." },
       { status: 400 },
     );
   }
@@ -42,7 +59,7 @@ export async function POST(request: Request) {
       title: payload.title.trim(),
       summary: payload.summary?.trim() || "",
       cadence: payload.cadence?.trim() || "",
-      body: payload.body.trim(),
+      body: structuredBody,
       createdAt: new Date(),
       updatedAt: new Date(),
     })

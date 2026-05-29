@@ -12,6 +12,7 @@ import {
   plans,
   users,
 } from "@/db/schema";
+import { parsePlanSections } from "@/lib/portal/plan-sections";
 import type {
   AdminConversation,
   AdminDashboardData,
@@ -46,12 +47,16 @@ function mapProfileRow(row: typeof users.$inferSelect): PortalProfile {
 }
 
 function mapPlanRow(row: typeof plans.$inferSelect): PortalPlan {
+  const parsedPlan = parsePlanSections(row.body);
+
   return {
     id: row.id,
     title: row.title,
     summary: row.summary,
     cadence: row.cadence,
     body: row.body,
+    sections: parsedPlan.sections,
+    isStructured: parsedPlan.isStructured,
     createdAt: toIsoDate(row.createdAt) || new Date().toISOString(),
     updatedAt: toIsoDate(row.updatedAt) || new Date().toISOString(),
   };

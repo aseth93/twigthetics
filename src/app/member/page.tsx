@@ -4,6 +4,7 @@ import { requirePortalViewer } from "@/lib/portal/auth";
 import { getMemberDashboardData } from "@/lib/portal/data";
 import { formatPortalDate, formatPortalDateTime } from "@/lib/portal/format";
 import { getPortalRuntime } from "@/lib/portal/env";
+import { getPlanSectionPreview } from "@/lib/portal/plan-sections";
 
 export default async function MemberDashboardPage() {
   const viewer = await requirePortalViewer({
@@ -12,6 +13,10 @@ export default async function MemberDashboardPage() {
   });
   const runtime = getPortalRuntime();
   const dashboard = await getMemberDashboardData(viewer);
+  const activePlan = dashboard.assignments[0]?.plan || null;
+  const activePlanPreview = activePlan
+    ? getPlanSectionPreview(activePlan.sections)
+    : "";
 
   return (
     <div className="space-y-6">
@@ -65,7 +70,7 @@ export default async function MemberDashboardPage() {
             <div>
               <p className="eyebrow">Current block</p>
               <h2 className="mt-4 text-2xl font-semibold text-[var(--ink)]">
-                {dashboard.assignments[0]?.plan.title || "No live block yet"}
+                {activePlan?.title || "No live block yet"}
               </h2>
             </div>
             <Link href="/member/plans" className="quiet-link">
@@ -73,7 +78,7 @@ export default async function MemberDashboardPage() {
             </Link>
           </div>
           <p className="mt-4 text-sm leading-7 text-[var(--muted)]">
-            {dashboard.assignments[0]?.plan.body ||
+            {activePlanPreview ||
               "Your training and nutrition structure will appear here after assignment."}
           </p>
         </article>

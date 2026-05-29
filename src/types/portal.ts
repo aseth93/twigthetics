@@ -1,3 +1,5 @@
+import type { PlanSectionKey, PlanSections } from "@/lib/portal/plan-sections";
+
 export type ApplicationRole = "member" | "coach_admin";
 
 export type PortalMode = "live";
@@ -23,8 +25,16 @@ export type PortalPlan = {
   summary: string;
   cadence: string;
   body: string;
+  sections: PlanSections;
+  isStructured: boolean;
   createdAt: string;
   updatedAt: string;
+};
+
+export type PlanSectionDefinition = {
+  key: PlanSectionKey;
+  label: string;
+  value: string;
 };
 
 export type PlanAssignmentStatus = "active" | "archived";

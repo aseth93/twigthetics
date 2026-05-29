@@ -1,6 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import {
+  PLAN_SECTION_KEYS,
+  PLAN_SECTION_LABELS,
+  type PlanSectionKey,
+} from "@/lib/portal/plan-sections";
 
 type AdminPlanFormProps = {
   allowSubmit?: boolean;
@@ -18,16 +23,37 @@ export function AdminPlanForm({
   const [title, setTitle] = useState("");
   const [summary, setSummary] = useState("");
   const [cadence, setCadence] = useState("");
-  const [body, setBody] = useState("");
+  const [training, setTraining] = useState("");
+  const [nutrition, setNutrition] = useState("");
+  const [supplements, setSupplements] = useState("");
+  const [cardio, setCardio] = useState("");
+  const [misc, setMisc] = useState("");
   const [memberId, setMemberId] = useState(initialMemberId);
   const [startsOn, setStartsOn] = useState("");
   const [notes, setNotes] = useState("");
   const [status, setStatus] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [activeSection, setActiveSection] = useState<PlanSectionKey>("training");
 
   useEffect(() => {
     setMemberId(initialMemberId);
   }, [initialMemberId]);
+
+  const sectionValues: Record<PlanSectionKey, string> = {
+    training,
+    nutrition,
+    supplements,
+    cardio,
+    misc,
+  };
+
+  const sectionSetters: Record<PlanSectionKey, (value: string) => void> = {
+    training: setTraining,
+    nutrition: setNutrition,
+    supplements: setSupplements,
+    cardio: setCardio,
+    misc: setMisc,
+  };
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -50,7 +76,7 @@ export function AdminPlanForm({
           title,
           summary,
           cadence,
-          body,
+          sections: sectionValues,
           memberId,
           startsOn,
           notes,
@@ -68,7 +94,11 @@ export function AdminPlanForm({
       setTitle("");
       setSummary("");
       setCadence("");
-      setBody("");
+      setTraining("");
+      setNutrition("");
+      setSupplements("");
+      setCardio("");
+      setMisc("");
       setMemberId(initialMemberId || "");
       setStartsOn("");
       setNotes("");
@@ -115,14 +145,32 @@ export function AdminPlanForm({
         disabled={!allowSubmit}
         className="w-full rounded-[1rem] border border-[var(--line)] bg-white/80 px-4 py-3 text-[15px] text-[var(--ink)] outline-none focus:border-[var(--accent)]"
       />
-      <textarea
-        value={body}
-        onChange={(event) => setBody(event.target.value)}
-        rows={6}
-        placeholder="Plan notes, training split, nutrition guardrails..."
-        disabled={!allowSubmit}
-        className="w-full rounded-[1rem] border border-[var(--line)] bg-white/80 px-4 py-3 text-[15px] text-[var(--ink)] outline-none focus:border-[var(--accent)]"
-      />
+      <div className="rounded-[1.1rem] border border-[var(--line)] bg-[var(--canvas)] px-4 py-4">
+        <div className="flex flex-wrap gap-2">
+          {PLAN_SECTION_KEYS.map((sectionKey) => (
+            <button
+              key={sectionKey}
+              type="button"
+              onClick={() => setActiveSection(sectionKey)}
+              className={`rounded-full border px-4 py-2 text-sm transition ${
+                activeSection === sectionKey
+                  ? "border-[var(--accent)] bg-[rgba(141,107,61,0.12)] text-[var(--ink)]"
+                  : "border-[var(--line)] bg-white/80 text-[var(--muted)] hover:bg-white"
+              }`}
+            >
+              {PLAN_SECTION_LABELS[sectionKey]}
+            </button>
+          ))}
+        </div>
+        <textarea
+          value={sectionValues[activeSection]}
+          onChange={(event) => sectionSetters[activeSection](event.target.value)}
+          rows={8}
+          placeholder={`Write the ${PLAN_SECTION_LABELS[activeSection].toLowerCase()} details...`}
+          disabled={!allowSubmit}
+          className="mt-4 w-full rounded-[1rem] border border-[var(--line)] bg-white/90 px-4 py-3 text-[15px] text-[var(--ink)] outline-none focus:border-[var(--accent)]"
+        />
+      </div>
       {hasLockedMember ? (
         <div className="rounded-[1rem] border border-[var(--line)] bg-white/55 px-4 py-3 text-sm text-[var(--muted)]">
           Assigned member ID: {memberId}

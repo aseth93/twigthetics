@@ -14,6 +14,7 @@ import {
   users,
 } from "@/db/schema";
 import { getPortalViewer } from "@/lib/portal/auth";
+import { serializePlanSections } from "@/lib/portal/plan-sections";
 import { hashPassword, normalizeEmail } from "@/lib/portal/users";
 
 const demoMemberPassword = "MemberDemo123!";
@@ -48,7 +49,13 @@ type DemoMemberSeed = {
   planTitle: string;
   planSummary: string;
   planCadence: string;
-  planBody: string;
+  planSections: {
+    training: string;
+    nutrition: string;
+    supplements: string;
+    cardio: string;
+    misc: string;
+  };
   planNotes: string;
   messages: [string, string];
 };
@@ -90,8 +97,17 @@ const demoMembers: DemoMemberSeed[] = [
     planTitle: "Jordan Lean Recomp Block",
     planSummary: "Keep him lean while pushing upper-body fullness and leg detail.",
     planCadence: "4 lifts, 2 cardio sessions, 9-10k steps",
-    planBody:
-      "Day 1: Upper strength\nDay 2: Lower bias quads\nDay 3: Rest + steps\nDay 4: Upper pump\nDay 5: Lower posterior chain\nFood: macro-tracked with one free meal.",
+    planSections: {
+      training:
+        "Day 1: Upper strength\nDay 2: Lower bias quads\nDay 3: Rest + steps\nDay 4: Upper pump\nDay 5: Lower posterior chain",
+      nutrition:
+        "Macro-tracked setup with one free meal. Protein stays high daily and carbs cluster around lifting.",
+      supplements:
+        "Creatine daily, whey isolate as needed, fish oil, vitamin D, and caffeine pre-lift if helpful.",
+      cardio: "2 incline treadmill sessions each week plus 9-10k steps daily.",
+      misc:
+        "Travel weeks stay on the same food structure. Progress volume before load on pressing to keep the shoulder happy.",
+    },
     planNotes: "Keep the shoulder happy. Progress volume before load on pressing.",
     messages: [
       "Welcome in. First priority is getting your food structure and weekly check-in flow tight.",
@@ -137,8 +153,17 @@ const demoMembers: DemoMemberSeed[] = [
     planTitle: "Marco Return-to-Shape Phase",
     planSummary: "Waist reduction, movement consistency, and sustainable training rhythm.",
     planCadence: "5 training days, 1-2 cardio sessions, 7-8k steps",
-    planBody:
-      "Day 1: Push\nDay 2: Pull\nDay 3: Legs (knee-friendly)\nDay 4: Upper hypertrophy\nDay 5: Lower + conditioning\nMeal plan with repeated base meals.",
+    planSections: {
+      training:
+        "Day 1: Push\nDay 2: Pull\nDay 3: Legs (knee-friendly)\nDay 4: Upper hypertrophy\nDay 5: Lower + conditioning",
+      nutrition:
+        "Meal plan with repeated base meals. Breakfast and lunch stay almost identical and dinner uses a swap list.",
+      supplements:
+        "Creatine, electrolyte mix, and magnesium glycinate. Keep the stack simple and consistent.",
+      cardio: "1-2 bike or incline sessions weekly plus a push toward 7-8k steps daily.",
+      misc:
+        "The goal is rhythm first. Tighten sleep and consistency before pushing fatigue or aggressive deficits.",
+    },
     planNotes: "Keep compliance high. Don’t chase aggressive fatigue right away.",
     messages: [
       "We’ll start by making the plan easy to repeat. Consistency first, then tighten the details.",
@@ -177,6 +202,7 @@ export async function POST() {
   const createdNames: string[] = [];
 
   for (const [index, member] of demoMembers.entries()) {
+    const serializedPlanBody = serializePlanSections(member.planSections);
     const email = normalizeEmail(member.email);
     const [existingUser] = await db
       .select()
@@ -321,22 +347,34 @@ export async function POST() {
       .where(eq(plans.title, member.planTitle))
       .limit(1);
 
-    const plan =
-      existingPlan ||
-      (
-        await db
-          .insert(plans)
-          .values({
-            coachId: viewer.profile.id,
-            title: member.planTitle,
-            summary: member.planSummary,
-            cadence: member.planCadence,
-            body: member.planBody,
-            createdAt: new Date(),
-            updatedAt: new Date(),
-          })
-          .returning()
-      )[0];
+    const plan = existingPlan
+      ? (
+          await db
+            .update(plans)
+            .set({
+              coachId: viewer.profile.id,
+              summary: member.planSummary,
+              cadence: member.planCadence,
+              body: serializedPlanBody,
+              updatedAt: new Date(),
+            })
+            .where(eq(plans.id, existingPlan.id))
+            .returning()
+        )[0]
+      : (
+          await db
+            .insert(plans)
+            .values({
+              coachId: viewer.profile.id,
+              title: member.planTitle,
+              summary: member.planSummary,
+              cadence: member.planCadence,
+              body: serializedPlanBody,
+              createdAt: new Date(),
+              updatedAt: new Date(),
+            })
+            .returning()
+        )[0];
 
     if (plan) {
       const [existingAssignment] = await db
@@ -365,24 +403,38 @@ export async function POST() {
       .where(eq(documents.title, member.documentTitle))
       .limit(1);
 
-    const document =
-      existingDocument ||
-      (
-        await db
-          .insert(documents)
-          .values({
-            coachId: viewer.profile.id,
-            title: member.documentTitle,
-            description: member.documentDescription,
-            fileName: `${member.fullName.toLowerCase().replaceAll(" ", "-")}-guide.txt`,
-            mimeType: "text/plain",
-            sizeBytes: Buffer.byteLength(member.planBody, "utf8"),
-            fileBlob: Buffer.from(member.planBody, "utf8"),
-            createdAt: new Date(),
-            updatedAt: new Date(),
-          })
-          .returning()
-      )[0];
+    const document = existingDocument
+      ? (
+          await db
+            .update(documents)
+            .set({
+              coachId: viewer.profile.id,
+              description: member.documentDescription,
+              fileName: `${member.fullName.toLowerCase().replaceAll(" ", "-")}-guide.txt`,
+              mimeType: "text/plain",
+              sizeBytes: Buffer.byteLength(serializedPlanBody, "utf8"),
+              fileBlob: Buffer.from(serializedPlanBody, "utf8"),
+              updatedAt: new Date(),
+            })
+            .where(eq(documents.id, existingDocument.id))
+            .returning()
+        )[0]
+      : (
+          await db
+            .insert(documents)
+            .values({
+              coachId: viewer.profile.id,
+              title: member.documentTitle,
+              description: member.documentDescription,
+              fileName: `${member.fullName.toLowerCase().replaceAll(" ", "-")}-guide.txt`,
+              mimeType: "text/plain",
+              sizeBytes: Buffer.byteLength(serializedPlanBody, "utf8"),
+              fileBlob: Buffer.from(serializedPlanBody, "utf8"),
+              createdAt: new Date(),
+              updatedAt: new Date(),
+            })
+            .returning()
+        )[0];
 
     if (document) {
       const [existingAccess] = await db
