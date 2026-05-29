@@ -1,6 +1,6 @@
 import { hash } from "bcryptjs";
 import { eq } from "drizzle-orm";
-import { getDb } from "@/db";
+import { getDbReady } from "@/db";
 import { users } from "@/db/schema";
 import type { PortalProfile } from "@/types/portal";
 
@@ -21,7 +21,7 @@ export function mapUserToPortalProfile(user: typeof users.$inferSelect): PortalP
 }
 
 export async function findUserByEmail(email: string) {
-  const db = getDb();
+  const db = await getDbReady();
 
   if (!db) {
     return null;
@@ -37,7 +37,7 @@ export async function findUserByEmail(email: string) {
 }
 
 export async function findUserById(userId: string) {
-  const db = getDb();
+  const db = await getDbReady();
 
   if (!db) {
     return null;
@@ -53,7 +53,7 @@ export async function hashPassword(password: string) {
 }
 
 export async function ensureBootstrapAdmin() {
-  const db = getDb();
+  const db = await getDbReady();
   const email = normalizeEmail(process.env.BOOTSTRAP_ADMIN_EMAIL || "");
   const password = process.env.BOOTSTRAP_ADMIN_PASSWORD?.trim() || "";
   const fullName = process.env.BOOTSTRAP_ADMIN_NAME?.trim() || "Twigthetics Admin";

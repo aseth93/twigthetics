@@ -1,6 +1,6 @@
 import Stripe from "stripe";
 import { NextResponse } from "next/server";
-import { getDb } from "@/db";
+import { getDbReady } from "@/db";
 import {
   attachCheckoutToExistingUserByEmail,
   syncBillingFromSubscriptionEvent,
@@ -12,7 +12,7 @@ import { getStripeClient } from "@/lib/portal/stripe";
 export async function POST(request: Request) {
   const runtime = getPortalRuntime();
   const stripe = getStripeClient();
-  const db = getDb();
+  const db = await getDbReady();
 
   if (!runtime.stripeConfigured || !db || !stripe) {
     return NextResponse.json(

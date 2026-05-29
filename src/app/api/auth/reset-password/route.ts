@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { and, eq, gt, isNull } from "drizzle-orm";
-import { getDb } from "@/db";
+import { getDbReady } from "@/db";
 import { passwordResetTokens, users } from "@/db/schema";
 import { hashOpaqueToken } from "@/lib/portal/tokens";
 import { hashPassword } from "@/lib/portal/users";
@@ -29,7 +29,7 @@ export async function POST(request: Request) {
     );
   }
 
-  const db = getDb();
+  const db = await getDbReady();
 
   if (!db) {
     return NextResponse.json(

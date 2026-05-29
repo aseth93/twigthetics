@@ -1,7 +1,7 @@
 import Stripe from "stripe";
 import { eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
-import { getDb } from "@/db";
+import { getDbReady } from "@/db";
 import { billingAccounts } from "@/db/schema";
 import { upsertStripeCheckoutSessionRecord } from "@/lib/portal/billing";
 import { getPortalViewer } from "@/lib/portal/auth";
@@ -12,7 +12,7 @@ export async function GET(request: Request) {
   const viewer = await getPortalViewer();
   const origin = getSiteOrigin(new Headers(request.headers));
   const priceId = getStripePriceId();
-  const db = getDb();
+  const db = await getDbReady();
   const stripe = getStripeClient();
 
   if (!viewer) {

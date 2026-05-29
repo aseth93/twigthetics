@@ -1,12 +1,12 @@
 import { and, eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
-import { getDb } from "@/db";
+import { getDbReady } from "@/db";
 import { conversations, messages } from "@/db/schema";
 import { getPortalViewer } from "@/lib/portal/auth";
 import { getConversationMessages } from "@/lib/portal/data";
 
 async function getOrCreateConversation(memberId: string, coachId?: string | null) {
-  const db = getDb();
+  const db = await getDbReady();
 
   if (!db) {
     return null;
@@ -42,7 +42,7 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: "You must be logged in." }, { status: 401 });
   }
 
-  const db = getDb();
+  const db = await getDbReady();
 
   if (!db) {
     return NextResponse.json({ error: "Portal backend is not ready yet." }, { status: 503 });
@@ -112,7 +112,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Message body is required." }, { status: 400 });
   }
 
-  const db = getDb();
+  const db = await getDbReady();
 
   if (!db) {
     return NextResponse.json({ error: "Portal backend is not ready yet." }, { status: 503 });

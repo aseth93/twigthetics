@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { eq } from "drizzle-orm";
-import { getDb } from "@/db";
+import { getDbReady } from "@/db";
 import { passwordResetTokens } from "@/db/schema";
 import { sendPasswordResetEmail } from "@/lib/portal/email";
 import { getSiteOrigin } from "@/lib/portal/env";
@@ -15,7 +15,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Email is required." }, { status: 400 });
   }
 
-  const db = getDb();
+  const db = await getDbReady();
 
   if (!db) {
     return NextResponse.json(

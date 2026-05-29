@@ -1,6 +1,6 @@
 import Stripe from "stripe";
 import { and, eq, isNull, or } from "drizzle-orm";
-import { getDb } from "@/db";
+import { getDbReady } from "@/db";
 import { billingAccounts, stripeCheckoutSessions } from "@/db/schema";
 import { getStripeClient } from "./stripe";
 import { findUserByEmail, normalizeEmail } from "./users";
@@ -56,7 +56,7 @@ function getSubscriptionStatus(input: unknown) {
 }
 
 export async function upsertStripeCheckoutSessionRecord(session: Stripe.Checkout.Session) {
-  const db = getDb();
+  const db = await getDbReady();
 
   if (!db) {
     return null;
@@ -128,7 +128,7 @@ export async function resolveMemberIdForBilling(options: {
   stripeSubscriptionId?: string | null;
   fallbackEmail?: string | null;
 }) {
-  const db = getDb();
+  const db = await getDbReady();
 
   if (!db) {
     return null;
@@ -193,7 +193,7 @@ export async function upsertBillingAccountForMember(options: {
   sessionId?: string | null;
   subscription?: Stripe.Subscription | null;
 }) {
-  const db = getDb();
+  const db = await getDbReady();
 
   if (!db) {
     return null;
@@ -260,7 +260,7 @@ export async function upsertBillingAccountForMember(options: {
 }
 
 export async function claimStripeCheckoutSessionForUser(sessionId: string, userId: string) {
-  const db = getDb();
+  const db = await getDbReady();
 
   if (!db) {
     return { ok: false as const, reason: "db-not-configured" };
@@ -322,7 +322,7 @@ export async function getStripeSignupContext(sessionId: string) {
 
     await upsertStripeCheckoutSessionRecord(session);
 
-    const db = getDb();
+    const db = await getDbReady();
     const email = extractCheckoutEmail(session);
     const [localSession] =
       db && sessionId
@@ -427,7 +427,7 @@ export async function attachCheckoutToExistingUserByEmail(session: Stripe.Checko
 }
 
 export async function getExistingStripeCheckoutSession(sessionId: string) {
-  const db = getDb();
+  const db = await getDbReady();
 
   if (!db) {
     return null;

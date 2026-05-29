@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
-import { getDb } from "@/db";
+import { getDbReady } from "@/db";
 import { billingAccounts } from "@/db/schema";
 import { getPortalViewer } from "@/lib/portal/auth";
 import { getSiteOrigin } from "@/lib/portal/env";
@@ -9,7 +9,7 @@ import { getStripeClient } from "@/lib/portal/stripe";
 export async function GET(request: Request) {
   const viewer = await getPortalViewer();
   const origin = getSiteOrigin(new Headers(request.headers));
-  const db = getDb();
+  const db = await getDbReady();
   const stripe = getStripeClient();
 
   if (!viewer) {

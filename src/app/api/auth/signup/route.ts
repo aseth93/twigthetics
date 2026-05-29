@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { and, eq, isNull } from "drizzle-orm";
-import { getDb } from "@/db";
+import { getDbReady } from "@/db";
 import { billingAccounts, stripeCheckoutSessions, users } from "@/db/schema";
 import { getCoachingPlanName, getStripeSignupContext } from "@/lib/portal/billing";
 import { getStripeClient } from "@/lib/portal/stripe";
@@ -46,7 +46,7 @@ export async function POST(request: Request) {
     );
   }
 
-  const db = getDb();
+  const db = await getDbReady();
   const stripe = getStripeClient();
 
   if (!db || !stripe) {

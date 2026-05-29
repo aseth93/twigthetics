@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getDb } from "@/db";
+import { getDbReady } from "@/db";
 import {
   coachingApplicationAttachments,
   coachingApplications,
@@ -26,7 +26,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Invalid application payload." }, { status: 400 });
   }
 
-  const db = getDb();
+  const db = await getDbReady();
 
   if (!db) {
     return NextResponse.json(

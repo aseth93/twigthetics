@@ -2,7 +2,7 @@ import { compare } from "bcryptjs";
 import { eq } from "drizzle-orm";
 import { getServerSession, type NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { getDb } from "@/db";
+import { getDbReady } from "@/db";
 import { users } from "@/db/schema";
 import { ensureBootstrapAdmin, normalizeEmail } from "@/lib/portal/users";
 
@@ -27,7 +27,7 @@ export const authOptions: NextAuthOptions = {
           throw new Error("Email and password are required.");
         }
 
-        const db = getDb();
+        const db = await getDbReady();
 
         if (!db) {
           throw new Error("Portal auth is not configured yet.");

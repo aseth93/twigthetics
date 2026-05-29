@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getDb } from "@/db";
+import { getDbReady } from "@/db";
 import { documentAccess, documents } from "@/db/schema";
 import { getPortalViewer } from "@/lib/portal/auth";
 
@@ -36,7 +36,7 @@ export async function POST(request: Request) {
     );
   }
 
-  const db = getDb();
+  const db = await getDbReady();
 
   if (!db) {
     return NextResponse.json({ error: "Portal backend is not ready yet." }, { status: 503 });

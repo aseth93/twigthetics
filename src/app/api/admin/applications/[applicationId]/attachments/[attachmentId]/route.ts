@@ -1,6 +1,6 @@
 import { and, eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
-import { getDb } from "@/db";
+import { getDbReady } from "@/db";
 import { coachingApplicationAttachments } from "@/db/schema";
 import { getPortalViewer } from "@/lib/portal/auth";
 
@@ -22,7 +22,7 @@ export async function GET(_request: Request, context: RouteContext) {
     return NextResponse.json({ error: "Admin access required." }, { status: 403 });
   }
 
-  const db = getDb();
+  const db = await getDbReady();
 
   if (!db) {
     return NextResponse.json({ error: "Portal backend is not ready yet." }, { status: 503 });

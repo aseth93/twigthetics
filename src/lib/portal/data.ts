@@ -1,5 +1,5 @@
 import { asc, desc, eq, inArray } from "drizzle-orm";
-import { getDb } from "@/db";
+import { getDbReady } from "@/db";
 import {
   billingAccounts,
   coachingApplicationAttachments,
@@ -160,7 +160,7 @@ function mapApplicationRow(
 export async function getMemberDashboardData(
   viewer: PortalViewer,
 ): Promise<MemberDashboardData> {
-  const db = getDb();
+  const db = await getDbReady();
 
   if (!db) {
     return {
@@ -228,7 +228,7 @@ export async function getAdminDashboardData(
   viewer: PortalViewer,
 ): Promise<AdminDashboardData> {
   void viewer;
-  const db = getDb();
+  const db = await getDbReady();
 
   if (!db) {
     return {
@@ -354,7 +354,7 @@ export async function getAdminDashboardData(
 export async function getConversationMessages(options: {
   conversationId: string;
 }) {
-  const db = getDb();
+  const db = await getDbReady();
 
   if (!db) {
     return [];
