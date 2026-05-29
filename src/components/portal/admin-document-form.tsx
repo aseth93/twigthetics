@@ -1,14 +1,30 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-export function AdminDocumentForm({ allowSubmit = true }: { allowSubmit?: boolean }) {
+type AdminDocumentFormProps = {
+  allowSubmit?: boolean;
+  initialMemberId?: string;
+  memberName?: string;
+  heading?: string;
+};
+
+export function AdminDocumentForm({
+  allowSubmit = true,
+  initialMemberId = "",
+  memberName,
+  heading = "Upload a client file",
+}: AdminDocumentFormProps) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [memberIds, setMemberIds] = useState("");
+  const [memberIds, setMemberIds] = useState(initialMemberId);
   const [file, setFile] = useState<File | null>(null);
   const [status, setStatus] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    setMemberIds(initialMemberId);
+  }, [initialMemberId]);
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -48,7 +64,7 @@ export function AdminDocumentForm({ allowSubmit = true }: { allowSubmit?: boolea
 
       setTitle("");
       setDescription("");
-      setMemberIds("");
+      setMemberIds(initialMemberId || "");
       setFile(null);
       setStatus(payload?.message || "Document uploaded.");
     } catch (error) {
@@ -60,11 +76,18 @@ export function AdminDocumentForm({ allowSubmit = true }: { allowSubmit?: boolea
     }
   }
 
+  const hasLockedMember = Boolean(initialMemberId);
+
   return (
     <form onSubmit={handleSubmit} className="surface-panel grid grid-cols-1 gap-4 p-6">
       <div>
         <p className="eyebrow">Documents</p>
-        <h3 className="mt-3 text-2xl font-semibold text-[var(--ink)]">Upload a client file</h3>
+        <h3 className="mt-3 text-2xl font-semibold text-[var(--ink)]">{heading}</h3>
+        {memberName ? (
+          <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
+            This upload will be assigned directly to {memberName}.
+          </p>
+        ) : null}
       </div>
 
       <input
@@ -82,13 +105,19 @@ export function AdminDocumentForm({ allowSubmit = true }: { allowSubmit?: boolea
         disabled={!allowSubmit}
         className="w-full rounded-[1rem] border border-[var(--line)] bg-white/80 px-4 py-3 text-[15px] text-[var(--ink)] outline-none focus:border-[var(--accent)]"
       />
-      <input
-        value={memberIds}
-        onChange={(event) => setMemberIds(event.target.value)}
-        placeholder="Assigned member IDs, comma separated"
-        disabled={!allowSubmit}
-        className="w-full rounded-[1rem] border border-[var(--line)] bg-white/80 px-4 py-3 text-[15px] text-[var(--ink)] outline-none focus:border-[var(--accent)]"
-      />
+      {hasLockedMember ? (
+        <div className="rounded-[1rem] border border-[var(--line)] bg-white/55 px-4 py-3 text-sm text-[var(--muted)]">
+          Assigned member ID: {memberIds}
+        </div>
+      ) : (
+        <input
+          value={memberIds}
+          onChange={(event) => setMemberIds(event.target.value)}
+          placeholder="Assigned member IDs, comma separated"
+          disabled={!allowSubmit}
+          className="w-full rounded-[1rem] border border-[var(--line)] bg-white/80 px-4 py-3 text-[15px] text-[var(--ink)] outline-none focus:border-[var(--accent)]"
+        />
+      )}
       <input
         type="file"
         onChange={(event) => setFile(event.target.files?.[0] || null)}

@@ -15,6 +15,7 @@ import {
 import type {
   AdminConversation,
   AdminDashboardData,
+  AdminMemberDetailData,
   BillingAccount,
   CoachingApplication,
   CoachingApplicationAttachment,
@@ -371,4 +372,102 @@ export async function getConversationMessages(options: {
     .orderBy(asc(messages.createdAt));
 
   return messageRows.map((row) => mapMessageRow(row));
+}
+
+export async function getAdminMemberDetailData(options: {
+  memberId: string;
+}): Promise<AdminMemberDetailData | null> {
+  const db = await getDbReady();
+
+  if (!db) {
+    return null;
+  }
+
+  const [memberRow] = await db
+    .select()
+    .from(users)
+    .where(eq(users.id, options.memberId))
+    .limit(1);
+
+  if (!memberRow || memberRow.role !== "member") {
+    return null;
+  }
+
+  const [assignmentRows, documentRows, billingRows, conversationRows, applicationRows] =
+    await Promise.all([
+      db
+        .select({
+          assignment: planAssignments,
+          plan: plans,
+        })
+        .from(planAssignments)
+        .innerJoin(plans, eq(planAssignments.planId, plans.id))
+        .where(eq(planAssignments.memberId, memberRow.id))
+        .orderBy(desc(planAssignments.startsOn), desc(planAssignments.createdAt)),
+      db
+        .select({
+          document: documents,
+        })
+        .from(documentAccess)
+        .innerJoin(documents, eq(documentAccess.documentId, documents.id))
+        .where(eq(documentAccess.memberId, memberRow.id))
+        .orderBy(desc(documents.createdAt)),
+      db
+        .select()
+        .from(billingAccounts)
+        .where(eq(billingAccounts.memberId, memberRow.id))
+        .limit(1),
+      db
+        .select()
+        .from(conversations)
+        .where(eq(conversations.memberId, memberRow.id))
+        .limit(1),
+      db
+        .select()
+        .from(coachingApplications)
+        .where(eq(coachingApplications.email, memberRow.email))
+        .orderBy(desc(coachingApplications.submittedAt)),
+    ]);
+
+  const applicationIds = applicationRows.map((row) => row.id);
+  const [messageRows, attachmentRows] = await Promise.all([
+    conversationRows[0]
+      ? db
+          .select({
+            message: messages,
+            sender: users,
+          })
+          .from(messages)
+          .innerJoin(users, eq(messages.senderId, users.id))
+          .where(eq(messages.conversationId, conversationRows[0].id))
+          .orderBy(asc(messages.createdAt))
+      : Promise.resolve([]),
+    applicationIds.length
+      ? db
+          .select()
+          .from(coachingApplicationAttachments)
+          .where(inArray(coachingApplicationAttachments.applicationId, applicationIds))
+          .orderBy(asc(coachingApplicationAttachments.createdAt))
+      : Promise.resolve([]),
+  ]);
+
+  const attachmentsByApplication = new Map<string, CoachingApplicationAttachment[]>();
+
+  attachmentRows.forEach((row) => {
+    const group = attachmentsByApplication.get(row.applicationId) || [];
+    group.push(mapApplicationAttachmentRow(row));
+    attachmentsByApplication.set(row.applicationId, group);
+  });
+
+  return {
+    member: mapProfileRow(memberRow),
+    billing: billingRows[0] ? mapBillingRow(billingRows[0]) : null,
+    assignments: assignmentRows.map((row) => mapAssignmentRow(row)),
+    documents: documentRows.map((row) => mapDocumentRow(row.document, [memberRow.id])),
+    conversation: conversationRows[0] ? mapConversationRow(conversationRows[0]) : null,
+    messages: messageRows.map((row) => mapMessageRow(row)),
+    applications: applicationRows.map((row) =>
+      mapApplicationRow(row, attachmentsByApplication.get(row.id) || []),
+    ),
+  };
 }

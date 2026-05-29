@@ -1,17 +1,33 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-export function AdminPlanForm({ allowSubmit = true }: { allowSubmit?: boolean }) {
+type AdminPlanFormProps = {
+  allowSubmit?: boolean;
+  initialMemberId?: string;
+  memberName?: string;
+  heading?: string;
+};
+
+export function AdminPlanForm({
+  allowSubmit = true,
+  initialMemberId = "",
+  memberName,
+  heading = "Create a coaching plan",
+}: AdminPlanFormProps) {
   const [title, setTitle] = useState("");
   const [summary, setSummary] = useState("");
   const [cadence, setCadence] = useState("");
   const [body, setBody] = useState("");
-  const [memberId, setMemberId] = useState("");
+  const [memberId, setMemberId] = useState(initialMemberId);
   const [startsOn, setStartsOn] = useState("");
   const [notes, setNotes] = useState("");
   const [status, setStatus] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    setMemberId(initialMemberId);
+  }, [initialMemberId]);
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -53,7 +69,7 @@ export function AdminPlanForm({ allowSubmit = true }: { allowSubmit?: boolean })
       setSummary("");
       setCadence("");
       setBody("");
-      setMemberId("");
+      setMemberId(initialMemberId || "");
       setStartsOn("");
       setNotes("");
       setStatus(payload?.message || "Plan saved.");
@@ -64,11 +80,18 @@ export function AdminPlanForm({ allowSubmit = true }: { allowSubmit?: boolean })
     }
   }
 
+  const hasLockedMember = Boolean(initialMemberId);
+
   return (
     <form onSubmit={handleSubmit} className="surface-panel grid grid-cols-1 gap-4 p-6">
       <div>
         <p className="eyebrow">Admin</p>
-        <h3 className="mt-3 text-2xl font-semibold text-[var(--ink)]">Create a coaching plan</h3>
+        <h3 className="mt-3 text-2xl font-semibold text-[var(--ink)]">{heading}</h3>
+        {memberName ? (
+          <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
+            Assign directly to {memberName}.
+          </p>
+        ) : null}
       </div>
 
       <input
@@ -100,13 +123,19 @@ export function AdminPlanForm({ allowSubmit = true }: { allowSubmit?: boolean })
         disabled={!allowSubmit}
         className="w-full rounded-[1rem] border border-[var(--line)] bg-white/80 px-4 py-3 text-[15px] text-[var(--ink)] outline-none focus:border-[var(--accent)]"
       />
-      <input
-        value={memberId}
-        onChange={(event) => setMemberId(event.target.value)}
-        placeholder="Assign to member ID (optional)"
-        disabled={!allowSubmit}
-        className="w-full rounded-[1rem] border border-[var(--line)] bg-white/80 px-4 py-3 text-[15px] text-[var(--ink)] outline-none focus:border-[var(--accent)]"
-      />
+      {hasLockedMember ? (
+        <div className="rounded-[1rem] border border-[var(--line)] bg-white/55 px-4 py-3 text-sm text-[var(--muted)]">
+          Assigned member ID: {memberId}
+        </div>
+      ) : (
+        <input
+          value={memberId}
+          onChange={(event) => setMemberId(event.target.value)}
+          placeholder="Assign to member ID (optional)"
+          disabled={!allowSubmit}
+          className="w-full rounded-[1rem] border border-[var(--line)] bg-white/80 px-4 py-3 text-[15px] text-[var(--ink)] outline-none focus:border-[var(--accent)]"
+        />
+      )}
       <input
         type="date"
         value={startsOn}

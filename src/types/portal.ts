@@ -127,6 +127,16 @@ export type AdminDashboardData = {
   applications: CoachingApplication[];
 };
 
+export type AdminMemberDetailData = {
+  member: PortalProfile;
+  billing: BillingAccount | null;
+  assignments: PlanAssignment[];
+  documents: PortalDocument[];
+  conversation: ConversationThread | null;
+  messages: ConversationMessage[];
+  applications: CoachingApplication[];
+};
+
 export type PortalRuntime = {
   databaseConfigured: boolean;
   authConfigured: boolean;
