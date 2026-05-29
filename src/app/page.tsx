@@ -1,7 +1,10 @@
 import type { CSSProperties } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { CoachingIntakeModal } from "@/components/coaching-intake-modal";
+import {
+  CoachingIntakeButton,
+  CoachingIntakeProvider,
+} from "@/components/coaching-intake-modal";
 import { SectionHeading } from "@/components/section-heading";
 import { SiteHeader } from "@/components/site-header";
 import { siteConfig } from "@/content/site-config";
@@ -170,27 +173,32 @@ export default function Home() {
     ...featuredClientTransformations,
   ];
   const heroHeadlineWords = siteConfig.brand.headline.split(" ");
-  const primaryCtaHref = "#coaching-intake-modal";
+  const primaryCtaHref = "#apply";
   const primaryCtaLabel = "Sign up for coaching";
 
   return (
-    <div className="relative overflow-x-hidden">
-      <div className="grain pointer-events-none fixed inset-0 opacity-50" />
-      <CoachingIntakeModal
-        fields={siteConfig.applicationFields}
-        instagramUrl={siteConfig.links.instagram}
-      />
-      <SiteHeader
-        brandName={siteConfig.brand.name}
-        navItems={navItems}
-        primaryHref={primaryCtaHref}
-        primaryLabel={primaryCtaLabel}
-        secondaryHref="/login"
-        secondaryLabel="Member Login"
-      />
+    <CoachingIntakeProvider
+      fields={siteConfig.applicationFields}
+      instagramUrl={siteConfig.links.instagram}
+    >
+      <div className="relative overflow-x-hidden">
+        <div className="grain pointer-events-none fixed inset-0 opacity-50" />
+        <SiteHeader
+          brandName={siteConfig.brand.name}
+          navItems={navItems}
+          primaryHref={primaryCtaHref}
+          primaryLabel={primaryCtaLabel}
+          primarySlot={
+            <CoachingIntakeButton className="btn-header">
+              {primaryCtaLabel}
+            </CoachingIntakeButton>
+          }
+          secondaryHref="/login"
+          secondaryLabel="Member Login"
+        />
 
-      <main>
-        <section id="top" className="section-shell pt-40 md:pt-32">
+        <main>
+          <section id="top" className="section-shell pt-40 md:pt-32">
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,0.78fr)] lg:items-start">
             <div className="page-reveal min-w-0 lg:pr-6">
               <p className="eyebrow hidden sm:block">{siteConfig.brand.eyebrow}</p>
@@ -209,9 +217,9 @@ export default function Home() {
               </p>
 
               <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
-                <Link href={primaryCtaHref} className="btn-primary w-full text-white sm:w-auto">
+                <CoachingIntakeButton className="btn-primary w-full text-white sm:w-auto">
                   Sign up for coaching
-                </Link>
+                </CoachingIntakeButton>
                 <Link
                   href="#guide"
                   className="btn-secondary w-full text-[var(--ink)] sm:w-auto"
@@ -376,7 +384,7 @@ export default function Home() {
           </div>
         </section>
 
-        <section id="coaching" className="section-shell">
+          <section id="coaching" className="section-shell">
             <div className="dark-panel page-reveal grid grid-cols-1 gap-8 overflow-hidden p-6 sm:p-8 md:p-12 lg:grid-cols-[0.9fr_1.1fr]">
             <div>
               <SectionHeading
@@ -394,9 +402,9 @@ export default function Home() {
               </p>
 
               <div className="mt-8">
-                <Link href={primaryCtaHref} className="btn-ghost">
+                <CoachingIntakeButton className="btn-ghost">
                   {siteConfig.coachingOffer.ctaLabel}
-                </Link>
+                </CoachingIntakeButton>
               </div>
             </div>
 
@@ -636,9 +644,9 @@ export default function Home() {
                   </div>
                 </div>
                 <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
-                  <Link href={primaryCtaHref} className="btn-primary text-white">
+                  <CoachingIntakeButton className="btn-primary text-white">
                     Sign up for coaching
-                  </Link>
+                  </CoachingIntakeButton>
                   <a
                     href={siteConfig.links.instagram}
                     target="_blank"
@@ -651,7 +659,10 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="page-reveal surface-panel overflow-hidden" style={{ animationDelay: "120ms" }}>
+            <div
+              className="page-reveal surface-panel overflow-hidden"
+              style={{ animationDelay: "120ms" }}
+            >
               <div className="border-b border-[var(--line)] bg-white/55 px-6 py-5 sm:px-8">
                 <p className="eyebrow text-[var(--muted)]">Inside the intake</p>
                 <h3 className="mt-2 text-2xl font-semibold text-[var(--ink)]">
@@ -684,42 +695,43 @@ export default function Home() {
               </div>
             </div>
           </div>
-        </section>
-      </main>
+          </section>
+        </main>
 
-      <footer className="section-shell border-t border-[var(--line)] py-8">
-        <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
-          <div>
-            <p className="type-display text-3xl uppercase leading-none text-[var(--ink)]">
-              {siteConfig.brand.name}
-            </p>
-            <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
-              Online physique coaching and a practical guide for maintaining an
-              aesthetic build without living on extremes.
-            </p>
-          </div>
+        <footer className="section-shell border-t border-[var(--line)] py-8">
+          <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
+            <div>
+              <p className="type-display text-3xl uppercase leading-none text-[var(--ink)]">
+                {siteConfig.brand.name}
+              </p>
+              <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
+                Online physique coaching and a practical guide for maintaining an
+                aesthetic build without living on extremes.
+              </p>
+            </div>
 
-          <div className="flex flex-wrap items-center gap-x-6 gap-y-3 text-sm text-[var(--muted)]">
-            <a
-              href={siteConfig.links.instagram}
-              target="_blank"
-              rel="noreferrer"
-              className="quiet-link"
-            >
-              Instagram
-            </a>
-            <Link href={primaryCtaHref} className="quiet-link">
-              Contact
-            </Link>
-            <Link href="/privacy" className="quiet-link">
-              Privacy
-            </Link>
-            <Link href="/terms" className="quiet-link">
-              Terms
-            </Link>
+            <div className="flex flex-wrap items-center gap-x-6 gap-y-3 text-sm text-[var(--muted)]">
+              <a
+                href={siteConfig.links.instagram}
+                target="_blank"
+                rel="noreferrer"
+                className="quiet-link"
+              >
+                Instagram
+              </a>
+              <CoachingIntakeButton className="quiet-link">
+                Contact
+              </CoachingIntakeButton>
+              <Link href="/privacy" className="quiet-link">
+                Privacy
+              </Link>
+              <Link href="/terms" className="quiet-link">
+                Terms
+              </Link>
+            </div>
           </div>
-        </div>
-      </footer>
-    </div>
+        </footer>
+      </div>
+    </CoachingIntakeProvider>
   );
 }

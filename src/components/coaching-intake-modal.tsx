@@ -1,26 +1,55 @@
+"use client";
+
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+  type ReactNode,
+} from "react";
 import { ApplicationForm } from "@/components/application-form";
 import type { ApplicationFormField } from "@/types/site";
 
-type CoachingIntakeModalProps = {
+type IntakeContextValue = {
+  open: () => void;
+  close: () => void;
+};
+
+const CoachingIntakeContext = createContext<IntakeContextValue | null>(null);
+
+type CoachingIntakeProviderProps = {
+  children: ReactNode;
   fields: ApplicationFormField[];
   instagramUrl: string;
 };
 
-export function CoachingIntakeModal({
+type CoachingIntakeButtonProps = {
+  children: ReactNode;
+  className: string;
+};
+
+function ModalContent({
   fields,
   instagramUrl,
-}: CoachingIntakeModalProps) {
+  onClose,
+}: {
+  fields: ApplicationFormField[];
+  instagramUrl: string;
+  onClose: () => void;
+}) {
   return (
     <section
-      id="coaching-intake-modal"
-      className="modal-shell"
       aria-labelledby="coaching-intake-title"
       aria-modal="true"
       role="dialog"
+      className="modal-shell"
     >
-      <a
-        href="#apply"
+      <button
+        type="button"
         aria-label="Close intake questionnaire"
+        onClick={onClose}
         className="absolute inset-0 block"
       />
 
@@ -41,12 +70,13 @@ export function CoachingIntakeModal({
             </p>
           </div>
 
-          <a
-            href="#apply"
+          <button
+            type="button"
+            onClick={onClose}
             className="rounded-full border border-[var(--line)] bg-white/72 px-4 py-2 text-xs uppercase tracking-[0.16em] text-[var(--muted)] hover:bg-white"
           >
             Close
-          </a>
+          </button>
         </div>
 
         <div className="max-h-[calc(100vh-9rem)] overflow-y-auto pb-2">
@@ -54,5 +84,77 @@ export function CoachingIntakeModal({
         </div>
       </div>
     </section>
+  );
+}
+
+export function CoachingIntakeProvider({
+  children,
+  fields,
+  instagramUrl,
+}: CoachingIntakeProviderProps) {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const open = useCallback(() => {
+    setIsOpen(true);
+  }, []);
+
+  const close = useCallback(() => {
+    setIsOpen(false);
+  }, []);
+
+  useEffect(() => {
+    if (!isOpen) {
+      return undefined;
+    }
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    function handleKeydown(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setIsOpen(false);
+      }
+    }
+
+    window.addEventListener("keydown", handleKeydown);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", handleKeydown);
+    };
+  }, [isOpen]);
+
+  const contextValue = useMemo<IntakeContextValue>(
+    () => ({
+      open,
+      close,
+    }),
+    [close, open],
+  );
+
+  return (
+    <CoachingIntakeContext.Provider value={contextValue}>
+      {children}
+      {isOpen ? (
+        <ModalContent fields={fields} instagramUrl={instagramUrl} onClose={close} />
+      ) : null}
+    </CoachingIntakeContext.Provider>
+  );
+}
+
+export function CoachingIntakeButton({
+  children,
+  className,
+}: CoachingIntakeButtonProps) {
+  const context = useContext(CoachingIntakeContext);
+
+  if (!context) {
+    throw new Error("CoachingIntakeButton must be used inside CoachingIntakeProvider.");
+  }
+
+  return (
+    <button type="button" onClick={context.open} className={className}>
+      {children}
+    </button>
   );
 }

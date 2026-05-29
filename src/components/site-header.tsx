@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import Link from "next/link";
 
 type SiteHeaderProps = {
@@ -7,6 +8,7 @@ type SiteHeaderProps = {
   secondaryHref?: string;
   primaryLabel?: string;
   secondaryLabel?: string;
+  primarySlot?: ReactNode;
 };
 
 export function SiteHeader({
@@ -16,6 +18,7 @@ export function SiteHeader({
   secondaryHref,
   primaryLabel = "Apply",
   secondaryLabel = "Member Login",
+  primarySlot,
 }: SiteHeaderProps) {
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-[var(--line)] bg-[rgba(245,239,230,0.8)] backdrop-blur-xl">
@@ -49,9 +52,11 @@ export function SiteHeader({
             </Link>
           ) : null}
 
-          <Link href={primaryHref} className="btn-header">
-            {primaryLabel}
-          </Link>
+          {primarySlot || (
+            <Link href={primaryHref} className="btn-header">
+              {primaryLabel}
+            </Link>
+          )}
         </div>
       </div>
 
