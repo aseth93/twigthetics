@@ -23,16 +23,12 @@ export function PortalShell({
       <div className="mx-auto grid min-h-screen w-full max-w-7xl grid-cols-1 gap-6 px-5 py-5 lg:grid-cols-[18rem_1fr] lg:px-8">
         <aside className="surface-panel h-fit overflow-hidden lg:sticky lg:top-5">
           <div className="border-b border-[var(--line)] px-5 py-5">
-            <div className="flex items-center justify-between gap-4">
-              <Link href="/" className="type-display text-2xl uppercase text-[var(--ink)]">
-                Twigthetics
-              </Link>
-              <span className="rounded-full border border-[var(--line)] px-3 py-1 text-[10px] uppercase tracking-[0.22em] text-[var(--muted)]">
-                {viewer.mode}
-              </span>
-            </div>
+            <Link href="/" className="type-display text-2xl uppercase text-[var(--ink)]">
+              Twigthetics
+            </Link>
             <p className="mt-4 text-sm font-medium text-[var(--ink)]">{viewer.profile.fullName}</p>
-            <p className="mt-1 text-xs uppercase tracking-[0.18em] text-[var(--muted)]">
+            <p className="mt-1 text-sm text-[var(--muted)]">{viewer.profile.email}</p>
+            <p className="mt-2 text-xs uppercase tracking-[0.18em] text-[var(--muted)]">
               {formatRoleLabel(viewer.profile.role)}
             </p>
           </div>

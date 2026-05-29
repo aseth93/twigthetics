@@ -1,63 +1,65 @@
+import { and, eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
+import { getDb } from "@/db";
+import { documentAccess, documents } from "@/db/schema";
 import { getPortalViewer } from "@/lib/portal/auth";
-import { getPortalRuntime, getSiteOrigin } from "@/lib/portal/env";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
 
-export async function GET(
-  request: Request,
-  context: { params: Promise<{ documentId: string }> },
-) {
+type RouteContext = {
+  params: Promise<{
+    documentId: string;
+  }>;
+};
+
+export async function GET(_request: Request, context: RouteContext) {
   const viewer = await getPortalViewer();
 
   if (!viewer) {
-    return NextResponse.redirect(new URL("/login?next=/member/documents", request.url));
+    return NextResponse.json({ error: "You must be logged in." }, { status: 401 });
   }
 
-  const runtime = getPortalRuntime();
-  const origin = getSiteOrigin(new Headers(request.headers));
+  const db = getDb();
 
-  if (!runtime.supabaseConfigured || viewer.mode === "demo") {
-    return NextResponse.redirect(new URL("/member/documents?staged=1", origin));
-  }
-
-  const supabase = await createSupabaseServerClient();
-
-  if (!supabase) {
-    return NextResponse.redirect(new URL("/member/documents?staged=1", origin));
+  if (!db) {
+    return NextResponse.json({ error: "Portal backend is not ready yet." }, { status: 503 });
   }
 
   const { documentId } = await context.params;
-  const { data: documentAccess } =
+  const [document] =
     viewer.profile.role === "coach_admin"
-      ? await supabase
-          .from("documents")
-          .select("bucket, path")
-          .eq("id", documentId)
-          .maybeSingle()
-      : await supabase
-          .from("document_access")
-          .select("document:documents(bucket, path)")
-          .eq("document_id", documentId)
-          .eq("member_id", viewer.profile.id)
-          .maybeSingle();
+      ? await db.select().from(documents).where(eq(documents.id, documentId)).limit(1)
+      : await db
+          .select({
+            id: documents.id,
+            coachId: documents.coachId,
+            title: documents.title,
+            description: documents.description,
+            fileName: documents.fileName,
+            mimeType: documents.mimeType,
+            sizeBytes: documents.sizeBytes,
+            fileBlob: documents.fileBlob,
+            createdAt: documents.createdAt,
+            updatedAt: documents.updatedAt,
+          })
+          .from(documentAccess)
+          .innerJoin(documents, eq(documentAccess.documentId, documents.id))
+          .where(
+            and(
+              eq(documentAccess.memberId, viewer.profile.id),
+              eq(documentAccess.documentId, documentId),
+            ),
+          )
+          .limit(1);
 
-  const documentRow =
-    viewer.profile.role === "coach_admin"
-      ? (documentAccess as { bucket?: string; path?: string } | null)
-      : ((documentAccess as { document?: { bucket?: string; path?: string } | null } | null)
-          ?.document ?? null);
-
-  if (!documentRow?.bucket || !documentRow.path) {
-    return NextResponse.redirect(new URL("/member/documents?missing=1", origin));
+  if (!document) {
+    return NextResponse.json({ error: "Document not found." }, { status: 404 });
   }
 
-  const { data: signedUrlData, error } = await supabase.storage
-    .from(documentRow.bucket)
-    .createSignedUrl(documentRow.path, 60);
-
-  if (error || !signedUrlData?.signedUrl) {
-    return NextResponse.redirect(new URL("/member/documents?missing=1", origin));
-  }
-
-  return NextResponse.redirect(signedUrlData.signedUrl);
+  return new Response(new Uint8Array(document.fileBlob), {
+    headers: {
+      "Content-Type": document.mimeType || "application/octet-stream",
+      "Content-Length": String(document.sizeBytes || document.fileBlob.length),
+      "Content-Disposition": `inline; filename="${encodeURIComponent(document.fileName)}"`,
+      "Cache-Control": "private, no-store",
+    },
+  });
 }

@@ -13,7 +13,6 @@ export type Brand = {
 export type Links = {
   instagram: string;
   guideCheckout: string;
-  applicationEndpoint: string;
 };
 
 export type CoachMetric = {
@@ -94,11 +93,23 @@ export type FaqItem = {
 export type ApplicationFormField = {
   name: string;
   label: string;
-  type: "text" | "email" | "url" | "select" | "textarea";
+  type: "text" | "email" | "url" | "select" | "textarea" | "number" | "date" | "file";
   placeholder?: string;
   helper?: string;
   required?: boolean;
   options?: string[];
+  accept?: string;
+  span?: "half" | "full";
+  requiredWhen?: {
+    field: string;
+    equals: string | string[];
+  };
+  showWhen?: {
+    field: string;
+    equals: string | string[];
+  };
+  minDaysFromToday?: number;
+  requiredWeekday?: number;
 };
 
 export type ProcessStep = {

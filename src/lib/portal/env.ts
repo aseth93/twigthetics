@@ -5,36 +5,39 @@ function getTrimmedEnv(name: string) {
 }
 
 export function getPortalRuntime(): PortalRuntime {
-  const supabaseUrl = getTrimmedEnv("NEXT_PUBLIC_SUPABASE_URL");
-  const supabaseAnonKey = getTrimmedEnv("NEXT_PUBLIC_SUPABASE_ANON_KEY");
+  const databaseUrl = getTrimmedEnv("DATABASE_URL");
+  const authSecret = getTrimmedEnv("NEXTAUTH_SECRET");
   const stripeSecretKey = getTrimmedEnv("STRIPE_SECRET_KEY");
   const stripeWebhookSecret = getTrimmedEnv("STRIPE_WEBHOOK_SECRET");
   const stripePriceId = getTrimmedEnv("STRIPE_COACHING_PRICE_ID");
-  const serviceRoleKey = getTrimmedEnv("SUPABASE_SERVICE_ROLE_KEY");
-  const portalPreviewMode = getTrimmedEnv("PORTAL_PREVIEW_MODE") === "1";
-  const supabaseConfigured = Boolean(supabaseUrl && supabaseAnonKey);
+  const resendApiKey = getTrimmedEnv("RESEND_API_KEY");
+  const resendFromEmail = getTrimmedEnv("RESEND_FROM_EMAIL");
+  const bootstrapAdminEmail = getTrimmedEnv("BOOTSTRAP_ADMIN_EMAIL");
+  const bootstrapAdminPassword = getTrimmedEnv("BOOTSTRAP_ADMIN_PASSWORD");
+  const databaseConfigured = Boolean(databaseUrl);
   const stripeConfigured = Boolean(stripeSecretKey && stripeWebhookSecret);
 
   return {
-    supabaseConfigured,
+    databaseConfigured,
+    authConfigured: Boolean(databaseUrl && authSecret),
     stripeConfigured,
     stripePriceConfigured: Boolean(stripePriceId),
-    serviceRoleConfigured: Boolean(supabaseUrl && serviceRoleKey),
-    previewMode: portalPreviewMode,
-    demoMode:
-      !supabaseConfigured &&
-      (process.env.NODE_ENV !== "production" || portalPreviewMode),
+    emailConfigured: Boolean(resendApiKey && resendFromEmail),
+    bootstrapAdminConfigured: Boolean(
+      databaseUrl && authSecret && bootstrapAdminEmail && bootstrapAdminPassword,
+    ),
   };
 }
 
 export function getSiteOrigin(headersLike?: Headers) {
+  const configuredSiteUrl = getTrimmedEnv("NEXT_PUBLIC_SITE_URL");
   const forwardedHost = headersLike?.get("x-forwarded-host");
   const host = forwardedHost || headersLike?.get("host");
   const forwardedProto = headersLike?.get("x-forwarded-proto");
   const proto = forwardedProto || (host?.includes("localhost") ? "http" : "https");
 
   if (!host) {
-    return "http://127.0.0.1:3000";
+    return configuredSiteUrl || "http://127.0.0.1:3000";
   }
 
   return `${proto}://${host}`;

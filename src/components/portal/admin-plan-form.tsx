@@ -7,6 +7,9 @@ export function AdminPlanForm({ allowSubmit = true }: { allowSubmit?: boolean })
   const [summary, setSummary] = useState("");
   const [cadence, setCadence] = useState("");
   const [body, setBody] = useState("");
+  const [memberId, setMemberId] = useState("");
+  const [startsOn, setStartsOn] = useState("");
+  const [notes, setNotes] = useState("");
   const [status, setStatus] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -32,6 +35,9 @@ export function AdminPlanForm({ allowSubmit = true }: { allowSubmit?: boolean })
           summary,
           cadence,
           body,
+          memberId,
+          startsOn,
+          notes,
         }),
       });
 
@@ -47,6 +53,9 @@ export function AdminPlanForm({ allowSubmit = true }: { allowSubmit?: boolean })
       setSummary("");
       setCadence("");
       setBody("");
+      setMemberId("");
+      setStartsOn("");
+      setNotes("");
       setStatus(payload?.message || "Plan saved.");
     } catch (error) {
       setStatus(error instanceof Error ? error.message : "Unable to save the plan.");
@@ -88,6 +97,28 @@ export function AdminPlanForm({ allowSubmit = true }: { allowSubmit?: boolean })
         onChange={(event) => setBody(event.target.value)}
         rows={6}
         placeholder="Plan notes, training split, nutrition guardrails..."
+        disabled={!allowSubmit}
+        className="w-full rounded-[1rem] border border-[var(--line)] bg-white/80 px-4 py-3 text-[15px] text-[var(--ink)] outline-none focus:border-[var(--accent)]"
+      />
+      <input
+        value={memberId}
+        onChange={(event) => setMemberId(event.target.value)}
+        placeholder="Assign to member ID (optional)"
+        disabled={!allowSubmit}
+        className="w-full rounded-[1rem] border border-[var(--line)] bg-white/80 px-4 py-3 text-[15px] text-[var(--ink)] outline-none focus:border-[var(--accent)]"
+      />
+      <input
+        type="date"
+        value={startsOn}
+        onChange={(event) => setStartsOn(event.target.value)}
+        disabled={!allowSubmit}
+        className="w-full rounded-[1rem] border border-[var(--line)] bg-white/80 px-4 py-3 text-[15px] text-[var(--ink)] outline-none focus:border-[var(--accent)]"
+      />
+      <textarea
+        value={notes}
+        onChange={(event) => setNotes(event.target.value)}
+        rows={3}
+        placeholder="Assignment note for this member (optional)"
         disabled={!allowSubmit}
         className="w-full rounded-[1rem] border border-[var(--line)] bg-white/80 px-4 py-3 text-[15px] text-[var(--ink)] outline-none focus:border-[var(--accent)]"
       />

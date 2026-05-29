@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { formatPortalDateTime } from "@/lib/portal/format";
 import type { ConversationMessage } from "@/types/portal";
 
@@ -21,6 +21,46 @@ export function MessageThread({
   const [body, setBody] = useState("");
   const [status, setStatus] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    setMessages(initialMessages);
+  }, [initialMessages]);
+
+  useEffect(() => {
+    if (!allowSubmit) {
+      return;
+    }
+
+    let isMounted = true;
+
+    async function refreshMessages() {
+      const query = memberId ? `?memberId=${encodeURIComponent(memberId)}` : "";
+      const response = await fetch(`/api/messages${query}`, {
+        cache: "no-store",
+      });
+
+      if (!response.ok) {
+        return;
+      }
+
+      const payload = (await response.json().catch(() => null)) as
+        | { messages?: ConversationMessage[] }
+        | null;
+
+      if (isMounted && payload?.messages) {
+        setMessages(payload.messages);
+      }
+    }
+
+    const interval = window.setInterval(() => {
+      void refreshMessages();
+    }, 15000);
+
+    return () => {
+      isMounted = false;
+      window.clearInterval(interval);
+    };
+  }, [allowSubmit, memberId]);
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -125,11 +165,6 @@ export function MessageThread({
           </button>
           {status ? <p className="text-sm text-[#8a3c2d]">{status}</p> : null}
         </div>
-        {!allowSubmit ? (
-          <p className="text-xs leading-6 text-[var(--muted)]">
-            Message sending activates after the live backend is connected.
-          </p>
-        ) : null}
       </form>
     </div>
   );

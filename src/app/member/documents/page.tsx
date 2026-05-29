@@ -12,13 +12,6 @@ export default async function MemberDocumentsPage() {
 
   return (
     <div className="grid grid-cols-1 gap-6">
-      {viewer.mode === "demo" ? (
-        <article className="rounded-[1.2rem] border border-[rgba(141,107,61,0.22)] bg-[rgba(141,107,61,0.08)] px-4 py-4 text-sm leading-6 text-[var(--ink)]">
-          Document storage is staged but not live yet. This page previews the member file
-          area before secure uploads are connected.
-        </article>
-      ) : null}
-
       {dashboard.documents.length ? (
         dashboard.documents.map((document) => (
           <article key={document.id} className="surface-panel p-6">
@@ -32,16 +25,12 @@ export default async function MemberDocumentsPage() {
                   {document.description || "Secure coaching document"}
                 </p>
               </div>
-              {viewer.mode === "demo" ? (
-                <span className="btn-disabled min-h-11">Preview only</span>
-              ) : (
-                <Link
-                  href={`/api/member/documents/${document.id}`}
-                  className="btn-secondary min-h-11"
-                >
-                  Open file
-                </Link>
-              )}
+              <Link
+                href={`/api/member/documents/${document.id}`}
+                className="btn-secondary min-h-11"
+              >
+                Open file
+              </Link>
             </div>
 
             <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-3">

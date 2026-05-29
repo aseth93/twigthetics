@@ -19,9 +19,9 @@ export default async function AdminDashboardPage() {
     <div className="space-y-6">
       <RuntimeBanner
         viewer={viewer}
-        supabaseConfigured={runtime.supabaseConfigured}
+        databaseConfigured={runtime.databaseConfigured}
+        emailConfigured={runtime.emailConfigured}
         stripeConfigured={runtime.stripeConfigured}
-        demoMode={runtime.demoMode}
       />
 
       <section className="grid grid-cols-1 gap-4 md:grid-cols-4">
@@ -112,8 +112,8 @@ export default async function AdminDashboardPage() {
       </section>
 
       <section className="grid grid-cols-1 gap-6 xl:grid-cols-2">
-        <AdminPlanForm allowSubmit={viewer.mode !== "demo"} />
-        <AdminDocumentForm allowSubmit={viewer.mode !== "demo"} />
+        <AdminPlanForm allowSubmit />
+        <AdminDocumentForm allowSubmit />
       </section>
 
       <section className="grid grid-cols-1 gap-6">
@@ -131,7 +131,7 @@ export default async function AdminDashboardPage() {
                 </p>
               </article>
               <MessageThread
-                allowSubmit={viewer.mode !== "demo"}
+                allowSubmit
                 memberId={conversation.member.id}
                 initialMessages={conversation.messages}
                 emptyLabel="No messages in this thread yet."

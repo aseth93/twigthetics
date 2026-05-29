@@ -16,17 +16,21 @@ services:
         value: https://www.instagram.com/twigthetics/
       - key: NEXT_PUBLIC_SITE_URL
         sync: false
-      - key: PORTAL_PREVIEW_MODE
-        value: "1"
       - key: NEXT_PUBLIC_GUIDE_CHECKOUT_URL
         sync: false
-      - key: NEXT_PUBLIC_APPLICATION_ENDPOINT
+      - key: DATABASE_URL
         sync: false
-      - key: NEXT_PUBLIC_SUPABASE_URL
+      - key: NEXTAUTH_SECRET
         sync: false
-      - key: NEXT_PUBLIC_SUPABASE_ANON_KEY
+      - key: RESEND_API_KEY
         sync: false
-      - key: SUPABASE_SERVICE_ROLE_KEY
+      - key: RESEND_FROM_EMAIL
+        sync: false
+      - key: BOOTSTRAP_ADMIN_EMAIL
+        sync: false
+      - key: BOOTSTRAP_ADMIN_PASSWORD
+        sync: false
+      - key: BOOTSTRAP_ADMIN_NAME
         sync: false
       - key: STRIPE_SECRET_KEY
         sync: false

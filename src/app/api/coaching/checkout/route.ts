@@ -1,6 +1,7 @@
 import Stripe from "stripe";
 import { NextResponse } from "next/server";
 import { getSiteOrigin } from "@/lib/portal/env";
+import { upsertStripeCheckoutSessionRecord } from "@/lib/portal/billing";
 
 function getTrimmedEnv(name: string) {
   return process.env[name]?.trim() || "";
@@ -31,9 +32,21 @@ export async function GET(request: Request) {
       phone_number_collection: {
         enabled: true,
       },
-      success_url: `${origin}/?checkout=success#coaching`,
+      metadata: {
+        source: "public-coaching-checkout",
+        priceId,
+      },
+      subscription_data: {
+        metadata: {
+          source: "public-coaching-checkout",
+          priceId,
+        },
+      },
+      success_url: `${origin}/signup?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/?checkout=cancelled#coaching`,
     });
+
+    await upsertStripeCheckoutSessionRecord(session);
 
     return NextResponse.redirect(session.url!, 303);
   } catch {

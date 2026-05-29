@@ -1,22 +1,17 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { signOut } from "next-auth/react";
 import { useState } from "react";
 
 export function LogoutButton() {
-  const router = useRouter();
   const [isPending, setIsPending] = useState(false);
 
   async function handleLogout() {
     try {
       setIsPending(true);
-
-      await fetch("/api/auth/logout", {
-        method: "POST",
+      await signOut({
+        callbackUrl: "/login",
       });
-
-      router.push("/login");
-      router.refresh();
     } finally {
       setIsPending(false);
     }

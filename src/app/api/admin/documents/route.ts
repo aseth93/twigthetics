@@ -1,10 +1,9 @@
-import { randomUUID } from "node:crypto";
 import { NextResponse } from "next/server";
+import { getDb } from "@/db";
+import { documentAccess, documents } from "@/db/schema";
 import { getPortalViewer } from "@/lib/portal/auth";
-import { getPortalRuntime } from "@/lib/portal/env";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
 
-const documentBucket = "member-documents";
+const maxDocumentBytes = 15 * 1024 * 1024;
 
 export async function POST(request: Request) {
   const viewer = await getPortalViewer();
@@ -30,68 +29,49 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Document title is required." }, { status: 400 });
   }
 
-  const runtime = getPortalRuntime();
-
-  if (!runtime.supabaseConfigured || viewer.mode === "demo") {
-    return NextResponse.json({
-      ok: true,
-      message:
-        "Document upload previewed successfully. Live storage starts once Supabase is connected.",
-    });
+  if (file.size > maxDocumentBytes) {
+    return NextResponse.json(
+      { error: "Document uploads are capped at 15 MB for now." },
+      { status: 400 },
+    );
   }
 
-  const supabase = await createSupabaseServerClient();
+  const db = getDb();
 
-  if (!supabase) {
+  if (!db) {
     return NextResponse.json({ error: "Portal backend is not ready yet." }, { status: 503 });
   }
 
-  const filePath = `${viewer.profile.id}/${randomUUID()}-${file.name}`;
-  const uploadBuffer = Buffer.from(await file.arrayBuffer());
-  const { error: uploadError } = await supabase.storage
-    .from(documentBucket)
-    .upload(filePath, uploadBuffer, {
-      contentType: file.type,
-      upsert: false,
-    });
-
-  if (uploadError) {
-    return NextResponse.json({ error: uploadError.message }, { status: 500 });
-  }
-
-  const { data: documentRow, error: documentError } = await supabase
-    .from("documents")
-    .insert({
-      coach_id: viewer.profile.id,
+  const fileBlob = Buffer.from(await file.arrayBuffer());
+  const insertedDocuments = await db
+    .insert(documents)
+    .values({
+      coachId: viewer.profile.id,
       title,
-      description,
-      file_name: file.name,
-      mime_type: file.type,
-      size_bytes: file.size,
-      bucket: documentBucket,
-      path: filePath,
+      description: description || null,
+      fileName: file.name,
+      mimeType: file.type || "application/octet-stream",
+      sizeBytes: file.size,
+      fileBlob,
+      createdAt: new Date(),
+      updatedAt: new Date(),
     })
-    .select("id")
-    .single();
+    .returning({ id: documents.id });
 
-  if (documentError || !documentRow) {
-    return NextResponse.json(
-      { error: documentError?.message || "Unable to save document metadata." },
-      { status: 500 },
-    );
+  const document = insertedDocuments[0];
+
+  if (!document) {
+    return NextResponse.json({ error: "Unable to save the document." }, { status: 500 });
   }
 
   if (memberIds.length) {
-    const { error: accessError } = await supabase.from("document_access").insert(
+    await db.insert(documentAccess).values(
       memberIds.map((memberId) => ({
-        document_id: documentRow.id,
-        member_id: memberId,
+        documentId: document.id,
+        memberId,
+        createdAt: new Date(),
       })),
     );
-
-    if (accessError) {
-      return NextResponse.json({ error: accessError.message }, { status: 500 });
-    }
   }
 
   return NextResponse.json({ ok: true, message: "Document uploaded." });

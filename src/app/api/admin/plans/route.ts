@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
+import { getDb } from "@/db";
+import { planAssignments, plans } from "@/db/schema";
 import { getPortalViewer } from "@/lib/portal/auth";
-import { getPortalRuntime } from "@/lib/portal/env";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 export async function POST(request: Request) {
   const viewer = await getPortalViewer();
@@ -16,6 +16,9 @@ export async function POST(request: Request) {
         summary?: string;
         cadence?: string;
         body?: string;
+        memberId?: string;
+        startsOn?: string;
+        notes?: string;
       }
     | null;
 
@@ -26,32 +29,48 @@ export async function POST(request: Request) {
     );
   }
 
-  const runtime = getPortalRuntime();
+  const db = getDb();
 
-  if (!runtime.supabaseConfigured || viewer.mode === "demo") {
-    return NextResponse.json({
-      ok: true,
-      message: "Plan saved in demo mode. Live persistence starts once Supabase is connected.",
-    });
-  }
-
-  const supabase = await createSupabaseServerClient();
-
-  if (!supabase) {
+  if (!db) {
     return NextResponse.json({ error: "Portal backend is not ready yet." }, { status: 503 });
   }
 
-  const { error } = await supabase.from("plans").insert({
-    coach_id: viewer.profile.id,
-    title: payload.title.trim(),
-    summary: payload.summary?.trim() || "",
-    cadence: payload.cadence?.trim() || "",
-    body: payload.body.trim(),
-  });
+  const insertedPlans = await db
+    .insert(plans)
+    .values({
+      coachId: viewer.profile.id,
+      title: payload.title.trim(),
+      summary: payload.summary?.trim() || "",
+      cadence: payload.cadence?.trim() || "",
+      body: payload.body.trim(),
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    })
+    .returning();
 
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  const plan = insertedPlans[0];
+
+  if (!plan) {
+    return NextResponse.json({ error: "Unable to save the plan." }, { status: 500 });
   }
 
-  return NextResponse.json({ ok: true, message: "Plan saved." });
+  const memberId = payload.memberId?.trim() || "";
+
+  if (memberId) {
+    await db.insert(planAssignments).values({
+      memberId,
+      planId: plan.id,
+      assignedByUserId: viewer.profile.id,
+      status: "active",
+      startsOn: payload.startsOn?.trim() || null,
+      notes: payload.notes?.trim() || null,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    });
+  }
+
+  return NextResponse.json({
+    ok: true,
+    message: memberId ? "Plan saved and assigned." : "Plan saved.",
+  });
 }

@@ -10,15 +10,72 @@ type ApplicationFormProps = {
 };
 
 type FormState = Record<string, string>;
+type FileState = Record<string, File | null>;
 type ErrorState = Record<string, string>;
 
 const emailPattern = /\S+@\S+\.\S+/;
 
 function buildInitialState(fields: ApplicationFormField[]): FormState {
   return fields.reduce<FormState>((accumulator, field) => {
-    accumulator[field.name] = "";
+    if (field.type !== "file") {
+      accumulator[field.name] = "";
+    }
     return accumulator;
   }, {});
+}
+
+function buildInitialFiles(fields: ApplicationFormField[]): FileState {
+  return fields.reduce<FileState>((accumulator, field) => {
+    if (field.type === "file") {
+      accumulator[field.name] = null;
+    }
+    return accumulator;
+  }, {});
+}
+
+function matchesCondition(
+  condition:
+    | {
+        field: string;
+        equals: string | string[];
+      }
+    | undefined,
+  values: FormState,
+) {
+  if (!condition) {
+    return true;
+  }
+
+  const currentValue = values[condition.field] || "";
+  const matches = Array.isArray(condition.equals)
+    ? condition.equals.includes(currentValue)
+    : currentValue === condition.equals;
+
+  return matches;
+}
+
+function startOfToday() {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  return today;
+}
+
+function addDays(date: Date, days: number) {
+  const next = new Date(date);
+  next.setDate(next.getDate() + days);
+  return next;
+}
+
+function parseDateValue(value: string) {
+  return value ? new Date(`${value}T00:00:00`) : null;
+}
+
+function formatDateValue(date: Date) {
+  return date.toISOString().slice(0, 10);
+}
+
+function getVisibleFields(fields: ApplicationFormField[], values: FormState) {
+  return fields.filter((field) => matchesCondition(field.showWhen, values));
 }
 
 export function ApplicationForm({
@@ -27,9 +84,12 @@ export function ApplicationForm({
   instagramUrl,
 }: ApplicationFormProps) {
   const initialState = useMemo(() => buildInitialState(fields), [fields]);
+  const initialFiles = useMemo(() => buildInitialFiles(fields), [fields]);
   const [values, setValues] = useState<FormState>(initialState);
+  const [files, setFiles] = useState<FileState>(initialFiles);
   const [errors, setErrors] = useState<ErrorState>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [resetKey, setResetKey] = useState(0);
   const [status, setStatus] = useState<{
     tone: "idle" | "success" | "error";
     message: string;
@@ -38,19 +98,59 @@ export function ApplicationForm({
     message: "",
   });
 
-  function validate(nextValues: FormState) {
+  const visibleFields = useMemo(() => getVisibleFields(fields, values), [fields, values]);
+
+  function validate(nextValues: FormState, nextFiles: FileState) {
     const nextErrors: ErrorState = {};
 
-    fields.forEach((field) => {
+    visibleFields.forEach((field) => {
+      const isConditionallyRequired = matchesCondition(field.requiredWhen, nextValues);
+      const isRequired = field.required || Boolean(field.requiredWhen && isConditionallyRequired);
+
+      if (field.type === "file") {
+        const file = nextFiles[field.name];
+
+        if (isRequired && !file) {
+          nextErrors[field.name] = "This file is required.";
+        }
+
+        return;
+      }
+
       const value = nextValues[field.name]?.trim() ?? "";
 
-      if (field.required && !value) {
+      if (isRequired && !value) {
         nextErrors[field.name] = "This field is required.";
         return;
       }
 
       if (field.type === "email" && value && !emailPattern.test(value)) {
         nextErrors[field.name] = "Enter a valid email address.";
+        return;
+      }
+
+      if (field.type === "date" && value) {
+        const selectedDate = parseDateValue(value);
+
+        if (!selectedDate || Number.isNaN(selectedDate.getTime())) {
+          nextErrors[field.name] = "Choose a valid date.";
+          return;
+        }
+
+        if (
+          typeof field.minDaysFromToday === "number" &&
+          selectedDate < addDays(startOfToday(), field.minDaysFromToday)
+        ) {
+          nextErrors[field.name] = `Pick a date at least ${field.minDaysFromToday} days out.`;
+          return;
+        }
+
+        if (
+          typeof field.requiredWeekday === "number" &&
+          selectedDate.getDay() !== field.requiredWeekday
+        ) {
+          nextErrors[field.name] = "Pick a Monday start date.";
+        }
       }
     });
 
@@ -62,19 +162,32 @@ export function ApplicationForm({
     event.preventDefault();
     setStatus({ tone: "idle", message: "" });
 
-    if (!validate(values) || !hasEndpoint) {
+    if (!validate(values, files) || !hasEndpoint) {
       return;
     }
 
     try {
       setIsSubmitting(true);
 
+      const formData = new FormData();
+
+      visibleFields.forEach((field) => {
+        if (field.type === "file") {
+          const file = files[field.name];
+
+          if (file) {
+            formData.append(field.name, file);
+          }
+
+          return;
+        }
+
+        formData.append(field.name, values[field.name] || "");
+      });
+
       const response = await fetch("/api/apply", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(values),
+        body: formData,
       });
 
       const payload = (await response.json().catch(() => null)) as
@@ -86,11 +199,13 @@ export function ApplicationForm({
       }
 
       setValues(initialState);
+      setFiles(initialFiles);
       setErrors({});
+      setResetKey((current) => current + 1);
       setStatus({
         tone: "success",
         message:
-          "Application sent. Expect the next step once submissions are wired into the live workflow.",
+          "Intake received. If the fit looks right, you’ll get the next coaching step directly.",
       });
     } catch (error) {
       setStatus({
@@ -98,30 +213,55 @@ export function ApplicationForm({
         message:
           error instanceof Error
             ? error.message
-            : "Something went wrong while submitting the application.",
+            : "Something went wrong while submitting your intake.",
       });
     } finally {
       setIsSubmitting(false);
     }
   }
 
+  function handleValueChange(fieldName: string, nextValue: string) {
+    setValues((current) => ({ ...current, [fieldName]: nextValue }));
+    if (errors[fieldName]) {
+      setErrors((current) => ({ ...current, [fieldName]: "" }));
+    }
+  }
+
+  function handleFileChange(fieldName: string, nextFile: File | null) {
+    setFiles((current) => ({ ...current, [fieldName]: nextFile }));
+    if (errors[fieldName]) {
+      setErrors((current) => ({ ...current, [fieldName]: "" }));
+    }
+  }
+
   function renderField(field: ApplicationFormField) {
+    const commonClassName =
+      "w-full rounded-[1.15rem] border border-[var(--line)] bg-white/80 px-4 py-3 text-[15px] text-[var(--ink)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--accent)] focus:bg-white";
+
+    if (field.type === "file") {
+      return (
+        <input
+          key={`${field.name}-${resetKey}`}
+          id={field.name}
+          name={field.name}
+          type="file"
+          accept={field.accept}
+          onChange={(event) => handleFileChange(field.name, event.target.files?.[0] || null)}
+          aria-invalid={Boolean(errors[field.name])}
+          className={`${commonClassName} file:mr-4 file:rounded-full file:border-0 file:bg-[var(--ink)] file:px-4 file:py-2 file:text-sm file:text-white`}
+        />
+      );
+    }
+
     const commonProps = {
       id: field.name,
       name: field.name,
-      value: values[field.name],
+      value: values[field.name] || "",
       onChange: (
         event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
-      ) => {
-        const nextValue = event.target.value;
-        setValues((current) => ({ ...current, [field.name]: nextValue }));
-        if (errors[field.name]) {
-          setErrors((current) => ({ ...current, [field.name]: "" }));
-        }
-      },
+      ) => handleValueChange(field.name, event.target.value),
       "aria-invalid": Boolean(errors[field.name]),
-      className:
-        "w-full rounded-[1.15rem] border border-[var(--line)] bg-white/80 px-4 py-3 text-[15px] text-[var(--ink)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--accent)] focus:bg-white",
+      className: commonClassName,
     };
 
     if (field.type === "textarea") {
@@ -147,22 +287,23 @@ export function ApplicationForm({
         type={field.type}
         placeholder={field.placeholder}
         autoComplete="off"
+        min={
+          field.type === "date" && typeof field.minDaysFromToday === "number"
+            ? formatDateValue(addDays(startOfToday(), field.minDaysFromToday))
+            : undefined
+        }
       />
     );
   }
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      noValidate
-      className="surface-panel p-6 sm:p-8 md:p-10"
-    >
+    <form onSubmit={handleSubmit} noValidate className="surface-panel p-6 sm:p-8 md:p-10">
       <div className="grid grid-cols-1 gap-4 sm:gap-5 md:grid-cols-2">
-        {fields.map((field) => (
+        {visibleFields.map((field) => (
           <label
             key={field.name}
             htmlFor={field.name}
-            className={field.type === "textarea" ? "md:col-span-2" : ""}
+            className={field.span === "full" || field.type === "textarea" ? "md:col-span-2" : ""}
           >
             <span className="mb-2 block text-sm font-medium text-[var(--ink)]">
               {field.label}
@@ -191,22 +332,18 @@ export function ApplicationForm({
           {isSubmitting
             ? "Submitting..."
             : hasEndpoint
-              ? "Submit Application"
-              : "Applications Reopen Soon"}
+              ? "Submit Intake"
+              : "Intake Reopens Soon"}
         </button>
 
-        <a
-          href={instagramUrl}
-          target="_blank"
-          rel="noreferrer"
-          className="quiet-link"
-        >
+        <a href={instagramUrl} target="_blank" rel="noreferrer" className="quiet-link">
           DM on Instagram instead
         </a>
       </div>
 
       <p className="mt-4 text-xs leading-6 text-[var(--muted)]">
-        Your information is used only to review coaching fit and next steps.
+        Your information and progress photos are used only to review coaching fit and next
+        steps.
       </p>
 
       {status.message ? (

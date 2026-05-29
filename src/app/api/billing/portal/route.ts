@@ -1,13 +1,16 @@
+import { eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
+import { getDb } from "@/db";
+import { billingAccounts } from "@/db/schema";
 import { getPortalViewer } from "@/lib/portal/auth";
-import { getPortalRuntime, getSiteOrigin } from "@/lib/portal/env";
+import { getSiteOrigin } from "@/lib/portal/env";
 import { getStripeClient } from "@/lib/portal/stripe";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 export async function GET(request: Request) {
   const viewer = await getPortalViewer();
-  const runtime = getPortalRuntime();
   const origin = getSiteOrigin(new Headers(request.headers));
+  const db = getDb();
+  const stripe = getStripeClient();
 
   if (!viewer) {
     return NextResponse.redirect(new URL("/login?next=/member/billing", origin));
@@ -17,29 +20,22 @@ export async function GET(request: Request) {
     return NextResponse.redirect(new URL("/admin", origin));
   }
 
-  if (viewer.mode === "demo" || !runtime.stripeConfigured || !runtime.supabaseConfigured) {
-    return NextResponse.redirect(new URL("/member/billing?staged=1", origin));
+  if (!db || !stripe) {
+    return NextResponse.redirect(new URL("/member/billing?status=unavailable", origin));
   }
 
-  const supabase = await createSupabaseServerClient();
-  const stripe = getStripeClient();
+  const [billingAccount] = await db
+    .select({ stripeCustomerId: billingAccounts.stripeCustomerId })
+    .from(billingAccounts)
+    .where(eq(billingAccounts.memberId, viewer.profile.id))
+    .limit(1);
 
-  if (!supabase || !stripe) {
-    return NextResponse.redirect(new URL("/member/billing?staged=1", origin));
-  }
-
-  const { data: billingAccount } = await supabase
-    .from("billing_accounts")
-    .select("stripe_customer_id")
-    .eq("member_id", viewer.profile.id)
-    .maybeSingle();
-
-  if (!billingAccount?.stripe_customer_id) {
-    return NextResponse.redirect(new URL("/member/billing?staged=1", origin));
+  if (!billingAccount?.stripeCustomerId) {
+    return NextResponse.redirect(new URL("/member/billing?status=missing", origin));
   }
 
   const session = await stripe.billingPortal.sessions.create({
-    customer: billingAccount.stripe_customer_id,
+    customer: billingAccount.stripeCustomerId,
     return_url: `${origin}/member/billing`,
   });
 

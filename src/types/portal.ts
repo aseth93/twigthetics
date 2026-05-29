@@ -1,6 +1,6 @@
 export type ApplicationRole = "member" | "coach_admin";
 
-export type PortalMode = "live" | "demo";
+export type PortalMode = "live";
 
 export type PortalProfile = {
   id: string;
@@ -106,10 +106,10 @@ export type AdminDashboardData = {
 };
 
 export type PortalRuntime = {
-  supabaseConfigured: boolean;
+  databaseConfigured: boolean;
+  authConfigured: boolean;
   stripeConfigured: boolean;
   stripePriceConfigured: boolean;
-  serviceRoleConfigured: boolean;
-  demoMode: boolean;
-  previewMode: boolean;
+  emailConfigured: boolean;
+  bootstrapAdminConfigured: boolean;
 };

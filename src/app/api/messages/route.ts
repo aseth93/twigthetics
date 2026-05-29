@@ -1,7 +1,96 @@
+import { and, eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
+import { getDb } from "@/db";
+import { conversations, messages } from "@/db/schema";
 import { getPortalViewer } from "@/lib/portal/auth";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
-import { getPortalRuntime } from "@/lib/portal/env";
+import { getConversationMessages } from "@/lib/portal/data";
+
+async function getOrCreateConversation(memberId: string, coachId?: string | null) {
+  const db = getDb();
+
+  if (!db) {
+    return null;
+  }
+
+  const existingConversation = await db
+    .select()
+    .from(conversations)
+    .where(eq(conversations.memberId, memberId))
+    .limit(1);
+
+  if (existingConversation[0]) {
+    return existingConversation[0];
+  }
+
+  const insertedConversation = await db
+    .insert(conversations)
+    .values({
+      memberId,
+      coachId: coachId || null,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    })
+    .returning();
+
+  return insertedConversation[0] || null;
+}
+
+export async function GET(request: Request) {
+  const viewer = await getPortalViewer();
+
+  if (!viewer) {
+    return NextResponse.json({ error: "You must be logged in." }, { status: 401 });
+  }
+
+  const db = getDb();
+
+  if (!db) {
+    return NextResponse.json({ error: "Portal backend is not ready yet." }, { status: 503 });
+  }
+
+  const { searchParams } = new URL(request.url);
+  const memberId =
+    viewer.profile.role === "coach_admin"
+      ? searchParams.get("memberId")?.trim() || ""
+      : viewer.profile.id;
+
+  if (!memberId) {
+    return NextResponse.json(
+      { error: "Choose a client before opening an admin thread." },
+      { status: 400 },
+    );
+  }
+
+  const [conversation] = await db
+    .select()
+    .from(conversations)
+    .where(eq(conversations.memberId, memberId))
+    .limit(1);
+
+  if (!conversation) {
+    return NextResponse.json({
+      ok: true,
+      conversation: null,
+      messages: [],
+    });
+  }
+
+  const threadMessages = await getConversationMessages({
+    conversationId: conversation.id,
+  });
+
+  return NextResponse.json({
+    ok: true,
+    conversation: {
+      id: conversation.id,
+      memberId: conversation.memberId,
+      coachId: conversation.coachId,
+      createdAt: conversation.createdAt.toISOString(),
+      updatedAt: conversation.updatedAt.toISOString(),
+    },
+    messages: threadMessages,
+  });
+}
 
 export async function POST(request: Request) {
   const viewer = await getPortalViewer();
@@ -23,30 +112,14 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Message body is required." }, { status: 400 });
   }
 
-  const runtime = getPortalRuntime();
+  const db = getDb();
 
-  if (!runtime.supabaseConfigured || viewer.mode === "demo") {
-    return NextResponse.json({
-      ok: true,
-      message: {
-        id: `demo-${Date.now()}`,
-        body,
-        createdAt: new Date().toISOString(),
-        readAt: null,
-        sender: viewer.profile,
-        conversationId: payload?.memberId || viewer.profile.id,
-      },
-    });
-  }
-
-  const supabase = await createSupabaseServerClient();
-
-  if (!supabase) {
+  if (!db) {
     return NextResponse.json({ error: "Portal backend is not ready yet." }, { status: 503 });
   }
 
   const memberId =
-    viewer.profile.role === "coach_admin" ? payload?.memberId?.trim() : viewer.profile.id;
+    viewer.profile.role === "coach_admin" ? payload?.memberId?.trim() || "" : viewer.profile.id;
 
   if (!memberId) {
     return NextResponse.json(
@@ -55,65 +128,51 @@ export async function POST(request: Request) {
     );
   }
 
-  const { data: existingConversation } = await supabase
-    .from("conversations")
-    .select("id")
-    .eq("member_id", memberId)
-    .maybeSingle();
+  const conversation = await getOrCreateConversation(
+    memberId,
+    viewer.profile.role === "coach_admin" ? viewer.profile.id : null,
+  );
 
-  let conversationId = existingConversation?.id as string | undefined;
-
-  if (!conversationId) {
-    const { data: insertedConversation, error: conversationError } = await supabase
-      .from("conversations")
-      .insert({
-        member_id: memberId,
-        coach_id: viewer.profile.role === "coach_admin" ? viewer.profile.id : null,
-      })
-      .select("id")
-      .single();
-
-    if (conversationError || !insertedConversation) {
-      return NextResponse.json(
-        { error: "Unable to create a conversation thread." },
-        { status: 500 },
-      );
-    }
-
-    conversationId = insertedConversation.id;
+  if (!conversation) {
+    return NextResponse.json(
+      { error: "Unable to create a conversation thread." },
+      { status: 500 },
+    );
   }
 
-  const { data: insertedMessage, error: messageError } = await supabase
-    .from("messages")
-    .insert({
-      conversation_id: conversationId,
-      sender_id: viewer.profile.id,
+  const insertedMessages = await db
+    .insert(messages)
+    .values({
+      conversationId: conversation.id,
+      senderId: viewer.profile.id,
       body,
+      createdAt: new Date(),
     })
-    .select("id, body, created_at, read_at, conversation_id")
-    .single();
+    .returning();
 
-  if (messageError || !insertedMessage) {
+  const insertedMessage = insertedMessages[0];
+
+  if (!insertedMessage) {
     return NextResponse.json({ error: "Unable to send the message." }, { status: 500 });
   }
 
-  await supabase
-    .from("conversations")
-    .update({
-      updated_at: new Date().toISOString(),
-      coach_id: viewer.profile.role === "coach_admin" ? viewer.profile.id : null,
+  await db
+    .update(conversations)
+    .set({
+      updatedAt: new Date(),
+      coachId: viewer.profile.role === "coach_admin" ? viewer.profile.id : conversation.coachId,
     })
-    .eq("id", conversationId);
+    .where(and(eq(conversations.id, conversation.id), eq(conversations.memberId, memberId)));
 
   return NextResponse.json({
     ok: true,
     message: {
       id: insertedMessage.id,
       body: insertedMessage.body,
-      createdAt: insertedMessage.created_at,
-      readAt: insertedMessage.read_at,
+      createdAt: insertedMessage.createdAt.toISOString(),
+      readAt: insertedMessage.readAt?.toISOString() || null,
       sender: viewer.profile,
-      conversationId: insertedMessage.conversation_id,
+      conversationId: insertedMessage.conversationId,
     },
   });
 }

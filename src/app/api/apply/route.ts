@@ -1,63 +1,117 @@
 import { NextResponse } from "next/server";
+import { getDb } from "@/db";
+import {
+  coachingApplicationAttachments,
+  coachingApplications,
+} from "@/db/schema";
 
-const applicationEndpoint =
-  process.env.NEXT_PUBLIC_APPLICATION_ENDPOINT?.trim() || "";
+const maxAttachmentBytes = 15 * 1024 * 1024;
 
-export async function POST(request: Request) {
-  const payload = (await request.json().catch(() => null)) as
-    | Record<string, string>
-    | null;
+function readString(payload: Record<string, string>, keys: string[]) {
+  for (const key of keys) {
+    const value = payload[key]?.trim();
 
-  if (!payload || typeof payload !== "object") {
-    return NextResponse.json(
-      { error: "Invalid application payload." },
-      { status: 400 },
-    );
+    if (value) {
+      return value;
+    }
   }
 
-  if (!applicationEndpoint) {
+  return null;
+}
+
+export async function POST(request: Request) {
+  const formData = await request.formData().catch(() => null);
+
+  if (!formData) {
+    return NextResponse.json({ error: "Invalid application payload." }, { status: 400 });
+  }
+
+  const db = getDb();
+
+  if (!db) {
     return NextResponse.json(
       {
-        error:
-          "Application submissions are not connected yet. Add NEXT_PUBLIC_APPLICATION_ENDPOINT to activate the form.",
+        error: "Application submissions are not connected yet. Add DATABASE_URL to activate the form.",
       },
       { status: 503 },
     );
   }
 
-  try {
-    const upstreamResponse = await fetch(applicationEndpoint, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      body: JSON.stringify({
-        source: "twigthetics-site",
-        submittedAt: new Date().toISOString(),
-        ...payload,
-      }),
-      cache: "no-store",
-    });
+  const payload: Record<string, string> = {};
+  const attachments: Array<{
+    fieldName: string;
+    file: File;
+  }> = [];
 
-    if (!upstreamResponse.ok) {
-      const message = await upstreamResponse.text();
+  for (const [key, value] of formData.entries()) {
+    if (value instanceof File) {
+      if (value.size > 0) {
+        if (value.size > maxAttachmentBytes) {
+          return NextResponse.json(
+            { error: `${value.name} is too large. Keep each image under 15 MB.` },
+            { status: 400 },
+          );
+        }
 
-      return NextResponse.json(
-        {
-          error:
-            message.slice(0, 180) ||
-            "The application endpoint rejected the submission.",
-        },
-        { status: 502 },
-      );
+        attachments.push({
+          fieldName: key,
+          file: value,
+        });
+      }
+
+      continue;
     }
 
-    return NextResponse.json({ ok: true });
-  } catch {
+    payload[key] = value;
+  }
+
+  const fullName = readString(payload, ["fullName", "name"]);
+  const email = readString(payload, ["email"]);
+
+  if (!fullName || !email) {
     return NextResponse.json(
-      { error: "Unable to reach the application endpoint right now." },
-      { status: 502 },
+      { error: "Full name and email are required." },
+      { status: 400 },
     );
   }
+
+  await db.transaction(async (tx) => {
+    const insertedApplications = await tx
+      .insert(coachingApplications)
+      .values({
+        fullName,
+        email,
+        instagramHandle: readString(payload, ["instagramHandle", "instagram"]) || null,
+        status: "new",
+        payload,
+        submittedAt: new Date(),
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      })
+      .returning({ id: coachingApplications.id });
+
+    const application = insertedApplications[0];
+
+    if (!application) {
+      throw new Error("Unable to save the intake.");
+    }
+
+    if (attachments.length) {
+      const attachmentRows = await Promise.all(
+        attachments.map(async ({ fieldName, file }) => ({
+          applicationId: application.id,
+          fieldName,
+          fileName: file.name,
+          mimeType: file.type || "application/octet-stream",
+          sizeBytes: file.size,
+          fileBlob: Buffer.from(await file.arrayBuffer()),
+          createdAt: new Date(),
+        })),
+      );
+
+      await tx.insert(coachingApplicationAttachments).values(attachmentRows);
+    }
+  });
+
+  return NextResponse.json({ ok: true });
 }

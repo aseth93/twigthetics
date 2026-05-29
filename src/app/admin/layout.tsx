@@ -3,9 +3,7 @@ import { requirePortalViewer } from "@/lib/portal/auth";
 
 const adminNavItems = [
   { href: "/admin", label: "Dashboard" },
-  { href: "/member", label: "Member view" },
-  { href: "/member/messages", label: "Inbox preview" },
-  { href: "/member/billing", label: "Billing preview" },
+  { href: "/", label: "Public site" },
 ];
 
 export default async function AdminLayout({

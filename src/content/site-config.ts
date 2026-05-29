@@ -4,9 +4,6 @@ const instagramUrl =
   process.env.NEXT_PUBLIC_INSTAGRAM_URL?.trim() ||
   "https://www.instagram.com/twigthetics/";
 
-const applicationEndpoint =
-  process.env.NEXT_PUBLIC_APPLICATION_ENDPOINT?.trim() || "";
-
 export const siteConfig: SiteConfig = {
   brand: {
     name: "Twigthetics",
@@ -18,7 +15,6 @@ export const siteConfig: SiteConfig = {
   links: {
     instagram: instagramUrl,
     guideCheckout: "",
-    applicationEndpoint,
   },
   coach: {
     name: "Abe Seth",
@@ -62,7 +58,7 @@ export const siteConfig: SiteConfig = {
       "Execution beats theatrics. The process is not built around hacks, punishment, or panic changes.",
       "You should want oversight. If you only need a reference framework, the guide is the better entry point.",
     ],
-    ctaLabel: "Start the application",
+    ctaLabel: "Sign up for coaching",
   },
   guideOffer: {
     title: "The Lean Aesthetic Guide",
@@ -279,14 +275,14 @@ export const siteConfig: SiteConfig = {
     {
       question: "What happens after I apply?",
       answer:
-        "Your application is reviewed for fit, current training reality, and whether the coaching offer is the right tool. If it is, the next step is a direct follow-up with onboarding details.",
+        "Your intake, current physique pictures, and training reality are reviewed first. If the fit looks right, the next step is a direct follow-up with onboarding details.",
     },
   ],
   process: [
     {
       title: "Apply",
       description:
-        "Share your current physique, training history, and what has been preventing the next jump in look or consistency.",
+        "Submit the full intake, current progress pictures, and the details that show how you train, eat, and recover right now.",
     },
     {
       title: "Audit",
@@ -301,7 +297,7 @@ export const siteConfig: SiteConfig = {
   ],
   applicationFields: [
     {
-      name: "name",
+      name: "fullName",
       label: "Full name",
       type: "text",
       placeholder: "Your name",
@@ -315,33 +311,201 @@ export const siteConfig: SiteConfig = {
       required: true,
     },
     {
-      name: "instagram",
+      name: "instagramHandle",
       label: "Instagram handle",
       type: "text",
       placeholder: "@yourhandle",
       helper: "Optional, but useful if your current physique proof lives there.",
     },
     {
-      name: "experience",
-      label: "Training experience",
+      name: "age",
+      label: "1. How old are you?",
+      type: "number",
+      placeholder: "Age",
+      required: true,
+    },
+    {
+      name: "weight",
+      label: "2. How much do you weigh?",
+      type: "text",
+      placeholder: "e.g. 178 lb / 81 kg",
+      required: true,
+    },
+    {
+      name: "height",
+      label: "3. What is your height?",
+      type: "text",
+      placeholder: "e.g. 5'10\" / 178 cm",
+      required: true,
+    },
+    {
+      name: "gender",
+      label: "4. What is your gender?",
       type: "select",
-      placeholder: "Select your training background",
-      options: ["Less than 1 year", "1-3 years", "3-5 years", "5+ years"],
+      placeholder: "Select gender",
+      options: ["Male", "Female", "Non-binary", "Prefer not to say"],
       required: true,
     },
     {
-      name: "goal",
-      label: "Primary goal",
+      name: "goalDescription",
+      label: "5. Please describe your goals. Be as descriptive as possible.",
       type: "textarea",
-      placeholder: "What do you want your physique to look like in the next phase?",
+      placeholder: "Describe the look you want, what you want to improve, and what success would look like.",
+      required: true,
+      span: "full",
+    },
+    {
+      name: "trainingAvailability",
+      label: "6. How much time are you willing to spend in the gym during your training sessions?",
+      type: "text",
+      placeholder: "e.g. 4 days/week, 70 minutes per session",
+      helper: "Include both days per week and average time per workout.",
       required: true,
     },
     {
-      name: "stickingPoint",
-      label: "What keeps stalling progress?",
-      type: "textarea",
-      placeholder: "Training consistency, food structure, recovery, spinning your wheels, rebound weight gain, or something else.",
+      name: "dailyActivity",
+      label: "7. What type of daily activity do you have?",
+      type: "select",
+      placeholder: "Select your daily activity level",
+      options: [
+        "Sedentary desk job",
+        "Some walking during the day",
+        "On my feet most of the day",
+        "Physically demanding / labor-intensive",
+      ],
+      helper: "Think about your workday and general movement outside the gym.",
       required: true,
+    },
+    {
+      name: "nutritionStyle",
+      label: "8. Do you prefer to track calories in MyFitnessPal or follow a laid-out meal plan?",
+      type: "select",
+      placeholder: "Select your preferred nutrition approach",
+      options: [
+        "Track calories/macros with MyFitnessPal",
+        "Specific meal plan laid out for me",
+      ],
+      helper: "Meal plan means repeating similar foods. Tracking means more flexibility.",
+      required: true,
+      span: "full",
+    },
+    {
+      name: "mealPlanFoods",
+      label: "If you chose meal plan, what foods do you eat regularly / what does your current meal plan look like?",
+      type: "textarea",
+      placeholder: "List the foods you already eat often or your current meal plan setup.",
+      requiredWhen: {
+        field: "nutritionStyle",
+        equals: "Specific meal plan laid out for me",
+      },
+      showWhen: {
+        field: "nutritionStyle",
+        equals: "Specific meal plan laid out for me",
+      },
+      span: "full",
+    },
+    {
+      name: "cardioPreference",
+      label: "9. If it were up to you, would you rather eat less + do less cardio, or eat more + do more cardio?",
+      type: "select",
+      placeholder: "Choose your preferred trade-off",
+      options: ["Eat less + do less cardio", "Eat more + do more cardio"],
+      required: true,
+      span: "full",
+    },
+    {
+      name: "frontRelaxedProgressPhoto",
+      label: "10. Front relaxed progress picture",
+      type: "file",
+      required: true,
+      accept: "image/*,.heic,.HEIC,.heif,.HEIF",
+      helper: "Attach a clear front relaxed picture.",
+      span: "full",
+    },
+    {
+      name: "rearRelaxedProgressPhoto",
+      label: "Rear relaxed progress picture",
+      type: "file",
+      required: true,
+      accept: "image/*,.heic,.HEIC,.heif,.HEIF",
+      helper: "Attach a clear rear relaxed picture.",
+      span: "full",
+    },
+    {
+      name: "sideRelaxedProgressPhoto",
+      label: "Side relaxed progress picture",
+      type: "file",
+      required: true,
+      accept: "image/*,.heic,.HEIC,.heif,.HEIF",
+      helper: "Attach a clear side relaxed picture.",
+      span: "full",
+    },
+    {
+      name: "currentTrainingPlan",
+      label: "11. What is your current training plan?",
+      type: "textarea",
+      placeholder: "Lay out your current split, exercise structure, and how you currently train.",
+      required: true,
+      span: "full",
+    },
+    {
+      name: "pedHistory",
+      label: "12. If applicable, what anabolic supplements are you currently on, and what is your full PED use history?",
+      type: "textarea",
+      placeholder: "Current compounds, dose ranges, time on, prior cycles, and any relevant context.",
+      span: "full",
+    },
+    {
+      name: "otcSupplements",
+      label: "13. What over-the-counter supplements are you currently taking?",
+      type: "textarea",
+      placeholder: "Creatine, caffeine, pre-workout, fish oil, vitamins, etc.",
+      span: "full",
+    },
+    {
+      name: "injuriesAndExerciseResponse",
+      label: "14. What injuries do you currently have, if any? Which exercises bother you, and which feel best?",
+      type: "textarea",
+      placeholder: "List injuries, painful movements, and any exercises or machines where your mind-muscle connection feels especially strong.",
+      required: true,
+      span: "full",
+    },
+    {
+      name: "preferredStartDate",
+      label: "15. What is your preferred start date?",
+      type: "date",
+      helper: "Pick a Monday at least 1 week out.",
+      required: true,
+      minDaysFromToday: 7,
+      requiredWeekday: 1,
+    },
+    {
+      name: "currentCardioAndSteps",
+      label: "Extra: What are your current daily steps and cardio levels?",
+      type: "textarea",
+      placeholder: "Average steps per day, cardio sessions per week, and how hard those sessions are.",
+      span: "full",
+    },
+    {
+      name: "foodRestrictions",
+      label: "Extra: Do you have any food allergies, restrictions, digestive issues, or foods you will not eat?",
+      type: "textarea",
+      placeholder: "Anything that affects meal planning or food selection.",
+      span: "full",
+    },
+    {
+      name: "sleepAndStress",
+      label: "Extra: How much do you usually sleep, and what is your stress level like right now?",
+      type: "textarea",
+      placeholder: "Average sleep hours, work stress, life stress, travel, or anything that affects recovery.",
+      span: "full",
+    },
+    {
+      name: "gymAccess",
+      label: "Extra: What gym do you train at / what equipment limitations do you have, if any?",
+      type: "textarea",
+      placeholder: "Commercial gym, apartment gym, home gym, or any equipment constraints that matter.",
+      span: "full",
     },
   ],
 };

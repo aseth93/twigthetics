@@ -163,20 +163,16 @@ function ClientTransformationCard({
 }
 
 export default function Home() {
-  const hasCoachingCheckout = Boolean(
-    process.env.STRIPE_SECRET_KEY?.trim() &&
-      process.env.STRIPE_COACHING_PRICE_ID?.trim(),
-  );
   const hasGuideCheckout = Boolean(siteConfig.links.guideCheckout);
-  const hasApplicationEndpoint = Boolean(siteConfig.links.applicationEndpoint);
+  const hasApplicationEndpoint = Boolean(process.env.DATABASE_URL?.trim());
   const featuredClientTransformations = siteConfig.clientTransformations.slice(0, 6);
   const desktopHeroTransformations = [
     ...featuredClientTransformations,
     ...featuredClientTransformations,
   ];
   const heroHeadlineWords = siteConfig.brand.headline.split(" ");
-  const primaryCtaHref = hasCoachingCheckout ? "/api/coaching/checkout" : "#apply";
-  const primaryCtaLabel = hasCoachingCheckout ? "Start Coaching" : "Apply";
+  const primaryCtaHref = "#apply";
+  const primaryCtaLabel = "Sign up for coaching";
 
   return (
     <div className="relative overflow-x-hidden">
@@ -211,7 +207,7 @@ export default function Home() {
 
               <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
                 <Link href={primaryCtaHref} className="btn-primary w-full text-white sm:w-auto">
-                  {hasCoachingCheckout ? "Start Coaching" : "Apply for Coaching"}
+                  Sign up for coaching
                 </Link>
                 <Link
                   href="#guide"
@@ -396,7 +392,7 @@ export default function Home() {
 
               <div className="mt-8">
                 <Link href={primaryCtaHref} className="btn-ghost">
-                  {hasCoachingCheckout ? "Start Coaching" : siteConfig.coachingOffer.ctaLabel}
+                  {siteConfig.coachingOffer.ctaLabel}
                 </Link>
               </div>
             </div>
@@ -616,19 +612,20 @@ export default function Home() {
             <div className="surface-panel p-6 sm:p-8 md:p-10">
               <SectionHeading
                 eyebrow="Apply"
-                title="If you want direct oversight, start here."
-                description="The form below is the first filter. Share your current situation, your goal, and what has been blocking the leaner, athletic, aesthetic look you want."
+                title="If you want coaching, sign up here."
+                description="The intake below covers training, nutrition, recovery, current physique, and start-date fit so the coaching decision is made on real context instead of guesswork."
               />
 
               <div className="mt-8 rounded-[1.5rem] border border-[var(--line)] bg-white/50 p-4 text-sm leading-7 text-[var(--muted)] sm:p-5">
                 <p>
-                  Coaching is for people who want structure, accountability, and
-                  precise adjustments. If you only need the playbook, the guide
-                  may be enough. If you want eyes on the plan, apply.
+                  Coaching is for people who want structure, accountability,
+                  and precise adjustments. The intake is detailed on purpose so
+                  the plan starts from your real training, food, recovery, and
+                  current physique instead of a generic template.
                 </p>
                 <p className="mt-4">
                   {hasApplicationEndpoint
-                    ? "Applications are live."
+                    ? "Intake is live."
                     : "The form is built and ready. Until the submission endpoint is connected, the fallback contact route is Instagram DM."}
                 </p>
               </div>

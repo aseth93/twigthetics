@@ -17,9 +17,9 @@ export default async function MemberDashboardPage() {
     <div className="space-y-6">
       <RuntimeBanner
         viewer={viewer}
-        supabaseConfigured={runtime.supabaseConfigured}
+        databaseConfigured={runtime.databaseConfigured}
+        emailConfigured={runtime.emailConfigured}
         stripeConfigured={runtime.stripeConfigured}
-        demoMode={runtime.demoMode}
       />
 
       <section className="grid grid-cols-1 gap-4 md:grid-cols-3">

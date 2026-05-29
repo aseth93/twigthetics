@@ -1,69 +1,27 @@
 "use client";
 
 import Link from "next/link";
+import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { getSupabaseBrowserClient } from "@/lib/supabase/browser";
 
 type LoginPanelProps = {
-  demoMode: boolean;
-  previewMode: boolean;
-  supabaseConfigured: boolean;
+  authConfigured: boolean;
+  nextPath: string;
+  notice?: string | null;
 };
 
-export function LoginPanel({
-  demoMode,
-  previewMode,
-  supabaseConfigured,
-}: LoginPanelProps) {
+export function LoginPanel({ authConfigured, nextPath, notice }: LoginPanelProps) {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isPending, setIsPending] = useState(false);
   const [status, setStatus] = useState("");
-  const nextPath = "/member";
-
-  async function handleDemoLogin(role: "member" | "coach_admin") {
-    try {
-      setIsPending(true);
-      setStatus("");
-
-      const response = await fetch("/api/demo-login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ role }),
-      });
-
-      const payload = (await response.json().catch(() => null)) as
-        | { error?: string; redirectTo?: string }
-        | null;
-
-      if (!response.ok) {
-        throw new Error(payload?.error || "Unable to open demo portal.");
-      }
-
-      router.push(payload?.redirectTo || nextPath);
-      router.refresh();
-    } catch (error) {
-      setStatus(error instanceof Error ? error.message : "Unable to open demo portal.");
-    } finally {
-      setIsPending(false);
-    }
-  }
 
   async function handleLiveLogin(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    if (!supabaseConfigured) {
-      return;
-    }
-
-    const supabase = getSupabaseBrowserClient();
-
-    if (!supabase) {
-      setStatus("Supabase browser client is not configured.");
+    if (!authConfigured) {
       return;
     }
 
@@ -71,16 +29,18 @@ export function LoginPanel({
       setIsPending(true);
       setStatus("");
 
-      const { error } = await supabase.auth.signInWithPassword({
+      const result = await signIn("credentials", {
         email,
         password,
+        redirect: false,
+        callbackUrl: nextPath,
       });
 
-      if (error) {
-        throw error;
+      if (result?.error) {
+        throw new Error(result.error);
       }
 
-      router.push(nextPath);
+      router.replace(result?.url || nextPath);
       router.refresh();
     } catch (error) {
       setStatus(
@@ -94,14 +54,23 @@ export function LoginPanel({
   return (
     <div className="surface-panel p-8 md:p-10">
       <p className="eyebrow">Member Login</p>
-      <h2 className="display-title mt-4 text-[var(--ink)]">One site. Public front. Private portal.</h2>
+      <h2 className="display-title mt-4 text-[var(--ink)]">Portal access for active clients.</h2>
       <p className="mt-4 max-w-2xl text-base leading-7 text-[var(--muted)]">
-        Clients land on the main Twigthetics site, then sign in here for billing, plans,
-        documents, and direct messaging.
+        Sign in for plans, billing, documents, and direct coaching messages inside the
+        same Twigthetics site.
       </p>
 
+      {notice ? (
+        <div className="mt-6 rounded-[1.1rem] border border-[rgba(39,49,39,0.18)] bg-[rgba(39,49,39,0.08)] px-4 py-3 text-sm leading-6 text-[var(--forest)]">
+          {notice}
+        </div>
+      ) : null}
+
       <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-[1.1fr_0.9fr]">
-        <form onSubmit={handleLiveLogin} className="grid grid-cols-1 gap-4 rounded-[1.6rem] border border-[var(--line)] bg-white/72 p-5">
+        <form
+          onSubmit={handleLiveLogin}
+          className="grid grid-cols-1 gap-4 rounded-[1.6rem] border border-[var(--line)] bg-white/72 p-5"
+        >
           <div>
             <label htmlFor="email" className="mb-2 block text-sm font-medium text-[var(--ink)]">
               Email
@@ -118,12 +87,14 @@ export function LoginPanel({
           </div>
 
           <div>
-            <label
-              htmlFor="password"
-              className="mb-2 block text-sm font-medium text-[var(--ink)]"
-            >
-              Password
-            </label>
+            <div className="mb-2 flex items-center justify-between gap-4">
+              <label htmlFor="password" className="block text-sm font-medium text-[var(--ink)]">
+                Password
+              </label>
+              <Link href="/forgot-password" className="quiet-link text-xs">
+                Forgot password?
+              </Link>
+            </div>
             <input
               id="password"
               type="password"
@@ -137,61 +108,40 @@ export function LoginPanel({
 
           <button
             type="submit"
-            disabled={!supabaseConfigured || isPending}
-            className={supabaseConfigured ? "btn-primary" : "btn-disabled"}
+            disabled={!authConfigured || isPending}
+            className={authConfigured ? "btn-primary" : "btn-disabled"}
           >
-            {isPending ? "Signing in..." : supabaseConfigured ? "Sign in" : "Live auth not connected"}
+            {isPending ? "Signing in..." : authConfigured ? "Sign in" : "Portal not connected"}
           </button>
 
           <p className="text-xs leading-6 text-[var(--muted)]">
-            Use live account login once Supabase auth is connected on Render. Until then,
-            demo access below previews the portal flow.
+            Bought coaching already? Use the portal account setup step after checkout, then
+            sign in here going forward.
           </p>
         </form>
 
         <div className="dark-panel grid grid-cols-1 gap-4 p-5">
           <div>
-            <p className="eyebrow text-white/60">Preview Access</p>
-            <h3 className="mt-3 text-2xl font-semibold text-white">Demo portal roles</h3>
+            <p className="eyebrow text-white/60">New Clients</p>
+            <h3 className="mt-3 text-2xl font-semibold text-white">
+              Checkout first, then create your account
+            </h3>
             <p className="mt-3 text-sm leading-6 text-white/72">
-              Member view shows billing, plans, docs, and inbox. Admin view shows your
-              client roster and management tools.
+              Coaching checkout sends you into the portal signup flow so your payment,
+              billing record, and account all line up under the same email.
             </p>
           </div>
 
-          {previewMode ? (
-            <>
-              <Link href="/member" className="btn-ghost">
-                Open member demo
-              </Link>
-              <Link href="/admin" className="btn-ghost">
-                Open admin demo
-              </Link>
-            </>
-          ) : (
-            <>
-              <button
-                type="button"
-                onClick={() => handleDemoLogin("member")}
-                className={demoMode ? "btn-ghost" : "btn-disabled"}
-                disabled={!demoMode || isPending}
-              >
-                Open member demo
-              </button>
-              <button
-                type="button"
-                onClick={() => handleDemoLogin("coach_admin")}
-                className={demoMode ? "btn-ghost" : "btn-disabled"}
-                disabled={!demoMode || isPending}
-              >
-                Open admin demo
-              </button>
-            </>
-          )}
+          <Link href="/#coaching" className="btn-ghost">
+            Back to coaching
+          </Link>
+          <Link href="/signup" className="btn-ghost">
+            Open signup
+          </Link>
 
           <p className="text-xs leading-6 text-white/60">
-            Demo access is available only in local or preview mode before the live backend is
-            configured.
+            The signup page only activates when it can verify a completed Stripe checkout
+            session.
           </p>
         </div>
       </div>
