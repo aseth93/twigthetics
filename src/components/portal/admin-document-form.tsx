@@ -1,23 +1,33 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import {
+  PLAN_SECTION_KEYS,
+  PLAN_SECTION_LABELS,
+  type PlanSectionKey,
+} from "@/lib/portal/plan-sections";
 
 type AdminDocumentFormProps = {
   allowSubmit?: boolean;
   initialMemberId?: string;
+  initialSection?: PlanSectionKey;
   memberName?: string;
   heading?: string;
+  hideSectionPicker?: boolean;
 };
 
 export function AdminDocumentForm({
   allowSubmit = true,
   initialMemberId = "",
+  initialSection = "misc",
   memberName,
   heading = "Upload a client file",
+  hideSectionPicker = false,
 }: AdminDocumentFormProps) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [memberIds, setMemberIds] = useState(initialMemberId);
+  const [section, setSection] = useState<PlanSectionKey>(initialSection);
   const [file, setFile] = useState<File | null>(null);
   const [status, setStatus] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -25,6 +35,10 @@ export function AdminDocumentForm({
   useEffect(() => {
     setMemberIds(initialMemberId);
   }, [initialMemberId]);
+
+  useEffect(() => {
+    setSection(initialSection);
+  }, [initialSection]);
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -47,6 +61,7 @@ export function AdminDocumentForm({
       formData.append("title", title);
       formData.append("description", description);
       formData.append("memberIds", memberIds);
+      formData.append("section", section);
       formData.append("file", file);
 
       const response = await fetch("/api/admin/documents", {
@@ -65,6 +80,7 @@ export function AdminDocumentForm({
       setTitle("");
       setDescription("");
       setMemberIds(initialMemberId || "");
+      setSection(initialSection);
       setFile(null);
       setStatus(payload?.message || "Document uploaded.");
     } catch (error) {
@@ -105,6 +121,24 @@ export function AdminDocumentForm({
         disabled={!allowSubmit}
         className="w-full rounded-[1rem] border border-[var(--line)] bg-white/80 px-4 py-3 text-[15px] text-[var(--ink)] outline-none focus:border-[var(--accent)]"
       />
+      {hideSectionPicker ? (
+        <div className="rounded-[1rem] border border-[var(--line)] bg-white/55 px-4 py-3 text-sm text-[var(--muted)]">
+          Section: {PLAN_SECTION_LABELS[section]}
+        </div>
+      ) : (
+        <select
+          value={section}
+          onChange={(event) => setSection(event.target.value as PlanSectionKey)}
+          disabled={!allowSubmit}
+          className="w-full rounded-[1rem] border border-[var(--line)] bg-white/80 px-4 py-3 text-[15px] text-[var(--ink)] outline-none focus:border-[var(--accent)]"
+        >
+          {PLAN_SECTION_KEYS.map((sectionKey) => (
+            <option key={sectionKey} value={sectionKey}>
+              {PLAN_SECTION_LABELS[sectionKey]}
+            </option>
+          ))}
+        </select>
+      )}
       {hasLockedMember ? (
         <div className="rounded-[1rem] border border-[var(--line)] bg-white/55 px-4 py-3 text-sm text-[var(--muted)]">
           Assigned member ID: {memberIds}

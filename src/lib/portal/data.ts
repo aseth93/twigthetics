@@ -84,6 +84,7 @@ function mapDocumentRow(
     id: row.id,
     title: row.title,
     description: row.description,
+    section: row.section as PortalDocument["section"],
     fileName: row.fileName,
     mimeType: row.mimeType,
     sizeBytes: row.sizeBytes,

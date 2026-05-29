@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getDbReady } from "@/db";
 import { documentAccess, documents } from "@/db/schema";
+import { PLAN_SECTION_KEYS, type PlanSectionKey } from "@/lib/portal/plan-sections";
 import { getPortalViewer } from "@/lib/portal/auth";
 
 const maxDocumentBytes = 15 * 1024 * 1024;
@@ -16,10 +17,16 @@ export async function POST(request: Request) {
   const file = formData.get("file");
   const title = String(formData.get("title") || "").trim();
   const description = String(formData.get("description") || "").trim();
+  const requestedSection = String(formData.get("section") || "").trim();
   const memberIds = String(formData.get("memberIds") || "")
     .split(",")
     .map((value) => value.trim())
     .filter(Boolean);
+  const section = (
+    PLAN_SECTION_KEYS.includes(requestedSection as PlanSectionKey)
+      ? requestedSection
+      : "misc"
+  ) as PlanSectionKey;
 
   if (!(file instanceof File)) {
     return NextResponse.json({ error: "A file is required." }, { status: 400 });
@@ -49,6 +56,7 @@ export async function POST(request: Request) {
       coachId: viewer.profile.id,
       title,
       description: description || null,
+      section,
       fileName: file.name,
       mimeType: file.type || "application/octet-stream",
       sizeBytes: file.size,

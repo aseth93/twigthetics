@@ -14,7 +14,7 @@ import {
   users,
 } from "@/db/schema";
 import { getPortalViewer } from "@/lib/portal/auth";
-import { serializePlanSections } from "@/lib/portal/plan-sections";
+import { serializePlanSections, type PlanSectionKey } from "@/lib/portal/plan-sections";
 import { hashPassword, normalizeEmail } from "@/lib/portal/users";
 
 const demoMemberPassword = "MemberDemo123!";
@@ -46,6 +46,7 @@ type DemoMemberSeed = {
   planName: string;
   documentTitle: string;
   documentDescription: string;
+  documentSection: PlanSectionKey;
   planTitle: string;
   planSummary: string;
   planCadence: string;
@@ -94,6 +95,7 @@ const demoMembers: DemoMemberSeed[] = [
     documentTitle: "Jordan Week 1 Execution Guide",
     documentDescription:
       "Cardio target, check-in format, and first-week training priorities.",
+    documentSection: "cardio",
     planTitle: "Jordan Lean Recomp Block",
     planSummary: "Keep him lean while pushing upper-body fullness and leg detail.",
     planCadence: "4 lifts, 2 cardio sessions, 9-10k steps",
@@ -150,6 +152,7 @@ const demoMembers: DemoMemberSeed[] = [
     documentTitle: "Marco Nutrition Structure",
     documentDescription:
       "Base meal structure, swap list, and travel guardrails for the first month.",
+    documentSection: "nutrition",
     planTitle: "Marco Return-to-Shape Phase",
     planSummary: "Waist reduction, movement consistency, and sustainable training rhythm.",
     planCadence: "5 training days, 1-2 cardio sessions, 7-8k steps",
@@ -410,6 +413,7 @@ export async function POST() {
             .set({
               coachId: viewer.profile.id,
               description: member.documentDescription,
+              section: member.documentSection,
               fileName: `${member.fullName.toLowerCase().replaceAll(" ", "-")}-guide.txt`,
               mimeType: "text/plain",
               sizeBytes: Buffer.byteLength(serializedPlanBody, "utf8"),
@@ -426,6 +430,7 @@ export async function POST() {
               coachId: viewer.profile.id,
               title: member.documentTitle,
               description: member.documentDescription,
+              section: member.documentSection,
               fileName: `${member.fullName.toLowerCase().replaceAll(" ", "-")}-guide.txt`,
               mimeType: "text/plain",
               sizeBytes: Buffer.byteLength(serializedPlanBody, "utf8"),

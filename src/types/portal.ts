@@ -52,6 +52,7 @@ export type PortalDocument = {
   id: string;
   title: string;
   description?: string | null;
+  section?: PlanSectionKey | null;
   fileName: string;
   mimeType?: string | null;
   sizeBytes?: number | null;

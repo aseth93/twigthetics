@@ -130,6 +130,7 @@ export const documents = pgTable(
     coachId: uuid("coach_id").references(() => users.id, { onDelete: "set null" }),
     title: varchar("title", { length: 200 }).notNull(),
     description: text("description"),
+    section: varchar("section", { length: 32 }).notNull().default("misc"),
     fileName: varchar("file_name", { length: 255 }).notNull(),
     mimeType: varchar("mime_type", { length: 255 }),
     sizeBytes: integer("size_bytes").notNull().default(0),

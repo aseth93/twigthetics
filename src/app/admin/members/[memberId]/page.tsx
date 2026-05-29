@@ -1,9 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { AdminDocumentForm } from "@/components/portal/admin-document-form";
+import { AdminMemberProgrammingWorkspace } from "@/components/portal/admin-member-programming-workspace";
 import { AdminPlanForm } from "@/components/portal/admin-plan-form";
 import { MessageThread } from "@/components/portal/message-thread";
-import { PlanAssignmentWorkspace } from "@/components/portal/plan-assignment-workspace";
 import { siteConfig } from "@/content/site-config";
 import { requirePortalViewer } from "@/lib/portal/auth";
 import { getAdminMemberDetailData } from "@/lib/portal/data";
@@ -22,7 +21,7 @@ type PageProps = {
   }>;
 };
 
-type MemberDetailTab = "overview" | "intake" | "programming" | "documents" | "messages";
+type MemberDetailTab = "overview" | "intake" | "programming" | "messages";
 
 const fieldLabelMap = new Map(
   siteConfig.applicationFields.map((field) => [field.name, field.label]),
@@ -38,7 +37,6 @@ const tabs: Array<{ key: MemberDetailTab; label: string }> = [
   { key: "overview", label: "Overview" },
   { key: "intake", label: "Intake" },
   { key: "programming", label: "Programming" },
-  { key: "documents", label: "Documents" },
   { key: "messages", label: "Messages" },
 ];
 
@@ -281,12 +279,6 @@ export default async function AdminMemberDetailPage({
                   Open programming
                 </Link>
                 <Link
-                  href={`/admin/members/${detail.member.id}?tab=documents`}
-                  className="btn-ghost"
-                >
-                  Open files
-                </Link>
-                <Link
                   href={`/admin/members/${detail.member.id}?tab=messages`}
                   className="btn-ghost"
                 >
@@ -398,13 +390,16 @@ export default async function AdminMemberDetailPage({
               Organized by training, nutrition, supplements, cardio, and misc.
             </h2>
             <p className="mt-3 text-sm leading-6 text-[var(--muted)]">
-              Keep each member’s plan structured so you can scan and update it fast.
+              Keep each member’s plan and files grouped by section so you can scan and
+              update everything from one workspace.
             </p>
 
             <div className="mt-6">
-              <PlanAssignmentWorkspace
+              <AdminMemberProgrammingWorkspace
                 assignments={detail.assignments}
-                emptyLabel="No plan assignments yet."
+                documents={detail.documents}
+                memberId={detail.member.id}
+                memberName={detail.member.fullName}
               />
             </div>
           </article>
@@ -414,54 +409,6 @@ export default async function AdminMemberDetailPage({
             initialMemberId={detail.member.id}
             memberName={detail.member.fullName}
             heading={`Build or assign the next block for ${detail.member.fullName}`}
-          />
-        </section>
-      ) : null}
-
-      {activeTab === "documents" ? (
-        <section className="grid grid-cols-1 gap-6 xl:grid-cols-[1fr_0.95fr]">
-          <article className="surface-panel p-6 sm:p-8">
-            <p className="eyebrow">Assigned files</p>
-            <h2 className="mt-3 text-2xl font-semibold text-[var(--ink)]">
-              Documents attached to this member.
-            </h2>
-
-            <div className="mt-6 grid grid-cols-1 gap-4">
-              {detail.documents.length ? (
-                detail.documents.map((document) => (
-                  <a
-                    key={document.id}
-                    href={`/api/member/documents/${document.id}`}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="rounded-[1.15rem] border border-[var(--line)] bg-white/75 px-4 py-4 hover:bg-white"
-                  >
-                    <h3 className="text-lg font-semibold text-[var(--ink)]">
-                      {document.title}
-                    </h3>
-                    {document.description ? (
-                      <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
-                        {document.description}
-                      </p>
-                    ) : null}
-                    <p className="mt-3 text-xs uppercase tracking-[0.16em] text-[var(--muted)]">
-                      {document.fileName} • {formatBytes(document.sizeBytes)}
-                    </p>
-                  </a>
-                ))
-              ) : (
-                <p className="text-sm leading-7 text-[var(--muted)]">
-                  No documents assigned yet.
-                </p>
-              )}
-            </div>
-          </article>
-
-          <AdminDocumentForm
-            allowSubmit
-            initialMemberId={detail.member.id}
-            memberName={detail.member.fullName}
-            heading={`Upload a file for ${detail.member.fullName}`}
           />
         </section>
       ) : null}
