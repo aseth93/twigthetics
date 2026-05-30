@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useMemo, useState } from "react";
 import {
   getPopulatedPlanSectionKeys,
@@ -7,11 +8,12 @@ import {
   PLAN_SECTION_LABELS,
   type PlanSectionKey,
 } from "@/lib/portal/plan-sections";
-import { formatPortalDate } from "@/lib/portal/format";
-import type { PlanAssignment } from "@/types/portal";
+import { formatBytes, formatPortalDate } from "@/lib/portal/format";
+import type { PlanAssignment, PortalDocument } from "@/types/portal";
 
 type PlanAssignmentWorkspaceProps = {
   assignments: PlanAssignment[];
+  documents?: PortalDocument[];
   emptyLabel: string;
 };
 
@@ -25,6 +27,7 @@ function getInitialSectionKey(assignment?: PlanAssignment | null) {
 
 export function PlanAssignmentWorkspace({
   assignments,
+  documents = [],
   emptyLabel,
 }: PlanAssignmentWorkspaceProps) {
   const [selectedAssignmentId, setSelectedAssignmentId] = useState(assignments[0]?.id || "");
@@ -53,6 +56,9 @@ export function PlanAssignmentWorkspace({
     ? selectedSection
     : visibleSectionKeys[0];
   const activeContent = selectedAssignment.plan.sections[activeSectionKey]?.trim();
+  const sectionDocuments = documents.filter(
+    (document) => (document.section || "misc") === activeSectionKey,
+  );
 
   return (
     <div className="space-y-4">
@@ -139,6 +145,66 @@ export function PlanAssignmentWorkspace({
           <p className="eyebrow">{PLAN_SECTION_LABELS[activeSectionKey]}</p>
           <div className="mt-4 whitespace-pre-line text-sm leading-7 text-[var(--ink)]">
             {activeContent || "No details saved in this section yet."}
+          </div>
+        </div>
+
+        <div className="mt-5 rounded-[1.2rem] border border-[var(--line)] bg-white px-5 py-5">
+          <div className="flex flex-wrap items-start justify-between gap-4">
+            <div>
+              <p className="eyebrow">Section files</p>
+              <h4 className="mt-3 text-xl font-semibold text-[var(--ink)]">
+                {PLAN_SECTION_LABELS[activeSectionKey]}
+              </h4>
+              <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
+                Guides, sheets, and files for this section live here.
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-5 grid grid-cols-1 gap-4">
+            {sectionDocuments.length ? (
+              sectionDocuments.map((document) => (
+                <article
+                  key={document.id}
+                  className="rounded-[1.1rem] border border-[var(--line)] bg-[var(--canvas)] px-4 py-4"
+                >
+                  <div className="flex flex-wrap items-start justify-between gap-4">
+                    <div>
+                      <h5 className="text-lg font-semibold text-[var(--ink)]">
+                        {document.title}
+                      </h5>
+                      {document.description ? (
+                        <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
+                          {document.description}
+                        </p>
+                      ) : null}
+                    </div>
+                    <Link
+                      href={`/api/member/documents/${document.id}`}
+                      className="btn-secondary min-h-11"
+                    >
+                      Open file
+                    </Link>
+                  </div>
+
+                  <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
+                    <div className="rounded-[0.95rem] border border-[var(--line)] bg-white/80 px-3 py-3 text-sm text-[var(--muted)]">
+                      Added {formatPortalDate(document.createdAt)}
+                    </div>
+                    <div className="rounded-[0.95rem] border border-[var(--line)] bg-white/80 px-3 py-3 text-sm text-[var(--muted)]">
+                      {document.fileName}
+                    </div>
+                    <div className="rounded-[0.95rem] border border-[var(--line)] bg-white/80 px-3 py-3 text-sm text-[var(--muted)]">
+                      {formatBytes(document.sizeBytes)}
+                    </div>
+                  </div>
+                </article>
+              ))
+            ) : (
+              <div className="rounded-[1.1rem] border border-dashed border-[var(--line)] bg-[var(--canvas)] px-4 py-5 text-sm leading-6 text-[var(--muted)]">
+                No files are attached to this section yet.
+              </div>
+            )}
           </div>
         </div>
 

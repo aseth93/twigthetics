@@ -21,6 +21,7 @@ export default async function MemberPlansPage() {
       <div className="mt-6">
         <PlanAssignmentWorkspace
           assignments={dashboard.assignments}
+          documents={dashboard.documents}
           emptyLabel="No plans are assigned yet. This section fills once coaching starts and your first block is published."
         />
       </div>

@@ -99,14 +99,14 @@ export default async function MemberDashboardPage() {
         <article className="dark-panel p-6">
           <p className="eyebrow text-white/55">Quick links</p>
           <div className="mt-5 grid grid-cols-1 gap-3">
+            <Link href="/member/plans" className="btn-ghost">
+              Open plans + files
+            </Link>
             <Link href="/member/check-ins" className="btn-ghost">
               Log check-in
             </Link>
             <Link href="/member/messages" className="btn-ghost">
               Open inbox
-            </Link>
-            <Link href="/member/documents" className="btn-ghost">
-              Open documents
             </Link>
             <Link href="/member/billing" className="btn-ghost">
               Open billing

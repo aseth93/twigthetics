@@ -5,7 +5,6 @@ const memberNavItems = [
   { href: "/member", label: "Overview" },
   { href: "/member/plans", label: "Plans" },
   { href: "/member/check-ins", label: "Check-ins" },
-  { href: "/member/documents", label: "Documents" },
   { href: "/member/messages", label: "Messages" },
   { href: "/member/billing", label: "Billing" },
 ];
@@ -24,7 +23,7 @@ export default async function MemberLayout({
     <PortalShell
       viewer={viewer}
       title="Member portal"
-      subtitle="Plans, check-ins, billing, documents, and direct coaching messages all live inside the same Twigthetics site."
+      subtitle="Plans, section files, check-ins, billing, and direct coaching messages all live inside the same Twigthetics site."
       navItems={memberNavItems}
     >
       {children}
