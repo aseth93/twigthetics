@@ -109,6 +109,7 @@ export type ApplicationFormField = {
     equals: string | string[];
   };
   minDaysFromToday?: number;
+  minIsoDate?: string;
   requiredWeekday?: number;
 };
 

@@ -469,9 +469,9 @@ export const siteConfig: SiteConfig = {
       name: "preferredStartDate",
       label: "15. What is your preferred start date?",
       type: "date",
-      helper: "Pick a Monday at least 1 week out.",
+      helper: "Pick any Monday June 15th or after.",
       required: true,
-      minDaysFromToday: 7,
+      minIsoDate: "2026-06-15",
       requiredWeekday: 1,
     },
     {

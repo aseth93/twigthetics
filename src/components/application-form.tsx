@@ -142,6 +142,15 @@ export function ApplicationForm({
           return;
         }
 
+        if (field.minIsoDate) {
+          const minimumDate = parseDateValue(field.minIsoDate);
+
+          if (minimumDate && selectedDate < minimumDate) {
+            nextErrors[field.name] = "Pick any Monday June 15th or after.";
+            return;
+          }
+        }
+
         if (
           typeof field.minDaysFromToday === "number" &&
           selectedDate < addDays(startOfToday(), field.minDaysFromToday)
@@ -298,8 +307,11 @@ export function ApplicationForm({
         placeholder={field.placeholder}
         autoComplete="off"
         min={
-          field.type === "date" && typeof field.minDaysFromToday === "number"
-            ? formatDateValue(addDays(startOfToday(), field.minDaysFromToday))
+          field.type === "date"
+            ? field.minIsoDate ||
+              (typeof field.minDaysFromToday === "number"
+                ? formatDateValue(addDays(startOfToday(), field.minDaysFromToday))
+                : undefined)
             : undefined
         }
       />
