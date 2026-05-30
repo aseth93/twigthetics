@@ -110,30 +110,28 @@ export const siteConfig: SiteConfig = {
     {
       id: "coach-everyday-standard",
       label: "Coach Proof",
-      title: "Looks good in real life.",
-      summary:
-        "Lean, athletic, and healthy without needing perfect lighting, perfect timing, or extreme effort to keep it.",
+      title: "",
+      summary: "",
       timeframe: "Current coach check-ins",
       result: "Consistent condition without turning life into prep.",
       comparison: {
         before: {
           src: "/images/coach/coach-floor-mirror.jpg?v=2",
           alt: "Abe Seth in a full-body mirror check-in wearing joggers.",
-          caption: "Full-body check-in",
+          caption: "",
         },
         after: {
           src: "/images/coach/coach-portrait-mirror.jpg?v=2",
           alt: "Abe Seth in a close-up mirror check-in photo.",
-          caption: "Close-up check-in",
+          caption: "",
         },
       },
     },
     {
       id: "current-conditioning",
-      label: "Current Look",
-      title: "Lean enough to hold without living on extremes.",
-      summary:
-        "Current coach photos stay in the same lane: athletic shape, visible condition, and a look that still feels realistic outside of peak-week effort.",
+      label: "",
+      title: "Maintain a lean physique without living on extremes.",
+      summary: "",
       timeframe: "Current coach photo",
       result:
         "This is the standard the coaching is built around: sharp, healthy, and repeatable.",
@@ -275,14 +273,14 @@ export const siteConfig: SiteConfig = {
     {
       question: "What happens after I apply?",
       answer:
-        "Your intake, current physique pictures, and training reality are reviewed first. If the fit looks right, the next step is a direct follow-up with onboarding details.",
+        "Your intake, training reality, and any current physique pictures you include are reviewed first. If the fit looks right, the next step is a direct follow-up with onboarding details.",
     },
   ],
   process: [
     {
       title: "Apply",
       description:
-        "Submit the full intake, current progress pictures, and the details that show how you train, eat, and recover right now.",
+        "Submit the full intake and the details that show how you train, eat, and recover right now. Current progress pictures are highly recommended.",
     },
     {
       title: "Audit",
@@ -417,27 +415,24 @@ export const siteConfig: SiteConfig = {
       name: "frontRelaxedProgressPhoto",
       label: "10. Front relaxed progress picture",
       type: "file",
-      required: true,
       accept: "image/*,.heic,.HEIC,.heif,.HEIF",
-      helper: "Attach a clear front relaxed picture.",
+      helper: "Highly recommended: attach a clear front relaxed picture.",
       span: "full",
     },
     {
       name: "rearRelaxedProgressPhoto",
       label: "Rear relaxed progress picture",
       type: "file",
-      required: true,
       accept: "image/*,.heic,.HEIC,.heif,.HEIF",
-      helper: "Attach a clear rear relaxed picture.",
+      helper: "Highly recommended: attach a clear rear relaxed picture.",
       span: "full",
     },
     {
       name: "sideRelaxedProgressPhoto",
       label: "Side relaxed progress picture",
       type: "file",
-      required: true,
       accept: "image/*,.heic,.HEIC,.heif,.HEIF",
-      helper: "Attach a clear side relaxed picture.",
+      helper: "Highly recommended: attach a clear side relaxed picture.",
       span: "full",
     },
     {

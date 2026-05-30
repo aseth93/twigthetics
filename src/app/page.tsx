@@ -32,13 +32,19 @@ function TransformationCard({
   return (
     <article className="surface-panel overflow-hidden">
       <div className="border-b border-[var(--line)] bg-white/55 px-5 py-4">
-        <p className="eyebrow text-[var(--muted)]">{transformation.label}</p>
-        <h3 className="mt-2 text-2xl font-semibold text-[var(--ink)]">
-          {transformation.title}
-        </h3>
-        <p className="mt-2 max-w-xl text-sm leading-6 text-[var(--muted)]">
-          {transformation.summary}
-        </p>
+        {transformation.label ? (
+          <p className="eyebrow text-[var(--muted)]">{transformation.label}</p>
+        ) : null}
+        {transformation.title ? (
+          <h3 className="mt-2 text-2xl font-semibold text-[var(--ink)]">
+            {transformation.title}
+          </h3>
+        ) : null}
+        {transformation.summary ? (
+          <p className="mt-2 max-w-xl text-sm leading-6 text-[var(--muted)]">
+            {transformation.summary}
+          </p>
+        ) : null}
       </div>
 
       {transformation.comparison ? (
@@ -67,11 +73,13 @@ function TransformationCard({
                 />
                 </div>
               </div>
-              <div className="px-5 py-4">
-                <p className="text-xs uppercase tracking-[0.24em] text-[var(--muted)]">
-                  {item.caption}
-                </p>
-              </div>
+              {item.caption ? (
+                <div className="px-5 py-4">
+                  <p className="text-xs uppercase tracking-[0.24em] text-[var(--muted)]">
+                    {item.caption}
+                  </p>
+                </div>
+              ) : null}
             </div>
           ))}
         </div>
@@ -379,7 +387,7 @@ export default function Home() {
                     The standard starts with the coach.
                   </h3>
                   <p className="mt-3 max-w-2xl text-sm leading-6 text-[var(--muted)]">
-                    Lean, athletic, aesthetic, and maintainable without needing
+                    Lean, athletic, healthy, and maintainable without needing
                     bodybuilding-level effort year-round.
                   </p>
                 </div>
@@ -637,12 +645,12 @@ export default function Home() {
         </section>
 
         <section id="apply" className="section-shell pb-16">
-          <div className="page-reveal grid grid-cols-1 gap-8 lg:grid-cols-[0.92fr_1.08fr]">
+          <div className="page-reveal mx-auto max-w-4xl">
             <div className="surface-panel p-6 sm:p-8 md:p-10">
               <SectionHeading
                 eyebrow="Apply"
                 title="Sign up once. Start from real context."
-                description="The intake covers your goals, current training, food structure, recovery, schedule, and progress photos so the coaching decision starts with actual information."
+                description="The intake covers your goals, current training, food structure, recovery, schedule, and any progress photos you include so the coaching decision starts with actual information."
               />
 
               <div className="mt-8 rounded-[1.5rem] border border-[var(--line)] bg-white/50 p-5 text-sm leading-7 text-[var(--muted)] sm:p-6 sm:text-base">
@@ -657,8 +665,8 @@ export default function Home() {
                     plan
                   </div>
                   <div className="rounded-[1.25rem] border border-[var(--line)] bg-white/70 px-4 py-4">
-                    Front, rear, and side relaxed progress photos attached in
-                    the form
+                    Front, rear, and side relaxed progress photos are highly
+                    recommended with the form
                   </div>
                 </div>
                 <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
@@ -673,42 +681,6 @@ export default function Home() {
                   >
                     DM on Instagram instead
                   </a>
-                </div>
-              </div>
-            </div>
-
-            <div
-              className="page-reveal surface-panel overflow-hidden"
-              style={{ animationDelay: "120ms" }}
-            >
-              <div className="border-b border-[var(--line)] bg-white/55 px-6 py-5 sm:px-8">
-                <p className="eyebrow text-[var(--muted)]">Inside the intake</p>
-                <h3 className="mt-2 text-2xl font-semibold text-[var(--ink)]">
-                  Enough detail to build the plan properly.
-                </h3>
-                <p className="mt-3 max-w-2xl text-sm leading-6 text-[var(--muted)]">
-                  You’ll cover goals, preferred food structure, training split,
-                  recovery, injuries, supplements, activity level, and preferred
-                  Monday start date.
-                </p>
-              </div>
-              <div className="grid grid-cols-1 gap-px bg-[var(--line)] sm:grid-cols-2">
-                <div className="bg-[var(--canvas)] px-6 py-5 sm:px-8">
-                  <p className="eyebrow text-[var(--muted)]">What you send</p>
-                  <ul className="mt-4 space-y-3 text-sm leading-6 text-[var(--ink)]">
-                    <li>Current weight, height, goals, and timeline context</li>
-                    <li>Training availability and current program structure</li>
-                    <li>Food preference: calorie tracking or fixed meal plan</li>
-                    <li>Front, rear, and side relaxed progress pictures</li>
-                  </ul>
-                </div>
-                <div className="bg-[var(--canvas)] px-6 py-5 sm:px-8">
-                  <p className="eyebrow text-[var(--muted)]">What happens next</p>
-                  <ul className="mt-4 space-y-3 text-sm leading-6 text-[var(--ink)]">
-                    <li>The full response is saved in the admin side for review</li>
-                    <li>Coaching fit gets reviewed from actual context, not guesswork</li>
-                    <li>If the fit is right, the next coaching step comes directly after</li>
-                  </ul>
                 </div>
               </div>
             </div>
