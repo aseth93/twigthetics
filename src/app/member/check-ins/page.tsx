@@ -14,11 +14,11 @@ export default async function MemberCheckinsPage() {
       <article className="surface-panel p-6">
         <p className="eyebrow">Progress tracking</p>
         <h1 className="mt-4 text-3xl font-semibold text-[var(--ink)]">
-          Daily weigh-ins and workout notes
+          Daily weigh-ins, hydration, sleep, and workout notes
         </h1>
         <p className="mt-3 text-sm leading-7 text-[var(--muted)]">
-          Log bodyweight every day, keep workout notes inside the portal, and let the
-          weekly averages update automatically.
+          Log bodyweight, water, and sleep every day, keep workout notes inside the
+          portal after each session, and let the weekly averages update automatically.
         </p>
       </article>
 

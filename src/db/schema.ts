@@ -50,6 +50,9 @@ export const users = pgTable(
     role: varchar("role", { length: 32 }).notNull().default("member"),
     instagramHandle: varchar("instagram_handle", { length: 80 }),
     avatarUrl: text("avatar_url"),
+    memberOnboardingSeenAt: timestamp("member_onboarding_seen_at", {
+      withTimezone: true,
+    }),
     joinedAt: timestamp("joined_at", { withTimezone: true }).notNull().defaultNow(),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
     updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
@@ -92,6 +95,8 @@ export const dailyCheckins = pgTable(
       .references(() => users.id, { onDelete: "cascade" }),
     checkinDate: date("checkin_date").notNull(),
     weightTenths: integer("weight_tenths"),
+    hydrationOunces: integer("hydration_ounces"),
+    sleepTenths: integer("sleep_tenths"),
     workoutNotes: text("workout_notes"),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
     updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),

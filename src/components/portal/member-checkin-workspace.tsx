@@ -6,7 +6,12 @@ import {
   getCurrentWeekAverageWeight,
   getTodayIsoDate,
 } from "@/lib/portal/checkin-stats";
-import { formatPortalDate, formatWeightPounds } from "@/lib/portal/format";
+import {
+  formatHydrationOunces,
+  formatPortalDate,
+  formatSleepHours,
+  formatWeightPounds,
+} from "@/lib/portal/format";
 import type { DailyCheckinEntry } from "@/types/portal";
 
 type MemberCheckinWorkspaceProps = {
@@ -19,6 +24,8 @@ export function MemberCheckinWorkspace({
   const [checkins, setCheckins] = useState(initialCheckins);
   const [checkinDate, setCheckinDate] = useState(getTodayIsoDate());
   const [weightPounds, setWeightPounds] = useState("");
+  const [hydrationOunces, setHydrationOunces] = useState("");
+  const [sleepHours, setSleepHours] = useState("");
   const [workoutNotes, setWorkoutNotes] = useState("");
   const [status, setStatus] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -39,11 +46,23 @@ export function MemberCheckinWorkspace({
           ? selectedEntry.weightPounds.toFixed(1)
           : "",
       );
+      setHydrationOunces(
+        typeof selectedEntry.hydrationOunces === "number"
+          ? String(selectedEntry.hydrationOunces)
+          : "",
+      );
+      setSleepHours(
+        typeof selectedEntry.sleepHours === "number"
+          ? selectedEntry.sleepHours.toFixed(1)
+          : "",
+      );
       setWorkoutNotes(selectedEntry.workoutNotes || "");
       return;
     }
 
     setWeightPounds("");
+    setHydrationOunces("");
+    setSleepHours("");
     setWorkoutNotes("");
   }, [selectedEntry]);
 
@@ -72,6 +91,8 @@ export function MemberCheckinWorkspace({
         body: JSON.stringify({
           checkinDate,
           weightPounds,
+          hydrationOunces,
+          sleepHours,
           workoutNotes,
         }),
       });
@@ -85,10 +106,16 @@ export function MemberCheckinWorkspace({
       }
 
       const normalizedWeight = Number(weightPounds);
+      const normalizedHydration = hydrationOunces.trim()
+        ? Number(hydrationOunces)
+        : null;
+      const normalizedSleep = sleepHours.trim() ? Number(sleepHours) : null;
       const nextEntry: DailyCheckinEntry = selectedEntry
         ? {
             ...selectedEntry,
             weightPounds: normalizedWeight,
+            hydrationOunces: normalizedHydration,
+            sleepHours: normalizedSleep,
             workoutNotes: workoutNotes.trim() || null,
             updatedAt: new Date().toISOString(),
           }
@@ -97,6 +124,8 @@ export function MemberCheckinWorkspace({
             memberId: initialCheckins[0]?.memberId || "",
             checkinDate,
             weightPounds: normalizedWeight,
+            hydrationOunces: normalizedHydration,
+            sleepHours: normalizedSleep,
             workoutNotes: workoutNotes.trim() || null,
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
@@ -122,7 +151,7 @@ export function MemberCheckinWorkspace({
 
   return (
     <div className="space-y-6">
-      <section className="grid grid-cols-1 gap-4 md:grid-cols-3">
+      <section className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
         <article className="surface-panel p-6">
           <p className="eyebrow">Current week average</p>
           <h2 className="mt-4 text-3xl font-semibold text-[var(--ink)]">
@@ -146,11 +175,22 @@ export function MemberCheckinWorkspace({
         </article>
 
         <article className="surface-panel p-6">
-          <p className="eyebrow">Days logged</p>
-          <h2 className="mt-4 text-3xl font-semibold text-[var(--ink)]">{checkins.length}</h2>
+          <p className="eyebrow">Latest hydration</p>
+          <h2 className="mt-4 text-3xl font-semibold text-[var(--ink)]">
+            {formatHydrationOunces(latestCheckin?.hydrationOunces)}
+          </h2>
           <p className="mt-3 text-sm leading-6 text-[var(--muted)]">
-            One entry per day. Saving the same date updates that day instead of duplicating
-            it.
+            Water logged for the most recent day on file.
+          </p>
+        </article>
+
+        <article className="surface-panel p-6">
+          <p className="eyebrow">Latest sleep</p>
+          <h2 className="mt-4 text-3xl font-semibold text-[var(--ink)]">
+            {formatSleepHours(latestCheckin?.sleepHours)}
+          </h2>
+          <p className="mt-3 text-sm leading-6 text-[var(--muted)]">
+            Sleep logged for the most recent day on file.
           </p>
         </article>
       </section>
@@ -160,11 +200,11 @@ export function MemberCheckinWorkspace({
           <div>
             <p className="eyebrow">Daily check-in</p>
             <h2 className="mt-3 text-2xl font-semibold text-[var(--ink)]">
-              Log bodyweight and workout notes.
+              Log bodyweight, hydration, sleep, and workout notes.
             </h2>
             <p className="mt-3 text-sm leading-6 text-[var(--muted)]">
-              Use this daily so weekly averages stay accurate and workout notes don’t get
-              lost.
+              Log the weigh-in, water, and sleep daily. Add workout notes right after you
+              train so the weekly average and session feedback stay usable.
             </p>
           </div>
 
@@ -186,11 +226,34 @@ export function MemberCheckinWorkspace({
             className="w-full rounded-[1rem] border border-[var(--line)] bg-white/80 px-4 py-3 text-[15px] text-[var(--ink)] outline-none focus:border-[var(--accent)]"
           />
 
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+            <input
+              type="number"
+              step="1"
+              min="0"
+              value={hydrationOunces}
+              onChange={(event) => setHydrationOunces(event.target.value)}
+              placeholder="Hydration (oz)"
+              className="w-full rounded-[1rem] border border-[var(--line)] bg-white/80 px-4 py-3 text-[15px] text-[var(--ink)] outline-none focus:border-[var(--accent)]"
+            />
+
+            <input
+              type="number"
+              step="0.1"
+              min="0"
+              max="24"
+              value={sleepHours}
+              onChange={(event) => setSleepHours(event.target.value)}
+              placeholder="Sleep (hours)"
+              className="w-full rounded-[1rem] border border-[var(--line)] bg-white/80 px-4 py-3 text-[15px] text-[var(--ink)] outline-none focus:border-[var(--accent)]"
+            />
+          </div>
+
           <textarea
             value={workoutNotes}
             onChange={(event) => setWorkoutNotes(event.target.value)}
             rows={8}
-            placeholder="Workout notes, performance notes, energy, digestion, recovery, or anything worth flagging for the day."
+            placeholder="Workout notes, performance notes, pumps, energy, digestion, recovery, or anything worth flagging for the day."
             className="w-full rounded-[1rem] border border-[var(--line)] bg-white/80 px-4 py-3 text-[15px] text-[var(--ink)] outline-none focus:border-[var(--accent)]"
           />
 
@@ -256,6 +319,10 @@ export function MemberCheckinWorkspace({
                       <p className="text-sm font-medium text-[var(--ink)]">
                         {formatWeightPounds(entry.weightPounds)}
                       </p>
+                    </div>
+                    <div className="mt-3 flex flex-wrap gap-2 text-xs uppercase tracking-[0.14em] text-[var(--muted)]">
+                      <span>{formatHydrationOunces(entry.hydrationOunces)}</span>
+                      <span>{formatSleepHours(entry.sleepHours)}</span>
                     </div>
                     {entry.workoutNotes ? (
                       <p className="mt-3 whitespace-pre-line text-sm leading-6 text-[var(--muted)]">

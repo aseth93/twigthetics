@@ -1,3 +1,4 @@
+import { MemberOnboardingModal } from "@/components/portal/member-onboarding-modal";
 import { PortalShell } from "@/components/portal/portal-shell";
 import { requirePortalViewer } from "@/lib/portal/auth";
 
@@ -26,6 +27,10 @@ export default async function MemberLayout({
       subtitle="Plans, section files, check-ins, billing, and direct coaching messages all live inside the same Twigthetics site."
       navItems={memberNavItems}
     >
+      <MemberOnboardingModal
+        fullName={viewer.profile.fullName}
+        isSeen={Boolean(viewer.profile.memberOnboardingSeenAt)}
+      />
       {children}
     </PortalShell>
   );

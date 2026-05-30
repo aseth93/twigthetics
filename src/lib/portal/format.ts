@@ -49,6 +49,22 @@ export function formatWeightPounds(value?: number | null) {
   return `${value.toFixed(1)} lb`;
 }
 
+export function formatHydrationOunces(value?: number | null) {
+  if (typeof value !== "number" || Number.isNaN(value)) {
+    return "Not logged";
+  }
+
+  return `${value} oz`;
+}
+
+export function formatSleepHours(value?: number | null) {
+  if (typeof value !== "number" || Number.isNaN(value)) {
+    return "Not logged";
+  }
+
+  return `${value.toFixed(1)} hr`;
+}
+
 export function formatRoleLabel(role: string) {
   return role === "coach_admin" ? "Coach Admin" : "Member";
 }

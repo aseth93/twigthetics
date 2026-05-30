@@ -16,6 +16,7 @@ export function mapUserToPortalProfile(user: typeof users.$inferSelect): PortalP
     email: user.email,
     instagramHandle: user.instagramHandle,
     avatarUrl: user.avatarUrl,
+    memberOnboardingSeenAt: user.memberOnboardingSeenAt?.toISOString() || null,
     joinedAt: user.joinedAt.toISOString(),
   };
 }

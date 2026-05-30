@@ -11,6 +11,7 @@ export type PortalProfile = {
   email: string;
   instagramHandle?: string | null;
   avatarUrl?: string | null;
+  memberOnboardingSeenAt?: string | null;
   joinedAt?: string | null;
 };
 
@@ -166,6 +167,8 @@ export type DailyCheckinEntry = {
   memberId: string;
   checkinDate: string;
   weightPounds?: number | null;
+  hydrationOunces?: number | null;
+  sleepHours?: number | null;
   workoutNotes?: string | null;
   createdAt: string;
   updatedAt: string;

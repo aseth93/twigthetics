@@ -48,6 +48,7 @@ function mapProfileRow(row: typeof users.$inferSelect): PortalProfile {
     email: row.email,
     instagramHandle: row.instagramHandle,
     avatarUrl: row.avatarUrl,
+    memberOnboardingSeenAt: toIsoDate(row.memberOnboardingSeenAt),
     joinedAt: toIsoDate(row.joinedAt),
   };
 }
@@ -147,6 +148,9 @@ function mapDailyCheckinRow(row: typeof dailyCheckins.$inferSelect): DailyChecki
     checkinDate: row.checkinDate,
     weightPounds:
       typeof row.weightTenths === "number" ? row.weightTenths / 10 : null,
+    hydrationOunces: row.hydrationOunces,
+    sleepHours:
+      typeof row.sleepTenths === "number" ? row.sleepTenths / 10 : null,
     workoutNotes: row.workoutNotes,
     createdAt: toIsoDate(row.createdAt) || new Date().toISOString(),
     updatedAt: toIsoDate(row.updatedAt) || new Date().toISOString(),

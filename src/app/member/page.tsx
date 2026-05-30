@@ -3,7 +3,9 @@ import { RuntimeBanner } from "@/components/portal/runtime-banner";
 import { requirePortalViewer } from "@/lib/portal/auth";
 import { getMemberDashboardData } from "@/lib/portal/data";
 import {
+  formatHydrationOunces,
   formatPortalDate,
+  formatSleepHours,
   formatWeightPounds,
 } from "@/lib/portal/format";
 import { getPortalRuntime } from "@/lib/portal/env";
@@ -59,8 +61,8 @@ export default async function MemberDashboardPage() {
           </h2>
           <p className="mt-3 text-sm leading-6 text-[var(--muted)]">
             {dashboard.latestCheckin
-              ? `Logged ${formatPortalDate(dashboard.latestCheckin.checkinDate)}`
-              : "Start logging daily bodyweight in Check-ins."}
+              ? `Logged ${formatPortalDate(dashboard.latestCheckin.checkinDate)} • ${formatHydrationOunces(dashboard.latestCheckin.hydrationOunces)} • ${formatSleepHours(dashboard.latestCheckin.sleepHours)}`
+              : "Start logging daily weigh-in, hydration, and sleep in Check-ins."}
           </p>
         </article>
 
