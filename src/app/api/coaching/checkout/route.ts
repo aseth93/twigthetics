@@ -11,6 +11,8 @@ export async function GET(request: Request) {
   const origin = getSiteOrigin(new Headers(request.headers));
   const stripeKey = getTrimmedEnv("STRIPE_SECRET_KEY");
   const priceId = getTrimmedEnv("STRIPE_COACHING_PRICE_ID");
+  const requestUrl = new URL(request.url);
+  const customerEmail = requestUrl.searchParams.get("email")?.trim() || "";
 
   if (!stripeKey || !priceId) {
     return NextResponse.redirect(new URL("/#coaching", origin));
@@ -32,6 +34,7 @@ export async function GET(request: Request) {
       phone_number_collection: {
         enabled: true,
       },
+      customer_email: customerEmail || undefined,
       metadata: {
         source: "public-coaching-checkout",
         priceId,
