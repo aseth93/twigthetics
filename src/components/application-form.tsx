@@ -400,7 +400,7 @@ export function ApplicationForm({
                 Submitted.
               </h2>
               <p className="mt-3 text-sm leading-6 text-[var(--muted)] sm:text-base sm:leading-7">
-                Your intake has been received{confirmation.fullName ? `, ${confirmation.fullName}` : ""}. Do you want to pay and reserve your coaching spot now?
+                Your intake has been received{confirmation.fullName ? `, ${confirmation.fullName}` : ""}. Do you want to pay and reserve your coaching spot now? There are limited spots, so reserving now will guarantee you a coaching spot.
               </p>
 
               <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
