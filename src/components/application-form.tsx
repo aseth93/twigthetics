@@ -304,6 +304,10 @@ export function ApplicationForm({
     );
   }
 
+  function isHighlightedHelper(field: ApplicationFormField) {
+    return field.name === "preferredStartDate";
+  }
+
   function handleDismissConfirmation() {
     setConfirmation(null);
     setIsRedirectingToCheckout(false);
@@ -338,7 +342,13 @@ export function ApplicationForm({
               </span>
               {renderField(field)}
               {field.helper ? (
-                <span className="mt-2 block text-xs leading-5 text-[var(--muted)]">
+                <span
+                  className={`mt-2 block leading-5 ${
+                    isHighlightedHelper(field)
+                      ? "rounded-[0.95rem] border border-[rgba(141,107,61,0.28)] bg-[rgba(141,107,61,0.12)] px-3 py-2 text-sm font-semibold text-[var(--ink)]"
+                      : "text-xs text-[var(--muted)]"
+                  }`}
+                >
                   {field.helper}
                 </span>
               ) : null}
