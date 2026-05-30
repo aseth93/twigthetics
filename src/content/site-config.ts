@@ -8,7 +8,7 @@ export const siteConfig: SiteConfig = {
   brand: {
     name: "Twigthetics",
     eyebrow: "Lean Aesthetic Coaching",
-    headline: "Lean. Athletic. Aesthetic.",
+    headline: "Lean. Athletic. Healthy.",
     subheadline:
       "Online coaching for people who want to achieve an aesthetic physique that looks sharp year-round, feels athletic in real life, and can be maintained without killing yourself with effort.",
   },
