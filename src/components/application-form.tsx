@@ -12,6 +12,7 @@ type FormState = Record<string, string>;
 type FileState = Record<string, File | null>;
 type ErrorState = Record<string, string>;
 type SubmissionConfirmation = {
+  mode: "payment" | "thank-you";
   fullName: string;
   email: string;
 };
@@ -173,6 +174,7 @@ export function ApplicationForm({
     try {
       setIsSubmitting(true);
       const submissionSnapshot = {
+        mode: "payment" as const,
         fullName: values.fullName || values.name || "",
         email: values.email || "",
       };
@@ -309,6 +311,18 @@ export function ApplicationForm({
   }
 
   function handleDismissConfirmation() {
+    setConfirmation((current) =>
+      current
+        ? {
+            ...current,
+            mode: "thank-you",
+          }
+        : null,
+    );
+    setIsRedirectingToCheckout(false);
+  }
+
+  function handleCloseThankYou() {
     setConfirmation(null);
     setIsRedirectingToCheckout(false);
   }
@@ -395,42 +409,73 @@ export function ApplicationForm({
 
       {confirmation ? (
         <section
-          aria-labelledby="intake-submitted-title"
+          aria-labelledby={
+            confirmation.mode === "payment"
+              ? "intake-submitted-title"
+              : "intake-thank-you-title"
+          }
           aria-modal="true"
           role="dialog"
           className="modal-shell"
         >
           <div className="modal-card relative z-10 w-full max-w-2xl">
             <div className="rounded-[1.6rem] border border-[var(--line)] bg-[rgba(246,239,230,0.96)] px-5 py-5 shadow-[var(--shadow)] sm:px-6 sm:py-6">
-              <p className="eyebrow">Intake Submitted</p>
-              <h2
-                id="intake-submitted-title"
-                className="mt-3 text-2xl font-semibold text-[var(--ink)] sm:text-3xl"
-              >
-                Submitted.
-              </h2>
-              <p className="mt-3 text-sm leading-6 text-[var(--muted)] sm:text-base sm:leading-7">
-                Your intake has been received{confirmation.fullName ? `, ${confirmation.fullName}` : ""}. Do you want to pay and reserve your coaching spot now? There are limited spots, so reserving now will guarantee you a coaching spot.
-              </p>
+              {confirmation.mode === "payment" ? (
+                <>
+                  <p className="eyebrow">Intake Submitted</p>
+                  <h2
+                    id="intake-submitted-title"
+                    className="mt-3 text-2xl font-semibold text-[var(--ink)] sm:text-3xl"
+                  >
+                    Submitted.
+                  </h2>
+                  <p className="mt-3 text-sm leading-6 text-[var(--muted)] sm:text-base sm:leading-7">
+                    Your intake has been received{confirmation.fullName ? `, ${confirmation.fullName}` : ""}. Do you want to pay and reserve your coaching spot now? There are limited spots, so reserving now will guarantee you a coaching spot.
+                  </p>
 
-              <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
-                <button
-                  type="button"
-                  onClick={handleCheckoutNow}
-                  disabled={isRedirectingToCheckout}
-                  className="btn-primary"
-                >
-                  {isRedirectingToCheckout ? "Redirecting..." : "Yes, reserve my spot"}
-                </button>
-                <button
-                  type="button"
-                  onClick={handleDismissConfirmation}
-                  disabled={isRedirectingToCheckout}
-                  className="btn-secondary"
-                >
-                  No, I&apos;ll do it later
-                </button>
-              </div>
+                  <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
+                    <button
+                      type="button"
+                      onClick={handleCheckoutNow}
+                      disabled={isRedirectingToCheckout}
+                      className="btn-primary"
+                    >
+                      {isRedirectingToCheckout ? "Redirecting..." : "Yes, reserve my spot"}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleDismissConfirmation}
+                      disabled={isRedirectingToCheckout}
+                      className="btn-secondary"
+                    >
+                      No, I&apos;ll do it later
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <p className="eyebrow">Thank You</p>
+                  <h2
+                    id="intake-thank-you-title"
+                    className="mt-3 text-2xl font-semibold text-[var(--ink)] sm:text-3xl"
+                  >
+                    Form submitted.
+                  </h2>
+                  <p className="mt-3 text-sm leading-6 text-[var(--muted)] sm:text-base sm:leading-7">
+                    Thank you, your form has been submitted. I will reach back out if you qualify for a coaching spot.
+                  </p>
+
+                  <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
+                    <button
+                      type="button"
+                      onClick={handleCloseThankYou}
+                      className="btn-primary"
+                    >
+                      Done
+                    </button>
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </section>
