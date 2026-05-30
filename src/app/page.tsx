@@ -203,7 +203,7 @@ export default function Home() {
           primaryHref={primaryCtaHref}
           primaryLabel={primaryCtaLabel}
           primarySlot={
-            <CoachingIntakeButton className="btn-header">
+            <CoachingIntakeButton className="btn-header btn-home-cta">
               {primaryCtaLabel}
             </CoachingIntakeButton>
           }
@@ -231,7 +231,7 @@ export default function Home() {
               </p>
 
               <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
-                <CoachingIntakeButton className="btn-primary w-full text-white sm:w-auto">
+                <CoachingIntakeButton className="btn-primary btn-home-cta w-full text-white sm:w-auto">
                   Sign up for coaching
                 </CoachingIntakeButton>
                 <Link
@@ -418,7 +418,7 @@ export default function Home() {
               </p>
 
               <div className="mt-8">
-                <CoachingIntakeButton className="btn-ghost">
+                <CoachingIntakeButton className="btn-ghost btn-home-cta btn-home-cta-dark">
                   {siteConfig.coachingOffer.ctaLabel}
                 </CoachingIntakeButton>
               </div>
@@ -662,7 +662,7 @@ export default function Home() {
                   </div>
                 </div>
                 <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
-                  <CoachingIntakeButton className="btn-primary text-white">
+                  <CoachingIntakeButton className="btn-primary btn-home-cta text-white">
                     Sign up for coaching
                   </CoachingIntakeButton>
                   <a

@@ -226,6 +226,52 @@ summary {
   background: #28231d;
 }
 
+.btn-home-cta {
+  position: relative;
+  border: 1px solid rgba(201, 168, 116, 0.82);
+  box-shadow:
+    0 0 0 3px rgba(201, 168, 116, 0.18),
+    0 12px 34px rgba(141, 107, 61, 0.28),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.14);
+}
+
+.btn-home-cta::after {
+  content: "";
+  position: absolute;
+  inset: -7px;
+  border-radius: 999px;
+  border: 1px solid rgba(201, 168, 116, 0.26);
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+.btn-home-cta:hover {
+  box-shadow:
+    0 0 0 4px rgba(201, 168, 116, 0.24),
+    0 16px 42px rgba(141, 107, 61, 0.34),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.18);
+}
+
+.btn-home-cta-dark {
+  border-color: rgba(255, 255, 255, 0.22);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.06)),
+    rgba(255, 255, 255, 0.05);
+  box-shadow:
+    0 0 0 3px rgba(201, 168, 116, 0.14),
+    0 14px 34px rgba(201, 168, 116, 0.2);
+}
+
+.btn-home-cta-dark:hover {
+  border-color: rgba(201, 168, 116, 0.64);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.17), rgba(255, 255, 255, 0.09)),
+    rgba(255, 255, 255, 0.08);
+  box-shadow:
+    0 0 0 4px rgba(201, 168, 116, 0.18),
+    0 16px 38px rgba(201, 168, 116, 0.26);
+}
+
 .quiet-link {
   color: inherit;
   text-decoration: underline;
