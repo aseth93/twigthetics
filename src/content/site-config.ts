@@ -51,6 +51,7 @@ export const siteConfig: SiteConfig = {
       "Individualized training structure shaped around aesthetics, athleticism, recovery, and your actual weekly schedule.",
       "Nutrition targets built for body-composition progress without obsessive restriction or needless suffering.",
       "Regular check-ins, direct adjustments, and practical feedback when progress stalls.",
+      "Direct communication with me via my personal phone #.",
       "Simple guardrails around steps, cardio, hunger management, and keeping the look outside the gym.",
     ],
     commitments: [
