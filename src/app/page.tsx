@@ -54,7 +54,8 @@ function TransformationCard({
             },
           ].map((item) => (
             <div key={item.caption} className="bg-[var(--canvas)]">
-              <div className="relative aspect-[4/4] overflow-hidden">
+              <div className="aspect-square bg-[#efe5d7] p-2">
+                <div className="relative h-full w-full overflow-hidden rounded-[1rem]">
                 <Image
                   src={item.image.src}
                   alt={item.image.alt}
@@ -62,8 +63,9 @@ function TransformationCard({
                   loading="lazy"
                   quality={72}
                   sizes="(max-width: 768px) 100vw, 50vw"
-                  className="object-cover"
+                  className="object-contain object-center"
                 />
+                </div>
               </div>
               <div className="px-5 py-4">
                 <p className="text-xs uppercase tracking-[0.24em] text-[var(--muted)]">
@@ -74,16 +76,18 @@ function TransformationCard({
           ))}
         </div>
       ) : transformation.image ? (
-        <div className="relative aspect-[4/5] overflow-hidden">
-          <Image
-            src={transformation.image.src}
-            alt={transformation.image.alt}
-            fill
-            loading="lazy"
-            quality={72}
-            sizes="(max-width: 1024px) 100vw, 33vw"
-            className="object-cover object-top"
-          />
+        <div className="aspect-[4/5] bg-[#efe5d7] p-2">
+          <div className="relative h-full w-full overflow-hidden rounded-[1rem]">
+            <Image
+              src={transformation.image.src}
+              alt={transformation.image.alt}
+              fill
+              loading="lazy"
+              quality={72}
+              sizes="(max-width: 1024px) 100vw, 33vw"
+              className="object-contain object-center"
+            />
+          </div>
         </div>
       ) : null}
 

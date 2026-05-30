@@ -151,7 +151,7 @@ export const siteConfig: SiteConfig = {
       timeframe: "April 2021",
       sourceUrl: "https://www.instagram.com/p/CNdgJ5fjp0T/",
       image: {
-        src: "/images/client-transformations/jake-hudson.jpg",
+        src: "/images/client-transformations/previews/jake-hudson.jpg",
         alt: "Client transformation spotlight featuring Jake.",
       },
     },
@@ -162,7 +162,7 @@ export const siteConfig: SiteConfig = {
       timeframe: "April 2021",
       sourceUrl: "https://www.instagram.com/p/CNjVBxHDCbC/",
       image: {
-        src: "/images/client-transformations/rony-polanco.jpg",
+        src: "/images/client-transformations/previews/rony-polanco.jpg",
         alt: "Client transformation spotlight featuring Rony Polanco.",
       },
     },
@@ -173,7 +173,7 @@ export const siteConfig: SiteConfig = {
       timeframe: "October 2019",
       sourceUrl: "https://www.instagram.com/p/B3F-EhbjE6v/",
       image: {
-        src: "/images/client-transformations/sudie-progress.jpg",
+        src: "/images/client-transformations/previews/sudie-progress.jpg",
         alt: "Client progress spotlight featuring Sudie.",
       },
     },
@@ -184,7 +184,7 @@ export const siteConfig: SiteConfig = {
       timeframe: "October 2019",
       sourceUrl: "https://www.instagram.com/p/B3LeYCgjd_E/",
       image: {
-        src: "/images/client-transformations/gordan-progress.jpg",
+        src: "/images/client-transformations/previews/gordan-progress.jpg",
         alt: "Client transformation spotlight featuring Gordan.",
       },
     },
@@ -195,7 +195,7 @@ export const siteConfig: SiteConfig = {
       timeframe: "June 2018",
       sourceUrl: "https://www.instagram.com/p/BkjFZ8NHBXT/",
       image: {
-        src: "/images/client-transformations/maxwell-12-weeks.jpg",
+        src: "/images/client-transformations/previews/maxwell-12-weeks.jpg",
         alt: "Client transformation spotlight featuring Maxwell.",
       },
     },
@@ -206,7 +206,7 @@ export const siteConfig: SiteConfig = {
       timeframe: "October 2017",
       sourceUrl: "https://www.instagram.com/p/BaH6uKjnX7d/",
       image: {
-        src: "/images/client-transformations/aaron-progress.jpg",
+        src: "/images/client-transformations/previews/aaron-progress.jpg",
         alt: "Client progress spotlight featuring Aaron.",
       },
     },
@@ -217,7 +217,7 @@ export const siteConfig: SiteConfig = {
       timeframe: "October 2017",
       sourceUrl: "https://www.instagram.com/p/BaCZH82HVn1/",
       image: {
-        src: "/images/client-transformations/cameron-lifestyle.jpg",
+        src: "/images/client-transformations/previews/cameron-lifestyle.jpg",
         alt: "Client transformation spotlight featuring Cameron.",
       },
     },
@@ -228,7 +228,7 @@ export const siteConfig: SiteConfig = {
       timeframe: "July 2017",
       sourceUrl: "https://www.instagram.com/p/BWlrWDgHIwT/",
       image: {
-        src: "/images/client-transformations/mike-durkot.jpg",
+        src: "/images/client-transformations/previews/mike-durkot.jpg",
         alt: "Client prep progress spotlight featuring Mike Durkot.",
       },
     },
@@ -239,7 +239,7 @@ export const siteConfig: SiteConfig = {
       timeframe: "July 2017",
       sourceUrl: "https://www.instagram.com/p/BXOVRpCnWtB/",
       image: {
-        src: "/images/client-transformations/camilo-jimenez.jpg",
+        src: "/images/client-transformations/previews/camilo-jimenez.jpg",
         alt: "Client transformation spotlight featuring Camilo Jimenez.",
       },
     },
@@ -250,7 +250,7 @@ export const siteConfig: SiteConfig = {
       timeframe: "July 2017",
       sourceUrl: "https://www.instagram.com/p/BWla2q5HAQf/",
       image: {
-        src: "/images/client-transformations/kelly-results.jpg",
+        src: "/images/client-transformations/previews/kelly-results.jpg",
         alt: "Client results spotlight featuring Kelly.",
       },
     },
