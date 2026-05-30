@@ -18,11 +18,73 @@ type MemberCheckinWorkspaceProps = {
   initialCheckins: DailyCheckinEntry[];
 };
 
+const weekdayLabels = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+
+function toUtcDateFromIsoDate(value: string) {
+  return new Date(`${value}T12:00:00.000Z`);
+}
+
+function toIsoDateString(date: Date) {
+  return date.toISOString().slice(0, 10);
+}
+
+function addUtcDays(date: Date, days: number) {
+  const next = new Date(date);
+  next.setUTCDate(next.getUTCDate() + days);
+  return next;
+}
+
+function getMonthStartIsoDate(value: string) {
+  const date = toUtcDateFromIsoDate(value);
+  date.setUTCDate(1);
+  return toIsoDateString(date);
+}
+
+function shiftMonth(monthStartIsoDate: string, offset: number) {
+  const date = toUtcDateFromIsoDate(monthStartIsoDate);
+  const shifted = new Date(
+    Date.UTC(date.getUTCFullYear(), date.getUTCMonth() + offset, 1, 12, 0, 0),
+  );
+  return toIsoDateString(shifted);
+}
+
+function formatMonthLabel(value: string) {
+  return new Intl.DateTimeFormat("en-US", {
+    month: "long",
+    year: "numeric",
+  }).format(toUtcDateFromIsoDate(value));
+}
+
+function buildCalendarDays(monthStartIsoDate: string, selectedDate: string, entries: Map<string, DailyCheckinEntry>) {
+  const monthStart = toUtcDateFromIsoDate(monthStartIsoDate);
+  const monthIndex = monthStart.getUTCMonth();
+  const weekday = monthStart.getUTCDay();
+  const gridStart = addUtcDays(monthStart, weekday === 0 ? -6 : 1 - weekday);
+  const todayIsoDate = getTodayIsoDate();
+
+  return Array.from({ length: 42 }, (_, index) => {
+    const date = addUtcDays(gridStart, index);
+    const isoDate = toIsoDateString(date);
+
+    return {
+      isoDate,
+      dayNumber: date.getUTCDate(),
+      isCurrentMonth: date.getUTCMonth() === monthIndex,
+      isToday: isoDate === todayIsoDate,
+      isSelected: isoDate === selectedDate,
+      entry: entries.get(isoDate) || null,
+    };
+  });
+}
+
 export function MemberCheckinWorkspace({
   initialCheckins,
 }: MemberCheckinWorkspaceProps) {
   const [checkins, setCheckins] = useState(initialCheckins);
   const [checkinDate, setCheckinDate] = useState(getTodayIsoDate());
+  const [visibleMonthStart, setVisibleMonthStart] = useState(
+    getMonthStartIsoDate(getTodayIsoDate()),
+  );
   const [weightPounds, setWeightPounds] = useState("");
   const [hydrationOunces, setHydrationOunces] = useState("");
   const [sleepHours, setSleepHours] = useState("");
@@ -34,9 +96,23 @@ export function MemberCheckinWorkspace({
     setCheckins(initialCheckins);
   }, [initialCheckins]);
 
+  useEffect(() => {
+    setVisibleMonthStart(getMonthStartIsoDate(checkinDate));
+  }, [checkinDate]);
+
   const selectedEntry = useMemo(
     () => checkins.find((entry) => entry.checkinDate === checkinDate) || null,
     [checkinDate, checkins],
+  );
+
+  const entriesByDate = useMemo(
+    () => new Map(checkins.map((entry) => [entry.checkinDate, entry])),
+    [checkins],
+  );
+
+  const calendarDays = useMemo(
+    () => buildCalendarDays(visibleMonthStart, checkinDate, entriesByDate),
+    [visibleMonthStart, checkinDate, entriesByDate],
   );
 
   useEffect(() => {
@@ -195,8 +271,202 @@ export function MemberCheckinWorkspace({
         </article>
       </section>
 
+      <section className="grid grid-cols-1 gap-6 xl:grid-cols-[1.15fr_0.85fr]">
+        <article className="surface-panel p-6">
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <p className="eyebrow">Calendar view</p>
+              <h2 className="mt-3 text-2xl font-semibold text-[var(--ink)]">
+                Expand any day and look back at your log.
+              </h2>
+              <p className="mt-3 text-sm leading-6 text-[var(--muted)]">
+                Move month to month, then click a day to load that date’s weight, sleep,
+                hydration, and workout notes.
+              </p>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => setVisibleMonthStart((current) => shiftMonth(current, -1))}
+                className="rounded-full border border-[var(--line)] bg-white/70 px-4 py-2 text-xs uppercase tracking-[0.16em] text-[var(--muted)] hover:bg-white"
+              >
+                Prev
+              </button>
+              <button
+                type="button"
+                onClick={() => setVisibleMonthStart((current) => shiftMonth(current, 1))}
+                className="rounded-full border border-[var(--line)] bg-white/70 px-4 py-2 text-xs uppercase tracking-[0.16em] text-[var(--muted)] hover:bg-white"
+              >
+                Next
+              </button>
+            </div>
+          </div>
+
+          <div className="mt-6 flex items-center justify-between gap-3">
+            <p className="type-display text-2xl uppercase text-[var(--ink)]">
+              {formatMonthLabel(visibleMonthStart)}
+            </p>
+            <button
+              type="button"
+              onClick={() => {
+                const todayIsoDate = getTodayIsoDate();
+                setCheckinDate(todayIsoDate);
+                setVisibleMonthStart(getMonthStartIsoDate(todayIsoDate));
+              }}
+              className="rounded-full border border-[var(--line)] bg-white/70 px-4 py-2 text-xs uppercase tracking-[0.16em] text-[var(--muted)] hover:bg-white"
+            >
+              Today
+            </button>
+          </div>
+
+          <div className="mt-5 grid grid-cols-7 gap-2">
+            {weekdayLabels.map((label) => (
+              <p
+                key={label}
+                className="px-1 pb-2 text-center text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--muted)]"
+              >
+                {label}
+              </p>
+            ))}
+
+            {calendarDays.map((day) => (
+              <button
+                key={day.isoDate}
+                type="button"
+                onClick={() => setCheckinDate(day.isoDate)}
+                className={[
+                  "min-h-[5.75rem] rounded-[1.1rem] border px-2 py-2 text-left",
+                  day.isSelected
+                    ? "border-[var(--ink)] bg-[var(--ink)] text-white"
+                    : day.entry
+                      ? "border-[rgba(141,107,61,0.22)] bg-[rgba(141,107,61,0.09)] text-[var(--ink)] hover:bg-[rgba(141,107,61,0.15)]"
+                      : "border-[var(--line)] bg-white/62 text-[var(--ink)] hover:bg-white/82",
+                  day.isCurrentMonth ? "" : "opacity-45",
+                ].join(" ")}
+              >
+                <div className="flex items-start justify-between gap-2">
+                  <span className="text-sm font-semibold">{day.dayNumber}</span>
+                  {day.isToday ? (
+                    <span
+                      className={[
+                        "rounded-full px-2 py-0.5 text-[10px] uppercase tracking-[0.16em]",
+                        day.isSelected ? "bg-white/16 text-white" : "bg-[var(--ink)]/8 text-[var(--muted)]",
+                      ].join(" ")}
+                    >
+                      Today
+                    </span>
+                  ) : null}
+                </div>
+
+                {day.entry ? (
+                  <div className="mt-3 space-y-1">
+                    <p className="text-xs font-medium">
+                      {formatWeightPounds(day.entry.weightPounds)}
+                    </p>
+                    <div
+                      className={[
+                        "flex flex-wrap gap-1 text-[10px] uppercase tracking-[0.12em]",
+                        day.isSelected ? "text-white/78" : "text-[var(--muted)]",
+                      ].join(" ")}
+                    >
+                      <span>{formatHydrationOunces(day.entry.hydrationOunces)}</span>
+                      <span>{formatSleepHours(day.entry.sleepHours)}</span>
+                    </div>
+                  </div>
+                ) : (
+                  <p
+                    className={[
+                      "mt-3 text-[11px] leading-5",
+                      day.isSelected ? "text-white/78" : "text-[var(--muted)]",
+                    ].join(" ")}
+                  >
+                    No log
+                  </p>
+                )}
+              </button>
+            ))}
+          </div>
+        </article>
+
+        <article className="surface-panel p-6">
+          <p className="eyebrow">Selected day</p>
+          <h2 className="mt-3 text-2xl font-semibold text-[var(--ink)]">
+            {formatPortalDate(checkinDate)}
+          </h2>
+          <p className="mt-3 text-sm leading-6 text-[var(--muted)]">
+            Clicking a day opens the log for that date and also loads it into the editor
+            below.
+          </p>
+
+          <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-3">
+            <div className="rounded-[1.15rem] border border-[var(--line)] bg-white/72 px-4 py-4">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--muted)]">
+                Weight
+              </p>
+              <p className="mt-2 text-lg font-semibold text-[var(--ink)]">
+                {formatWeightPounds(selectedEntry?.weightPounds)}
+              </p>
+            </div>
+            <div className="rounded-[1.15rem] border border-[var(--line)] bg-white/72 px-4 py-4">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--muted)]">
+                Hydration
+              </p>
+              <p className="mt-2 text-lg font-semibold text-[var(--ink)]">
+                {formatHydrationOunces(selectedEntry?.hydrationOunces)}
+              </p>
+            </div>
+            <div className="rounded-[1.15rem] border border-[var(--line)] bg-white/72 px-4 py-4">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--muted)]">
+                Sleep
+              </p>
+              <p className="mt-2 text-lg font-semibold text-[var(--ink)]">
+                {formatSleepHours(selectedEntry?.sleepHours)}
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-5 rounded-[1.2rem] border border-[var(--line)] bg-white/72 px-4 py-4">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--muted)]">
+              Workout notes
+            </p>
+            {selectedEntry?.workoutNotes ? (
+              <p className="mt-3 whitespace-pre-line text-sm leading-6 text-[var(--ink)]">
+                {selectedEntry.workoutNotes}
+              </p>
+            ) : (
+              <p className="mt-3 text-sm leading-6 text-[var(--muted)]">
+                No workout notes logged for this day.
+              </p>
+            )}
+          </div>
+
+          <div className="mt-5 flex flex-wrap items-center gap-3">
+            <button
+              type="button"
+              onClick={() => {
+                const editor = document.getElementById("daily-checkin-editor");
+                editor?.scrollIntoView({ behavior: "smooth", block: "start" });
+              }}
+              className="btn-secondary"
+            >
+              Edit this day
+            </button>
+            <p className="text-sm text-[var(--muted)]">
+              {selectedEntry
+                ? `Last updated ${formatPortalDate(selectedEntry.updatedAt)}`
+                : "No saved entry yet for this date."}
+            </p>
+          </div>
+        </article>
+      </section>
+
       <section className="grid grid-cols-1 gap-6 xl:grid-cols-[0.95fr_1.05fr]">
-        <form onSubmit={handleSubmit} className="surface-panel grid grid-cols-1 gap-4 p-6">
+        <form
+          id="daily-checkin-editor"
+          onSubmit={handleSubmit}
+          className="surface-panel grid grid-cols-1 gap-4 p-6"
+        >
           <div>
             <p className="eyebrow">Daily check-in</p>
             <h2 className="mt-3 text-2xl font-semibold text-[var(--ink)]">
@@ -308,9 +578,11 @@ export function MemberCheckinWorkspace({
             <div className="mt-5 grid grid-cols-1 gap-4">
               {checkins.length ? (
                 checkins.slice(0, 10).map((entry) => (
-                  <div
+                  <button
                     key={`${entry.id}-${entry.checkinDate}`}
-                    className="rounded-[1.15rem] border border-[var(--line)] bg-white/70 px-4 py-4"
+                    type="button"
+                    onClick={() => setCheckinDate(entry.checkinDate)}
+                    className="rounded-[1.15rem] border border-[var(--line)] bg-white/70 px-4 py-4 text-left hover:bg-white"
                   >
                     <div className="flex flex-wrap items-start justify-between gap-3">
                       <p className="font-medium text-[var(--ink)]">
@@ -333,7 +605,7 @@ export function MemberCheckinWorkspace({
                         No workout notes saved for this day.
                       </p>
                     )}
-                  </div>
+                  </button>
                 ))
               ) : (
                 <div className="rounded-[1.15rem] border border-dashed border-[var(--line)] bg-white/45 px-4 py-5 text-sm leading-6 text-[var(--muted)]">
