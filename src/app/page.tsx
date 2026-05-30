@@ -59,8 +59,8 @@ function TransformationCard({
                   src={item.image.src}
                   alt={item.image.alt}
                   fill
-                  unoptimized
-                  loading="eager"
+                  loading="lazy"
+                  quality={72}
                   sizes="(max-width: 768px) 100vw, 50vw"
                   className="object-cover"
                 />
@@ -79,6 +79,8 @@ function TransformationCard({
             src={transformation.image.src}
             alt={transformation.image.alt}
             fill
+            loading="lazy"
+            quality={72}
             sizes="(max-width: 1024px) 100vw, 33vw"
             className="object-cover object-top"
           />
@@ -96,9 +98,11 @@ function TransformationCard({
 
 function HeroTransformationCard({
   transformation,
+  priority = false,
   style,
 }: {
   transformation: ClientTransformation;
+  priority?: boolean;
   style?: CSSProperties;
 }) {
   return (
@@ -115,6 +119,10 @@ function HeroTransformationCard({
             src={transformation.image.src}
             alt={transformation.image.alt}
             fill
+            priority={priority}
+            fetchPriority={priority ? "high" : "low"}
+            loading={priority ? "eager" : "lazy"}
+            quality={68}
             sizes="(max-width: 767px) 70vw, (max-width: 1280px) 18rem, 15rem"
             className="object-contain object-center"
           />
@@ -149,6 +157,8 @@ function ClientTransformationCard({
             src={transformation.image.src}
             alt={transformation.image.alt}
             fill
+            loading="lazy"
+            quality={68}
             sizes="(max-width: 640px) 82vw, (max-width: 1280px) 33vw, 20vw"
             className="object-contain object-center"
           />
@@ -167,7 +177,7 @@ function ClientTransformationCard({
 
 export default function Home() {
   const hasGuideCheckout = Boolean(siteConfig.links.guideCheckout);
-  const featuredClientTransformations = siteConfig.clientTransformations.slice(0, 6);
+  const featuredClientTransformations = siteConfig.clientTransformations.slice(0, 4);
   const desktopHeroTransformations = [
     ...featuredClientTransformations,
     ...featuredClientTransformations,
@@ -247,6 +257,7 @@ export default function Home() {
                     >
                       <HeroTransformationCard
                         transformation={transformation}
+                        priority={index < 2}
                         style={{
                           animationDelay: `${index * 140}ms`,
                           animationDuration: `${7200 + index * 220}ms`,
@@ -295,6 +306,7 @@ export default function Home() {
                       >
                         <HeroTransformationCard
                           transformation={transformation}
+                          priority={index < 2}
                           style={{
                             animationDelay: `${(index % featuredClientTransformations.length) * 160}ms`,
                             animationDuration: `${7600 + (index % featuredClientTransformations.length) * 260}ms`,
@@ -539,6 +551,8 @@ export default function Home() {
                     src={siteConfig.coach.portrait.src}
                     alt={siteConfig.coach.portrait.alt}
                     fill
+                    loading="lazy"
+                    quality={70}
                     sizes="80px"
                     className="object-cover"
                   />
