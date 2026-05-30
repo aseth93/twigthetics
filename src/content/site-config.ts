@@ -109,12 +109,11 @@ export const siteConfig: SiteConfig = {
     {
       id: "coach-everyday-standard",
       label: "Coach Proof",
-      title: "Sharp in normal conditions, not just perfect ones.",
+      title: "Looks good in real life.",
       summary:
-        "Different mirrors, different lighting, same standard: lean, athletic, and healthy enough to keep when life is normal.",
+        "Lean, athletic, and healthy without needing perfect lighting, perfect timing, or extreme effort to keep it.",
       timeframe: "Current coach check-ins",
-      result:
-        "The point is not one perfect photo. It is looking clearly in shape across ordinary settings without having to live on extremes.",
+      result: "Consistent condition without turning life into prep.",
       comparison: {
         before: {
           src: "/images/coach/coach-floor-mirror.jpg?v=2",
