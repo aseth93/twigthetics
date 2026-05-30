@@ -83,6 +83,25 @@ export const billingAccounts = pgTable(
   ],
 );
 
+export const dailyCheckins = pgTable(
+  "daily_checkins",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    memberId: uuid("member_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    checkinDate: date("checkin_date").notNull(),
+    weightTenths: integer("weight_tenths"),
+    workoutNotes: text("workout_notes"),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [
+    uniqueIndex("uniq_daily_checkins_member_date").on(table.memberId, table.checkinDate),
+    index("idx_daily_checkins_member_date").on(table.memberId, table.checkinDate),
+  ],
+);
+
 export const plans = pgTable(
   "plans",
   {

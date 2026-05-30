@@ -125,6 +125,10 @@ export type MemberDashboardData = {
   billing: BillingAccount | null;
   conversation: ConversationThread | null;
   messages: ConversationMessage[];
+  dailyCheckins: DailyCheckinEntry[];
+  weeklyWeightAverages: WeeklyWeightAverage[];
+  latestCheckin: DailyCheckinEntry | null;
+  currentWeekAverageWeightPounds: number | null;
 };
 
 export type AdminDashboardData = {
@@ -155,4 +159,21 @@ export type PortalRuntime = {
   stripePriceConfigured: boolean;
   emailConfigured: boolean;
   bootstrapAdminConfigured: boolean;
+};
+
+export type DailyCheckinEntry = {
+  id: string;
+  memberId: string;
+  checkinDate: string;
+  weightPounds?: number | null;
+  workoutNotes?: string | null;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type WeeklyWeightAverage = {
+  weekStart: string;
+  weekEnd: string;
+  averageWeightPounds: number;
+  entryCount: number;
 };

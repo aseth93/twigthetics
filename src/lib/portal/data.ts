@@ -5,6 +5,7 @@ import {
   coachingApplicationAttachments,
   coachingApplications,
   conversations,
+  dailyCheckins,
   documentAccess,
   documents,
   messages,
@@ -12,6 +13,10 @@ import {
   plans,
   users,
 } from "@/db/schema";
+import {
+  computeWeeklyWeightAverages,
+  getCurrentWeekAverageWeight,
+} from "@/lib/portal/checkin-stats";
 import { parsePlanSections } from "@/lib/portal/plan-sections";
 import type {
   AdminConversation,
@@ -22,6 +27,7 @@ import type {
   CoachingApplicationAttachment,
   ConversationMessage,
   ConversationThread,
+  DailyCheckinEntry,
   MemberDashboardData,
   PlanAssignment,
   PortalDocument,
@@ -134,6 +140,19 @@ function mapBillingRow(row: typeof billingAccounts.$inferSelect): BillingAccount
   };
 }
 
+function mapDailyCheckinRow(row: typeof dailyCheckins.$inferSelect): DailyCheckinEntry {
+  return {
+    id: row.id,
+    memberId: row.memberId,
+    checkinDate: row.checkinDate,
+    weightPounds:
+      typeof row.weightTenths === "number" ? row.weightTenths / 10 : null,
+    workoutNotes: row.workoutNotes,
+    createdAt: toIsoDate(row.createdAt) || new Date().toISOString(),
+    updatedAt: toIsoDate(row.updatedAt) || new Date().toISOString(),
+  };
+}
+
 function mapApplicationAttachmentRow(
   row: typeof coachingApplicationAttachments.$inferSelect,
 ): CoachingApplicationAttachment {
@@ -176,10 +195,15 @@ export async function getMemberDashboardData(
       billing: null,
       conversation: null,
       messages: [],
+      dailyCheckins: [],
+      weeklyWeightAverages: [],
+      latestCheckin: null,
+      currentWeekAverageWeightPounds: null,
     };
   }
 
-  const [assignmentRows, documentRows, billingRow, threadRow] = await Promise.all([
+  const [assignmentRows, documentRows, billingRow, threadRow, dailyCheckinRows] =
+    await Promise.all([
     db
       .select({
         assignment: planAssignments,
@@ -207,6 +231,11 @@ export async function getMemberDashboardData(
       .from(conversations)
       .where(eq(conversations.memberId, viewer.profile.id))
       .limit(1),
+    db
+      .select()
+      .from(dailyCheckins)
+      .where(eq(dailyCheckins.memberId, viewer.profile.id))
+      .orderBy(desc(dailyCheckins.checkinDate), desc(dailyCheckins.updatedAt)),
   ]);
 
   const conversation = threadRow[0] ? mapConversationRow(threadRow[0]) : null;
@@ -221,6 +250,8 @@ export async function getMemberDashboardData(
         .where(eq(messages.conversationId, conversation.id))
         .orderBy(asc(messages.createdAt))
     : [];
+  const mappedDailyCheckins = dailyCheckinRows.map((row) => mapDailyCheckinRow(row));
+  const weeklyWeightAverages = computeWeeklyWeightAverages(mappedDailyCheckins);
 
   return {
     assignments: assignmentRows.map((row) => mapAssignmentRow(row)),
@@ -228,6 +259,10 @@ export async function getMemberDashboardData(
     billing: billingRow[0] ? mapBillingRow(billingRow[0]) : null,
     conversation,
     messages: messageRows.map((row) => mapMessageRow(row)),
+    dailyCheckins: mappedDailyCheckins,
+    weeklyWeightAverages,
+    latestCheckin: mappedDailyCheckins[0] || null,
+    currentWeekAverageWeightPounds: getCurrentWeekAverageWeight(weeklyWeightAverages),
   };
 }
 

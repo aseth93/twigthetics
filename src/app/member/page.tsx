@@ -2,7 +2,10 @@ import Link from "next/link";
 import { RuntimeBanner } from "@/components/portal/runtime-banner";
 import { requirePortalViewer } from "@/lib/portal/auth";
 import { getMemberDashboardData } from "@/lib/portal/data";
-import { formatPortalDate, formatPortalDateTime } from "@/lib/portal/format";
+import {
+  formatPortalDate,
+  formatWeightPounds,
+} from "@/lib/portal/format";
 import { getPortalRuntime } from "@/lib/portal/env";
 import { getPlanSectionPreview } from "@/lib/portal/plan-sections";
 
@@ -27,7 +30,7 @@ export default async function MemberDashboardPage() {
         stripeConfigured={runtime.stripeConfigured}
       />
 
-      <section className="grid grid-cols-1 gap-4 md:grid-cols-3">
+      <section className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
         <article className="surface-panel p-6">
           <p className="eyebrow">Active plan</p>
           <h2 className="mt-4 text-2xl font-semibold text-[var(--ink)]">
@@ -40,6 +43,28 @@ export default async function MemberDashboardPage() {
         </article>
 
         <article className="surface-panel p-6">
+          <p className="eyebrow">Current week average</p>
+          <h2 className="mt-4 text-2xl font-semibold text-[var(--ink)]">
+            {formatWeightPounds(dashboard.currentWeekAverageWeightPounds)}
+          </h2>
+          <p className="mt-3 text-sm leading-6 text-[var(--muted)]">
+            Based on the weigh-ins you logged this week.
+          </p>
+        </article>
+
+        <article className="surface-panel p-6">
+          <p className="eyebrow">Latest weigh-in</p>
+          <h2 className="mt-4 text-2xl font-semibold text-[var(--ink)]">
+            {formatWeightPounds(dashboard.latestCheckin?.weightPounds)}
+          </h2>
+          <p className="mt-3 text-sm leading-6 text-[var(--muted)]">
+            {dashboard.latestCheckin
+              ? `Logged ${formatPortalDate(dashboard.latestCheckin.checkinDate)}`
+              : "Start logging daily bodyweight in Check-ins."}
+          </p>
+        </article>
+
+        <article className="surface-panel p-6">
           <p className="eyebrow">Billing status</p>
           <h2 className="mt-4 text-2xl font-semibold text-[var(--ink)]">
             {dashboard.billing?.status || "Not connected"}
@@ -48,18 +73,6 @@ export default async function MemberDashboardPage() {
             {dashboard.billing
               ? `Renews through ${formatPortalDate(dashboard.billing.currentPeriodEnd)}`
               : "Billing portal connects here once Stripe is enabled."}
-          </p>
-        </article>
-
-        <article className="surface-panel p-6">
-          <p className="eyebrow">Last message</p>
-          <h2 className="mt-4 text-2xl font-semibold text-[var(--ink)]">
-            {dashboard.messages.at(-1)?.sender.fullName || "Inbox ready"}
-          </h2>
-          <p className="mt-3 text-sm leading-6 text-[var(--muted)]">
-            {dashboard.messages.at(-1)
-              ? formatPortalDateTime(dashboard.messages.at(-1)?.createdAt)
-              : "Use the portal inbox instead of chasing DMs and buried emails."}
           </p>
         </article>
       </section>
@@ -86,6 +99,9 @@ export default async function MemberDashboardPage() {
         <article className="dark-panel p-6">
           <p className="eyebrow text-white/55">Quick links</p>
           <div className="mt-5 grid grid-cols-1 gap-3">
+            <Link href="/member/check-ins" className="btn-ghost">
+              Log check-in
+            </Link>
             <Link href="/member/messages" className="btn-ghost">
               Open inbox
             </Link>

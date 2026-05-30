@@ -41,6 +41,14 @@ export function formatBytes(value?: number | null) {
   return `${size.toFixed(unitIndex === 0 ? 0 : 1)} ${units[unitIndex]}`;
 }
 
+export function formatWeightPounds(value?: number | null) {
+  if (typeof value !== "number" || Number.isNaN(value)) {
+    return "Not logged";
+  }
+
+  return `${value.toFixed(1)} lb`;
+}
+
 export function formatRoleLabel(role: string) {
   return role === "coach_admin" ? "Coach Admin" : "Member";
 }
