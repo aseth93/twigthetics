@@ -18,11 +18,11 @@ export const siteConfig: SiteConfig = {
   },
   coach: {
     name: "Abe Seth",
-    title: "Online coach for lean, athletic physiques",
+    title: "IFBB Pro and online coach for lean, athletic physiques",
     handle: "twigthetics",
     summary:
-      "Twigthetics is for lifters who care about looking lean, moving well, and keeping the physique they build without turning fitness into a full-time job.",
-    bio: "The lane is simple: stay lean enough to look good, athletic enough to move well, and realistic enough to maintain without living on extreme cardio, food obsession, or bodybuilding effort year-round.",
+      "Twigthetics is led by IFBB Pro Abe Seth for lifters who care about looking lean, moving well, and keeping the physique they build without turning fitness into a full-time job.",
+    bio: "The lane is simple: stay lean enough to look good, athletic enough to move well, and realistic enough to maintain without living on extreme cardio, food obsession, or bodybuilding effort year-round. The standard is built from both real-life maintainable shape and high-level physique experience.",
     metrics: [
       { value: "Sustainable", label: "results that hold" },
       { value: "Structured", label: "organized approach" },
@@ -130,14 +130,14 @@ export const siteConfig: SiteConfig = {
     {
       id: "current-conditioning",
       label: "",
-      title: "Maintain a lean physique without living on extremes.",
+      title: "IFBB Pro experience, applied in a way that still works in real life.",
       summary: "",
-      timeframe: "Current coach photo",
+      timeframe: "IFBB Pro coach photo",
       result:
         "This is the standard the coaching is built around: flexible, healthy, and repeatable.",
       image: {
-        src: "/images/coach/coach-d93-checkin.jpg",
-        alt: "Abe Seth in a lean mirror check-in photo showing an athletic physique.",
+        src: "/images/coach/coach-stage-checkin.jpg",
+        alt: "Abe Seth in a deep-tan posing-trunks check-in photo showing an IFBB Pro physique.",
       },
     },
   ],

@@ -556,7 +556,26 @@ export default function Home() {
             </div>
 
             <div className="dark-panel p-6 sm:p-8 md:p-10">
-              <p className="eyebrow text-white/55">Approach</p>
+              <div className="mb-8 overflow-hidden rounded-[1.6rem] border border-white/10 bg-white/5 p-2">
+                <div className="relative aspect-[4/5] overflow-hidden rounded-[1.2rem] bg-[rgba(201,168,116,0.14)]">
+                  <Image
+                    src={siteConfig.coach.aboutImage.src}
+                    alt={siteConfig.coach.aboutImage.alt}
+                    fill
+                    loading="lazy"
+                    quality={74}
+                    sizes="(max-width: 1024px) 100vw, 40vw"
+                    className="object-contain object-center"
+                  />
+                </div>
+              </div>
+
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <p className="eyebrow text-white/55">Approach</p>
+                <span className="rounded-full border border-[rgba(201,168,116,0.28)] bg-[rgba(201,168,116,0.12)] px-3 py-1.5 text-[0.72rem] font-medium uppercase tracking-[0.18em] text-[var(--accent-soft)]">
+                  IFBB Pro
+                </span>
+              </div>
               <p className="mt-4 text-base leading-7 text-white/80 sm:text-lg sm:leading-8">
                 {siteConfig.coach.bio}
               </p>
