@@ -134,7 +134,7 @@ export const siteConfig: SiteConfig = {
       summary: "",
       timeframe: "Current coach photo",
       result:
-        "This is the standard the coaching is built around: sharp, healthy, and repeatable.",
+        "This is the standard the coaching is built around: flexible, healthy, and repeatable.",
       image: {
         src: "/images/coach/coach-d93-checkin.jpg",
         alt: "Abe Seth in a lean mirror check-in photo showing an athletic physique.",
