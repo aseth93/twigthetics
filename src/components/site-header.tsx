@@ -22,10 +22,10 @@ export function SiteHeader({
 }: SiteHeaderProps) {
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-[var(--line)] bg-[rgba(245,239,230,0.8)] backdrop-blur-xl">
-      <div className="mx-auto flex w-full max-w-7xl items-center justify-between gap-3 px-4 py-2.5 sm:gap-6 sm:px-6 sm:py-4 lg:px-8">
+      <div className="mx-auto flex w-full max-w-7xl items-center justify-between gap-3 px-4 py-2 sm:gap-6 sm:px-6 sm:py-4 lg:px-8">
         <Link
           href="#top"
-          className="type-display shrink-0 text-[1.65rem] leading-none uppercase text-[var(--ink)] sm:text-2xl"
+          className="type-display shrink-0 text-[1.45rem] leading-none uppercase text-[var(--ink)] sm:text-2xl"
         >
           {brandName}
         </Link>
@@ -61,12 +61,12 @@ export function SiteHeader({
       </div>
 
       <div className="border-t border-[var(--line)] md:hidden">
-        <nav className="mx-auto flex w-full max-w-7xl gap-3 overflow-x-auto px-4 py-2 sm:px-6">
+        <nav className="mx-auto flex w-full max-w-7xl gap-2.5 overflow-x-auto px-4 py-1.5 sm:px-6">
           {navItems.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              className="shrink-0 text-[0.66rem] uppercase tracking-[0.16em] text-[var(--muted)] transition hover:text-[var(--ink)]"
+              className="shrink-0 text-[0.62rem] uppercase tracking-[0.16em] text-[var(--muted)] transition hover:text-[var(--ink)]"
             >
               {item.label}
             </Link>

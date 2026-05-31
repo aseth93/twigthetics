@@ -53,7 +53,7 @@ function ModalContent({
         className="absolute inset-0 block"
       />
 
-      <div className="modal-card relative z-10 w-full max-w-5xl">
+      <div className="modal-card relative z-10 flex w-full max-w-5xl flex-col">
         <div className="mb-4 flex items-start justify-between gap-4 rounded-[1.6rem] border border-[var(--line)] bg-[rgba(246,239,230,0.94)] px-5 py-5 shadow-[var(--shadow)] sm:px-6">
           <div>
             <p className="eyebrow">Coaching Intake</p>
@@ -79,7 +79,7 @@ function ModalContent({
           </button>
         </div>
 
-        <div className="max-h-[calc(100dvh-9rem)] overflow-y-auto overscroll-contain pb-[calc(env(safe-area-inset-bottom)+1.5rem)] pr-1">
+        <div className="min-h-0 overflow-y-auto overscroll-contain pb-[calc(env(safe-area-inset-bottom)+6rem)] pr-1">
           <ApplicationForm fields={fields} instagramUrl={instagramUrl} />
         </div>
       </div>
