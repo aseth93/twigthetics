@@ -331,6 +331,13 @@ export const siteConfig: SiteConfig = {
       required: true,
     },
     {
+      name: "phoneNumber",
+      label: "Phone number",
+      type: "text",
+      placeholder: "Optional",
+      helper: "Optional.",
+    },
+    {
       name: "instagramHandle",
       label: "Instagram handle",
       type: "text",
