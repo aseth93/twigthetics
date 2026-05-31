@@ -45,65 +45,70 @@ export default async function AdminIntakesPage() {
                 key={application.id}
                 className="surface-panel rounded-[1.4rem] p-5 sm:p-6"
               >
-                <div className="flex flex-wrap items-start justify-between gap-4">
-                  <div>
-                    <p className="text-xl font-semibold text-[var(--ink)]">
-                      {application.fullName}
-                    </p>
-                    <p className="mt-1 text-sm text-[var(--muted)]">{application.email}</p>
-                    {application.instagramHandle ? (
-                      <p className="mt-1 text-sm text-[var(--muted)]">
-                        @{application.instagramHandle.replace(/^@/, "")}
+                <Link
+                  href={`/admin/intakes/${application.id}`}
+                  className="block cursor-pointer rounded-[1rem] transition hover:opacity-95 focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:ring-offset-2"
+                >
+                  <div className="flex flex-wrap items-start justify-between gap-4">
+                    <div>
+                      <p className="text-xl font-semibold text-[var(--ink)]">
+                        {application.fullName}
                       </p>
-                    ) : null}
+                      <p className="mt-1 text-sm text-[var(--muted)]">{application.email}</p>
+                      {application.instagramHandle ? (
+                        <p className="mt-1 text-sm text-[var(--muted)]">
+                          @{application.instagramHandle.replace(/^@/, "")}
+                        </p>
+                      ) : null}
+                    </div>
+                    <span className="rounded-full border border-[var(--line)] px-3 py-1 text-xs uppercase tracking-[0.18em] text-[var(--muted)]">
+                      {application.status}
+                    </span>
                   </div>
-                  <span className="rounded-full border border-[var(--line)] px-3 py-1 text-xs uppercase tracking-[0.18em] text-[var(--muted)]">
-                    {application.status}
-                  </span>
-                </div>
 
-                <div className="mt-4 grid grid-cols-2 gap-3 lg:grid-cols-5">
-                  <div className="rounded-[1rem] border border-[var(--line)] bg-[var(--canvas)] px-3 py-3">
-                    <p className="text-[11px] uppercase tracking-[0.16em] text-[var(--muted)]">
-                      Submitted
-                    </p>
-                    <p className="mt-2 text-sm font-medium text-[var(--ink)]">
-                      {formatPortalDateTime(application.submittedAt)}
-                    </p>
+                  <div className="mt-4 grid grid-cols-2 gap-3 lg:grid-cols-5">
+                    <div className="rounded-[1rem] border border-[var(--line)] bg-[var(--canvas)] px-3 py-3">
+                      <p className="text-[11px] uppercase tracking-[0.16em] text-[var(--muted)]">
+                        Submitted
+                      </p>
+                      <p className="mt-2 text-sm font-medium text-[var(--ink)]">
+                        {formatPortalDateTime(application.submittedAt)}
+                      </p>
+                    </div>
+                    <div className="rounded-[1rem] border border-[var(--line)] bg-[var(--canvas)] px-3 py-3">
+                      <p className="text-[11px] uppercase tracking-[0.16em] text-[var(--muted)]">
+                        Age
+                      </p>
+                      <p className="mt-2 text-sm font-medium text-[var(--ink)]">
+                        {application.payload.age || "Not provided"}
+                      </p>
+                    </div>
+                    <div className="rounded-[1rem] border border-[var(--line)] bg-[var(--canvas)] px-3 py-3">
+                      <p className="text-[11px] uppercase tracking-[0.16em] text-[var(--muted)]">
+                        Weight
+                      </p>
+                      <p className="mt-2 text-sm font-medium text-[var(--ink)]">
+                        {application.payload.weight || "Not provided"}
+                      </p>
+                    </div>
+                    <div className="rounded-[1rem] border border-[var(--line)] bg-[var(--canvas)] px-3 py-3">
+                      <p className="text-[11px] uppercase tracking-[0.16em] text-[var(--muted)]">
+                        Start date
+                      </p>
+                      <p className="mt-2 text-sm font-medium text-[var(--ink)]">
+                        {application.payload.preferredStartDate || "Not provided"}
+                      </p>
+                    </div>
+                    <div className="rounded-[1rem] border border-[var(--line)] bg-[var(--canvas)] px-3 py-3">
+                      <p className="text-[11px] uppercase tracking-[0.16em] text-[var(--muted)]">
+                        Photos
+                      </p>
+                      <p className="mt-2 text-sm font-medium text-[var(--ink)]">
+                        {application.attachments.length}
+                      </p>
+                    </div>
                   </div>
-                  <div className="rounded-[1rem] border border-[var(--line)] bg-[var(--canvas)] px-3 py-3">
-                    <p className="text-[11px] uppercase tracking-[0.16em] text-[var(--muted)]">
-                      Age
-                    </p>
-                    <p className="mt-2 text-sm font-medium text-[var(--ink)]">
-                      {application.payload.age || "Not provided"}
-                    </p>
-                  </div>
-                  <div className="rounded-[1rem] border border-[var(--line)] bg-[var(--canvas)] px-3 py-3">
-                    <p className="text-[11px] uppercase tracking-[0.16em] text-[var(--muted)]">
-                      Weight
-                    </p>
-                    <p className="mt-2 text-sm font-medium text-[var(--ink)]">
-                      {application.payload.weight || "Not provided"}
-                    </p>
-                  </div>
-                  <div className="rounded-[1rem] border border-[var(--line)] bg-[var(--canvas)] px-3 py-3">
-                    <p className="text-[11px] uppercase tracking-[0.16em] text-[var(--muted)]">
-                      Start date
-                    </p>
-                    <p className="mt-2 text-sm font-medium text-[var(--ink)]">
-                      {application.payload.preferredStartDate || "Not provided"}
-                    </p>
-                  </div>
-                  <div className="rounded-[1rem] border border-[var(--line)] bg-[var(--canvas)] px-3 py-3">
-                    <p className="text-[11px] uppercase tracking-[0.16em] text-[var(--muted)]">
-                      Photos
-                    </p>
-                    <p className="mt-2 text-sm font-medium text-[var(--ink)]">
-                      {application.attachments.length}
-                    </p>
-                  </div>
-                </div>
+                </Link>
 
                 <div className="mt-4 flex flex-wrap gap-4">
                   <Link
