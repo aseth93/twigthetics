@@ -19,6 +19,7 @@ import {
 } from "@/lib/portal/checkin-stats";
 import { parsePlanSections } from "@/lib/portal/plan-sections";
 import type {
+  AdminApplicationDetailData,
   AdminConversation,
   AdminDashboardData,
   AdminMemberDetailData,
@@ -514,5 +515,51 @@ export async function getAdminMemberDetailData(options: {
     applications: applicationRows.map((row) =>
       mapApplicationRow(row, attachmentsByApplication.get(row.id) || []),
     ),
+  };
+}
+
+export async function getAdminApplicationDetailData(options: {
+  applicationId: string;
+}): Promise<AdminApplicationDetailData | null> {
+  const db = await getDbReady();
+
+  if (!db) {
+    return null;
+  }
+
+  const [applicationRow] = await db
+    .select()
+    .from(coachingApplications)
+    .where(eq(coachingApplications.id, options.applicationId))
+    .limit(1);
+
+  if (!applicationRow) {
+    return null;
+  }
+
+  const [attachmentRows, matchingMemberRows] = await Promise.all([
+    db
+      .select()
+      .from(coachingApplicationAttachments)
+      .where(eq(coachingApplicationAttachments.applicationId, applicationRow.id))
+      .orderBy(asc(coachingApplicationAttachments.createdAt)),
+    applicationRow.email
+      ? db
+          .select()
+          .from(users)
+          .where(eq(users.email, applicationRow.email))
+          .limit(1)
+      : Promise.resolve([]),
+  ]);
+
+  return {
+    application: mapApplicationRow(
+      applicationRow,
+      attachmentRows.map((row) => mapApplicationAttachmentRow(row)),
+    ),
+    matchingMember:
+      matchingMemberRows[0] && matchingMemberRows[0].role === "member"
+        ? mapProfileRow(matchingMemberRows[0])
+        : null,
   };
 }

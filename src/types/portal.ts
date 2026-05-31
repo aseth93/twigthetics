@@ -153,6 +153,11 @@ export type AdminMemberDetailData = {
   applications: CoachingApplication[];
 };
 
+export type AdminApplicationDetailData = {
+  application: CoachingApplication;
+  matchingMember: PortalProfile | null;
+};
+
 export type PortalRuntime = {
   databaseConfigured: boolean;
   authConfigured: boolean;

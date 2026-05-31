@@ -154,7 +154,17 @@ export default async function AdminDashboardPage() {
         </article>
 
         <article className="dark-panel p-6 sm:p-8">
-          <p className="eyebrow text-white/55">Latest intake queue</p>
+          <div className="flex flex-wrap items-start justify-between gap-4">
+            <div>
+              <p className="eyebrow text-white/55">Latest intake queue</p>
+              <p className="mt-2 text-sm leading-6 text-white/60">
+                Open any submission directly, even if the person is not a portal member yet.
+              </p>
+            </div>
+            <Link href="/admin/intakes" className="quiet-link inline-flex text-white">
+              View all intakes
+            </Link>
+          </div>
           <div className="mt-5 grid grid-cols-1 gap-3">
             {dashboard.applications.length ? (
               dashboard.applications.slice(0, 8).map((application) => {
@@ -179,14 +189,22 @@ export default async function AdminDashboardPage() {
                     <p className="mt-3 text-white/55">
                       Submitted {formatPortalDate(application.submittedAt)}
                     </p>
-                    {matchingMemberId ? (
+                    <div className="mt-3 flex flex-wrap gap-4">
                       <Link
-                        href={`/admin/members/${matchingMemberId}`}
-                        className="quiet-link mt-3 inline-flex text-white"
+                        href={`/admin/intakes/${application.id}`}
+                        className="quiet-link inline-flex text-white"
                       >
-                        Open member
+                        Open intake
                       </Link>
-                    ) : null}
+                      {matchingMemberId ? (
+                        <Link
+                          href={`/admin/members/${matchingMemberId}`}
+                          className="quiet-link inline-flex text-white"
+                        >
+                          Open member
+                        </Link>
+                      ) : null}
+                    </div>
                   </div>
                 );
               })

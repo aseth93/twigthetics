@@ -3,6 +3,7 @@ import { requirePortalViewer } from "@/lib/portal/auth";
 
 const adminNavItems = [
   { href: "/admin", label: "Dashboard" },
+  { href: "/admin/intakes", label: "Intakes" },
   { href: "/", label: "Public site" },
 ];
 
