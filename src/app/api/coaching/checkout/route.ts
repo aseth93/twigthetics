@@ -2,6 +2,10 @@ import Stripe from "stripe";
 import { NextResponse } from "next/server";
 import { getSiteOrigin } from "@/lib/portal/env";
 import { upsertStripeCheckoutSessionRecord } from "@/lib/portal/billing";
+import { FRIEND_DISCOUNT_CODE } from "@/lib/portal/discount-codes";
+import {
+  ensureFriendDiscountPromotionCode,
+} from "@/lib/portal/discounts";
 
 function getTrimmedEnv(name: string) {
   return process.env[name]?.trim() || "";
@@ -13,6 +17,8 @@ export async function GET(request: Request) {
   const priceId = getTrimmedEnv("STRIPE_COACHING_PRICE_ID");
   const requestUrl = new URL(request.url);
   const customerEmail = requestUrl.searchParams.get("email")?.trim() || "";
+  const submittedDiscountCode =
+    requestUrl.searchParams.get("discountCode")?.trim().toUpperCase() || "";
 
   if (!stripeKey || !priceId) {
     return NextResponse.redirect(new URL("/#coaching", origin));
@@ -21,6 +27,12 @@ export async function GET(request: Request) {
   const stripe = new Stripe(stripeKey);
 
   try {
+    const appliedDiscountCode =
+      submittedDiscountCode === FRIEND_DISCOUNT_CODE ? FRIEND_DISCOUNT_CODE : "";
+    const promotionCodeId = appliedDiscountCode
+      ? await ensureFriendDiscountPromotionCode(stripe)
+      : "";
+
     const session = await stripe.checkout.sessions.create({
       mode: "subscription",
       line_items: [
@@ -30,6 +42,13 @@ export async function GET(request: Request) {
         },
       ],
       allow_promotion_codes: true,
+      discounts: promotionCodeId
+        ? [
+            {
+              promotion_code: promotionCodeId,
+            },
+          ]
+        : undefined,
       billing_address_collection: "auto",
       phone_number_collection: {
         enabled: true,
@@ -38,11 +57,13 @@ export async function GET(request: Request) {
       metadata: {
         source: "public-coaching-checkout",
         priceId,
+        discountCode: appliedDiscountCode,
       },
       subscription_data: {
         metadata: {
           source: "public-coaching-checkout",
           priceId,
+          discountCode: appliedDiscountCode,
         },
       },
       success_url: `${origin}/signup?session_id={CHECKOUT_SESSION_ID}`,

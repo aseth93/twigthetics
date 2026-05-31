@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { FRIEND_DISCOUNT_CODE } from "@/lib/portal/discount-codes";
 import type { ApplicationFormField } from "@/types/site";
 
 type ApplicationFormProps = {
@@ -102,6 +103,8 @@ export function ApplicationForm({
   });
   const [confirmation, setConfirmation] = useState<SubmissionConfirmation | null>(null);
   const [isRedirectingToCheckout, setIsRedirectingToCheckout] = useState(false);
+  const [discountCode, setDiscountCode] = useState("");
+  const [discountError, setDiscountError] = useState("");
 
   const visibleFields = useMemo(() => getVisibleFields(fields, values), [fields, values]);
 
@@ -225,6 +228,8 @@ export function ApplicationForm({
         tone: "success",
         message: "Intake submitted.",
       });
+      setDiscountCode("");
+      setDiscountError("");
       setConfirmation(submissionSnapshot);
     } catch (error) {
       setStatus({
@@ -332,11 +337,14 @@ export function ApplicationForm({
         : null,
     );
     setIsRedirectingToCheckout(false);
+    setDiscountError("");
   }
 
   function handleCloseThankYou() {
     setConfirmation(null);
     setIsRedirectingToCheckout(false);
+    setDiscountCode("");
+    setDiscountError("");
   }
 
   function handleCheckoutNow() {
@@ -344,11 +352,23 @@ export function ApplicationForm({
       return;
     }
 
+    const normalizedDiscountCode = discountCode.trim().toUpperCase();
+
+    if (normalizedDiscountCode && normalizedDiscountCode !== FRIEND_DISCOUNT_CODE) {
+      setDiscountError("That discount code is not valid.");
+      return;
+    }
+
     setIsRedirectingToCheckout(true);
+    setDiscountError("");
 
     const searchParams = new URLSearchParams({
       email: confirmation.email,
     });
+
+    if (normalizedDiscountCode) {
+      searchParams.set("discountCode", normalizedDiscountCode);
+    }
 
     window.location.href = `/api/coaching/checkout?${searchParams.toString()}`;
   }
@@ -444,6 +464,33 @@ export function ApplicationForm({
                   <p className="mt-3 text-sm leading-6 text-[var(--muted)] sm:text-base sm:leading-7">
                     Your intake has been received{confirmation.fullName ? `, ${confirmation.fullName}` : ""}. Do you want to pay and reserve your coaching spot now? There are limited spots, so reserving now will guarantee you a coaching spot.
                   </p>
+
+                  <div className="mt-5">
+                    <label htmlFor="discountCode" className="mb-2 block text-sm font-medium text-[var(--ink)]">
+                      Discount code
+                      <span className="ml-2 text-xs font-normal text-[var(--muted)]">
+                        Optional
+                      </span>
+                    </label>
+                    <input
+                      id="discountCode"
+                      name="discountCode"
+                      type="text"
+                      value={discountCode}
+                      onChange={(event) => {
+                        setDiscountCode(event.target.value.toUpperCase());
+                        if (discountError) {
+                          setDiscountError("");
+                        }
+                      }}
+                      placeholder="Enter code"
+                      autoComplete="off"
+                      className="w-full rounded-[1.15rem] border border-[var(--line)] bg-white/80 px-4 py-3 text-[15px] uppercase tracking-[0.08em] text-[var(--ink)] outline-none transition placeholder:normal-case placeholder:tracking-normal placeholder:text-[var(--muted)] focus:border-[var(--accent)] focus:bg-white"
+                    />
+                    {discountError ? (
+                      <p className="mt-2 text-xs leading-5 text-[#8a3c2d]">{discountError}</p>
+                    ) : null}
+                  </div>
 
                   <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
                     <button
