@@ -41,7 +41,7 @@ export async function GET(request: Request) {
           quantity: 1,
         },
       ],
-      allow_promotion_codes: true,
+      allow_promotion_codes: promotionCodeId ? undefined : true,
       discounts: promotionCodeId
         ? [
             {
