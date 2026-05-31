@@ -79,7 +79,7 @@ function ModalContent({
           </button>
         </div>
 
-        <div className="max-h-[calc(100vh-9rem)] overflow-y-auto pb-2">
+        <div className="max-h-[calc(100dvh-9rem)] overflow-y-auto overscroll-contain pb-[calc(env(safe-area-inset-bottom)+1.5rem)] pr-1">
           <ApplicationForm fields={fields} instagramUrl={instagramUrl} />
         </div>
       </div>
