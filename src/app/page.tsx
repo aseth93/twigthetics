@@ -220,7 +220,7 @@ export default function Home() {
         />
 
         <main>
-          <section id="top" className="section-shell pt-[15rem] sm:pt-40 md:pt-32">
+          <section id="top" className="section-shell pt-[16rem] sm:pt-40 md:pt-32">
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,0.78fr)] lg:items-start">
             <div className="page-reveal min-w-0 lg:pr-6">
               <p className="eyebrow hidden sm:block">{siteConfig.brand.eyebrow}</p>
