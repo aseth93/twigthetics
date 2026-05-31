@@ -64,9 +64,7 @@ function ModalContent({
               Sign up for coaching.
             </h2>
             <p className="mt-3 max-w-2xl text-sm leading-6 text-[var(--muted)] sm:text-base sm:leading-7">
-              Fill this out once with real detail. Training, food, recovery, current
-              structure, and progress photos all land in the admin side so the plan can
-              start from your actual situation.
+              Please fill out the intake questionnaire below.
             </p>
           </div>
 
