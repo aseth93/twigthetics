@@ -220,7 +220,7 @@ export default function Home() {
         />
 
         <main>
-          <section id="top" className="section-shell pt-40 md:pt-32">
+          <section id="top" className="section-shell pt-[13.5rem] sm:pt-40 md:pt-32">
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,0.78fr)] lg:items-start">
             <div className="page-reveal min-w-0 lg:pr-6">
               <p className="eyebrow hidden sm:block">{siteConfig.brand.eyebrow}</p>
@@ -248,36 +248,6 @@ export default function Home() {
                 >
                   Guide Coming Soon
                 </Link>
-              </div>
-
-              <div className="mt-9 md:hidden">
-                <div>
-                  <div>
-                    <p className="eyebrow text-[var(--muted)]">Client Proof</p>
-                    <p className="mt-2 max-w-sm text-sm leading-6 text-[var(--muted)]">
-                      Fat loss, recomposition, and physique-building results
-                      from real clients.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="proof-rail mt-5 flex gap-4 overflow-x-auto pb-3">
-                  {featuredClientTransformations.map((transformation, index) => (
-                    <div
-                      key={transformation.id}
-                      className="min-w-[78vw] max-w-[17rem] snap-start first:pl-px"
-                    >
-                      <HeroTransformationCard
-                        transformation={transformation}
-                        priority={index < 2}
-                        style={{
-                          animationDelay: `${index * 140}ms`,
-                          animationDuration: `${7200 + index * 220}ms`,
-                        }}
-                      />
-                    </div>
-                  ))}
-                </div>
               </div>
 
               <div className="mt-8 grid grid-cols-1 gap-3 sm:mt-10 sm:gap-4 sm:grid-cols-3">
