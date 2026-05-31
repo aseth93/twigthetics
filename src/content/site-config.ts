@@ -209,6 +209,28 @@ export const siteConfig: SiteConfig = {
       },
     },
     {
+      id: "paulina-mskii",
+      clientName: "Paulina",
+      note: "Consistent work paying off with a visibly leaner, tighter physique.",
+      timeframe: "November 2017",
+      sourceUrl: "https://www.instagram.com/p/BbidU8TnuP6/",
+      image: {
+        src: "/images/client-transformations/previews/paulina-mskii.jpg",
+        alt: "Client transformation spotlight featuring Paulina Mskii.",
+      },
+    },
+    {
+      id: "adam-weimer",
+      clientName: "Adam",
+      note: "Results that speak for themselves from locking in on the coaching plan.",
+      timeframe: "October 2017",
+      sourceUrl: "https://www.instagram.com/p/BasQER9HWRm/",
+      image: {
+        src: "/images/client-transformations/previews/adam-weimer.jpg",
+        alt: "Client transformation spotlight featuring Adam Weimer.",
+      },
+    },
+    {
       id: "cameron-lifestyle",
       clientName: "Cameron",
       note: "A full lifestyle shift built from applying a simple plan consistently.",
