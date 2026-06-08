@@ -43,6 +43,18 @@ function toIsoDate(input?: Date | null) {
   return input ? input.toISOString() : null;
 }
 
+function toIsoCalendarDate(input?: Date | string | null) {
+  if (!input) {
+    return null;
+  }
+
+  if (typeof input === "string") {
+    return input.slice(0, 10);
+  }
+
+  return input.toISOString().slice(0, 10);
+}
+
 function mapProfileRow(row: typeof users.$inferSelect): PortalProfile {
   return {
     id: row.id,
@@ -80,7 +92,7 @@ function mapAssignmentRow(row: {
     id: row.assignment.id,
     memberId: row.assignment.memberId,
     status: row.assignment.status === "archived" ? "archived" : "active",
-    startsOn: row.assignment.startsOn,
+    startsOn: toIsoCalendarDate(row.assignment.startsOn),
     notes: row.assignment.notes,
     plan: mapPlanRow(row.plan),
   };
@@ -148,7 +160,7 @@ function mapDailyCheckinRow(row: typeof dailyCheckins.$inferSelect): DailyChecki
   return {
     id: row.id,
     memberId: row.memberId,
-    checkinDate: row.checkinDate,
+    checkinDate: toIsoCalendarDate(row.checkinDate) || "",
     weightPounds:
       typeof row.weightTenths === "number" ? row.weightTenths / 10 : null,
     hydrationOunces: row.hydrationOunces,
@@ -166,7 +178,7 @@ function mapScheduledWorkoutRow(
   return {
     id: row.id,
     memberId: row.memberId,
-    scheduledDate: row.scheduledDate,
+    scheduledDate: toIsoCalendarDate(row.scheduledDate) || "",
     title: row.title,
     dayType: row.dayType,
     summary: row.summary,
