@@ -127,6 +127,7 @@ export type MemberDashboardData = {
   conversation: ConversationThread | null;
   messages: ConversationMessage[];
   dailyCheckins: DailyCheckinEntry[];
+  scheduledWorkouts: PortalWorkoutScheduleEntry[];
   weeklyWeightAverages: WeeklyWeightAverage[];
   latestCheckin: DailyCheckinEntry | null;
   currentWeekAverageWeightPounds: number | null;
@@ -175,6 +176,18 @@ export type DailyCheckinEntry = {
   hydrationOunces?: number | null;
   sleepHours?: number | null;
   workoutNotes?: string | null;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type PortalWorkoutScheduleEntry = {
+  id: string;
+  memberId: string;
+  scheduledDate: string;
+  title: string;
+  dayType: string;
+  summary?: string | null;
+  details?: string | null;
   createdAt: string;
   updatedAt: string;
 };

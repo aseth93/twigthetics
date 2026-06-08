@@ -2,8 +2,10 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { AdminMemberProgrammingWorkspace } from "@/components/portal/admin-member-programming-workspace";
 import { AdminPlanForm } from "@/components/portal/admin-plan-form";
+import { GenerateJiteshPackButton } from "@/components/portal/generate-jitesh-pack-button";
 import { MessageThread } from "@/components/portal/message-thread";
 import { siteConfig } from "@/content/site-config";
+import { JITESH_MEMBER_ID } from "@/lib/coaching/jitesh-pack";
 import { requirePortalViewer } from "@/lib/portal/auth";
 import { getAdminMemberDetailData } from "@/lib/portal/data";
 import {
@@ -115,6 +117,7 @@ export default async function AdminMemberDetailPage({
           typeof item.value === "string" && item.value.trim().length > 0,
       )
     : [];
+  const showJiteshPackGenerator = detail.member.id === JITESH_MEMBER_ID;
 
   return (
     <div className="space-y-6">
@@ -393,6 +396,12 @@ export default async function AdminMemberDetailPage({
               Keep each member’s plan and files grouped by section so you can scan and
               update everything from one workspace.
             </p>
+
+            {showJiteshPackGenerator ? (
+              <div className="mt-6">
+                <GenerateJiteshPackButton memberId={detail.member.id} />
+              </div>
+            ) : null}
 
             <div className="mt-6">
               <AdminMemberProgrammingWorkspace

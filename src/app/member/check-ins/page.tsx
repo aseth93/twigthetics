@@ -18,11 +18,15 @@ export default async function MemberCheckinsPage() {
         </h1>
         <p className="mt-3 text-sm leading-7 text-[var(--muted)]">
           Log bodyweight, water, and sleep every day, keep workout notes inside the
-          portal after each session, and let the weekly averages update automatically.
+          portal after each session, and use the calendar to see both the planned
+          workout and the daily log together.
         </p>
       </article>
 
-      <MemberCheckinWorkspace initialCheckins={dashboard.dailyCheckins} />
+      <MemberCheckinWorkspace
+        initialCheckins={dashboard.dailyCheckins}
+        scheduledWorkouts={dashboard.scheduledWorkouts}
+      />
     </div>
   );
 }

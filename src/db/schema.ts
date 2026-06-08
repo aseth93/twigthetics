@@ -107,6 +107,33 @@ export const dailyCheckins = pgTable(
   ],
 );
 
+export const memberWorkoutScheduleEntries = pgTable(
+  "member_workout_schedule_entries",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    memberId: uuid("member_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    scheduledDate: date("scheduled_date").notNull(),
+    title: varchar("title", { length: 200 }).notNull(),
+    dayType: varchar("day_type", { length: 64 }).notNull().default("training"),
+    summary: text("summary"),
+    details: text("details"),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [
+    uniqueIndex("uniq_member_workout_schedule_member_date").on(
+      table.memberId,
+      table.scheduledDate,
+    ),
+    index("idx_member_workout_schedule_member_date").on(
+      table.memberId,
+      table.scheduledDate,
+    ),
+  ],
+);
+
 export const plans = pgTable(
   "plans",
   {

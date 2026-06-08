@@ -22,6 +22,9 @@ export default async function MemberDashboardPage() {
   const activePlanPreview = activePlan
     ? getPlanSectionPreview(activePlan.sections)
     : "";
+  const todayIsoDate = new Date().toISOString().slice(0, 10);
+  const todayScheduledWorkout =
+    dashboard.scheduledWorkouts.find((entry) => entry.scheduledDate === todayIsoDate) || null;
 
   return (
     <div className="space-y-6">
@@ -96,6 +99,22 @@ export default async function MemberDashboardPage() {
             {activePlanPreview ||
               "Your training and nutrition structure will appear here after assignment."}
           </p>
+
+          {todayScheduledWorkout ? (
+            <div className="mt-5 rounded-[1.15rem] border border-[rgba(141,107,61,0.18)] bg-[rgba(141,107,61,0.08)] px-4 py-4">
+              <p className="text-[11px] uppercase tracking-[0.18em] text-[var(--muted)]">
+                Today&apos;s workout
+              </p>
+              <p className="mt-2 text-lg font-semibold text-[var(--ink)]">
+                {todayScheduledWorkout.title}
+              </p>
+              {todayScheduledWorkout.summary ? (
+                <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
+                  {todayScheduledWorkout.summary}
+                </p>
+              ) : null}
+            </div>
+          ) : null}
         </article>
 
         <article className="dark-panel p-6">

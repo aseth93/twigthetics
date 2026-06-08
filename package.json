@@ -11,6 +11,7 @@
     "db:migrate": "drizzle-kit migrate"
   },
   "dependencies": {
+    "@react-pdf/renderer": "^4.5.1",
     "bcryptjs": "^3.0.3",
     "drizzle-orm": "^0.45.2",
     "next": "^15.5.18",

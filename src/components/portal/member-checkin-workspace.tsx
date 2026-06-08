@@ -12,10 +12,11 @@ import {
   formatSleepHours,
   formatWeightPounds,
 } from "@/lib/portal/format";
-import type { DailyCheckinEntry } from "@/types/portal";
+import type { DailyCheckinEntry, PortalWorkoutScheduleEntry } from "@/types/portal";
 
 type MemberCheckinWorkspaceProps = {
   initialCheckins: DailyCheckinEntry[];
+  scheduledWorkouts: PortalWorkoutScheduleEntry[];
 };
 
 const weekdayLabels = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
@@ -55,7 +56,12 @@ function formatMonthLabel(value: string) {
   }).format(toUtcDateFromIsoDate(value));
 }
 
-function buildCalendarDays(monthStartIsoDate: string, selectedDate: string, entries: Map<string, DailyCheckinEntry>) {
+function buildCalendarDays(
+  monthStartIsoDate: string,
+  selectedDate: string,
+  entries: Map<string, DailyCheckinEntry>,
+  scheduledWorkouts: Map<string, PortalWorkoutScheduleEntry>,
+) {
   const monthStart = toUtcDateFromIsoDate(monthStartIsoDate);
   const monthIndex = monthStart.getUTCMonth();
   const weekday = monthStart.getUTCDay();
@@ -73,12 +79,14 @@ function buildCalendarDays(monthStartIsoDate: string, selectedDate: string, entr
       isToday: isoDate === todayIsoDate,
       isSelected: isoDate === selectedDate,
       entry: entries.get(isoDate) || null,
+      scheduledWorkout: scheduledWorkouts.get(isoDate) || null,
     };
   });
 }
 
 export function MemberCheckinWorkspace({
   initialCheckins,
+  scheduledWorkouts,
 }: MemberCheckinWorkspaceProps) {
   const [checkins, setCheckins] = useState(initialCheckins);
   const [checkinDate, setCheckinDate] = useState(getTodayIsoDate());
@@ -109,10 +117,24 @@ export function MemberCheckinWorkspace({
     () => new Map(checkins.map((entry) => [entry.checkinDate, entry])),
     [checkins],
   );
+  const scheduledWorkoutsByDate = useMemo(
+    () => new Map(scheduledWorkouts.map((entry) => [entry.scheduledDate, entry])),
+    [scheduledWorkouts],
+  );
 
   const calendarDays = useMemo(
-    () => buildCalendarDays(visibleMonthStart, checkinDate, entriesByDate),
-    [visibleMonthStart, checkinDate, entriesByDate],
+    () =>
+      buildCalendarDays(
+        visibleMonthStart,
+        checkinDate,
+        entriesByDate,
+        scheduledWorkoutsByDate,
+      ),
+    [visibleMonthStart, checkinDate, entriesByDate, scheduledWorkoutsByDate],
+  );
+  const selectedWorkout = useMemo(
+    () => scheduledWorkoutsByDate.get(checkinDate) || null,
+    [checkinDate, scheduledWorkoutsByDate],
   );
 
   useEffect(() => {
@@ -280,8 +302,8 @@ export function MemberCheckinWorkspace({
                 Expand any day and look back at your log.
               </h2>
               <p className="mt-3 text-sm leading-6 text-[var(--muted)]">
-                Move month to month, then click a day to load that date’s weight, sleep,
-                hydration, and workout notes.
+                Move month to month, then click a day to load that date’s planned
+                workout, weight, sleep, hydration, and workout notes.
               </p>
             </div>
 
@@ -339,7 +361,11 @@ export function MemberCheckinWorkspace({
                   "min-h-[5.75rem] rounded-[1.1rem] border px-2 py-2 text-left",
                   day.isSelected
                     ? "border-[var(--ink)] bg-[var(--ink)] text-white"
-                    : day.entry
+                    : day.entry && day.scheduledWorkout
+                      ? "border-[rgba(141,107,61,0.25)] bg-[rgba(141,107,61,0.14)] text-[var(--ink)] hover:bg-[rgba(141,107,61,0.2)]"
+                      : day.scheduledWorkout
+                        ? "border-[rgba(32,23,16,0.15)] bg-[rgba(32,23,16,0.06)] text-[var(--ink)] hover:bg-[rgba(32,23,16,0.1)]"
+                        : day.entry
                       ? "border-[rgba(141,107,61,0.22)] bg-[rgba(141,107,61,0.09)] text-[var(--ink)] hover:bg-[rgba(141,107,61,0.15)]"
                       : "border-[var(--line)] bg-white/62 text-[var(--ink)] hover:bg-white/82",
                   day.isCurrentMonth ? "" : "opacity-45",
@@ -359,19 +385,30 @@ export function MemberCheckinWorkspace({
                   ) : null}
                 </div>
 
-                {day.entry ? (
+                {day.entry || day.scheduledWorkout ? (
                   <div className="mt-3 space-y-1">
-                    <p className="text-xs font-medium">
-                      {formatWeightPounds(day.entry.weightPounds)}
-                    </p>
+                    {day.entry ? (
+                      <p className="text-xs font-medium">
+                        {formatWeightPounds(day.entry.weightPounds)}
+                      </p>
+                    ) : (
+                      <p className="text-[10px] font-semibold uppercase tracking-[0.12em]">
+                        Programmed
+                      </p>
+                    )}
                     <div
                       className={[
                         "flex flex-wrap gap-1 text-[10px] uppercase tracking-[0.12em]",
                         day.isSelected ? "text-white/78" : "text-[var(--muted)]",
                       ].join(" ")}
                     >
-                      <span>{formatHydrationOunces(day.entry.hydrationOunces)}</span>
-                      <span>{formatSleepHours(day.entry.sleepHours)}</span>
+                      {day.entry ? (
+                        <>
+                          <span>{formatHydrationOunces(day.entry.hydrationOunces)}</span>
+                          <span>{formatSleepHours(day.entry.sleepHours)}</span>
+                        </>
+                      ) : null}
+                      {day.scheduledWorkout ? <span>{day.scheduledWorkout.title}</span> : null}
                     </div>
                   </div>
                 ) : (
@@ -395,34 +432,55 @@ export function MemberCheckinWorkspace({
             {formatPortalDate(checkinDate)}
           </h2>
           <p className="mt-3 text-sm leading-6 text-[var(--muted)]">
-            Clicking a day opens the log for that date and also loads it into the editor
-            below.
+            Clicking a day opens the planned workout for that date and also loads the
+            saved log into the editor below.
           </p>
 
-          <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-3">
-            <div className="rounded-[1.15rem] border border-[var(--line)] bg-white/72 px-4 py-4">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--muted)]">
-                Weight
-              </p>
-              <p className="mt-2 text-lg font-semibold text-[var(--ink)]">
-                {formatWeightPounds(selectedEntry?.weightPounds)}
-              </p>
-            </div>
-            <div className="rounded-[1.15rem] border border-[var(--line)] bg-white/72 px-4 py-4">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--muted)]">
-                Hydration
-              </p>
-              <p className="mt-2 text-lg font-semibold text-[var(--ink)]">
-                {formatHydrationOunces(selectedEntry?.hydrationOunces)}
-              </p>
-            </div>
-            <div className="rounded-[1.15rem] border border-[var(--line)] bg-white/72 px-4 py-4">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--muted)]">
-                Sleep
-              </p>
-              <p className="mt-2 text-lg font-semibold text-[var(--ink)]">
-                {formatSleepHours(selectedEntry?.sleepHours)}
-              </p>
+          <div className="mt-6 space-y-4">
+            {selectedWorkout ? (
+              <div className="rounded-[1.2rem] border border-[rgba(141,107,61,0.22)] bg-[rgba(141,107,61,0.08)] px-5 py-5">
+                <p className="eyebrow">Planned workout</p>
+                <h3 className="mt-3 text-xl font-semibold text-[var(--ink)]">
+                  {selectedWorkout.title}
+                </h3>
+                {selectedWorkout.summary ? (
+                  <p className="mt-3 text-sm leading-6 text-[var(--muted)]">
+                    {selectedWorkout.summary}
+                  </p>
+                ) : null}
+                {selectedWorkout.details ? (
+                  <div className="mt-4 whitespace-pre-line text-sm leading-7 text-[var(--ink)]">
+                    {selectedWorkout.details}
+                  </div>
+                ) : null}
+              </div>
+            ) : null}
+
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+              <div className="rounded-[1.15rem] border border-[var(--line)] bg-white/72 px-4 py-4">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--muted)]">
+                  Weight
+                </p>
+                <p className="mt-2 text-lg font-semibold text-[var(--ink)]">
+                  {formatWeightPounds(selectedEntry?.weightPounds)}
+                </p>
+              </div>
+              <div className="rounded-[1.15rem] border border-[var(--line)] bg-white/72 px-4 py-4">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--muted)]">
+                  Hydration
+                </p>
+                <p className="mt-2 text-lg font-semibold text-[var(--ink)]">
+                  {formatHydrationOunces(selectedEntry?.hydrationOunces)}
+                </p>
+              </div>
+              <div className="rounded-[1.15rem] border border-[var(--line)] bg-white/72 px-4 py-4">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--muted)]">
+                  Sleep
+                </p>
+                <p className="mt-2 text-lg font-semibold text-[var(--ink)]">
+                  {formatSleepHours(selectedEntry?.sleepHours)}
+                </p>
+              </div>
             </div>
           </div>
 
@@ -455,7 +513,9 @@ export function MemberCheckinWorkspace({
             <p className="text-sm text-[var(--muted)]">
               {selectedEntry
                 ? `Last updated ${formatPortalDate(selectedEntry.updatedAt)}`
-                : "No saved entry yet for this date."}
+                : selectedWorkout
+                  ? "Programmed day is loaded. Add the actual check-in below."
+                  : "No saved entry yet for this date."}
             </p>
           </div>
         </article>

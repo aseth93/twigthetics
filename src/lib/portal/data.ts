@@ -8,6 +8,7 @@ import {
   dailyCheckins,
   documentAccess,
   documents,
+  memberWorkoutScheduleEntries,
   messages,
   planAssignments,
   plans,
@@ -34,6 +35,7 @@ import type {
   PortalDocument,
   PortalPlan,
   PortalProfile,
+  PortalWorkoutScheduleEntry,
   PortalViewer,
 } from "@/types/portal";
 
@@ -158,6 +160,22 @@ function mapDailyCheckinRow(row: typeof dailyCheckins.$inferSelect): DailyChecki
   };
 }
 
+function mapScheduledWorkoutRow(
+  row: typeof memberWorkoutScheduleEntries.$inferSelect,
+): PortalWorkoutScheduleEntry {
+  return {
+    id: row.id,
+    memberId: row.memberId,
+    scheduledDate: row.scheduledDate,
+    title: row.title,
+    dayType: row.dayType,
+    summary: row.summary,
+    details: row.details,
+    createdAt: toIsoDate(row.createdAt) || new Date().toISOString(),
+    updatedAt: toIsoDate(row.updatedAt) || new Date().toISOString(),
+  };
+}
+
 function mapApplicationAttachmentRow(
   row: typeof coachingApplicationAttachments.$inferSelect,
 ): CoachingApplicationAttachment {
@@ -201,13 +219,21 @@ export async function getMemberDashboardData(
       conversation: null,
       messages: [],
       dailyCheckins: [],
+      scheduledWorkouts: [],
       weeklyWeightAverages: [],
       latestCheckin: null,
       currentWeekAverageWeightPounds: null,
     };
   }
 
-  const [assignmentRows, documentRows, billingRow, threadRow, dailyCheckinRows] =
+  const [
+    assignmentRows,
+    documentRows,
+    billingRow,
+    threadRow,
+    dailyCheckinRows,
+    scheduledWorkoutRows,
+  ] =
     await Promise.all([
     db
       .select({
@@ -241,6 +267,11 @@ export async function getMemberDashboardData(
       .from(dailyCheckins)
       .where(eq(dailyCheckins.memberId, viewer.profile.id))
       .orderBy(desc(dailyCheckins.checkinDate), desc(dailyCheckins.updatedAt)),
+    db
+      .select()
+      .from(memberWorkoutScheduleEntries)
+      .where(eq(memberWorkoutScheduleEntries.memberId, viewer.profile.id))
+      .orderBy(desc(memberWorkoutScheduleEntries.scheduledDate)),
   ]);
 
   const conversation = threadRow[0] ? mapConversationRow(threadRow[0]) : null;
@@ -265,6 +296,7 @@ export async function getMemberDashboardData(
     conversation,
     messages: messageRows.map((row) => mapMessageRow(row)),
     dailyCheckins: mappedDailyCheckins,
+    scheduledWorkouts: scheduledWorkoutRows.map((row) => mapScheduledWorkoutRow(row)),
     weeklyWeightAverages,
     latestCheckin: mappedDailyCheckins[0] || null,
     currentWeekAverageWeightPounds: getCurrentWeekAverageWeight(weeklyWeightAverages),
