@@ -1,3 +1,11 @@
+function parsePortalDateValue(value: string) {
+  if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+    return new Date(`${value}T12:00:00.000Z`);
+  }
+
+  return new Date(value);
+}
+
 export function formatPortalDate(value?: string | null) {
   if (!value) {
     return "Not set";
@@ -7,7 +15,7 @@ export function formatPortalDate(value?: string | null) {
     month: "short",
     day: "numeric",
     year: "numeric",
-  }).format(new Date(value));
+  }).format(parsePortalDateValue(value));
 }
 
 export function formatPortalDateTime(value?: string | null) {
@@ -21,7 +29,7 @@ export function formatPortalDateTime(value?: string | null) {
     year: "numeric",
     hour: "numeric",
     minute: "2-digit",
-  }).format(new Date(value));
+  }).format(parsePortalDateValue(value));
 }
 
 export function formatBytes(value?: number | null) {
