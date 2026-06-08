@@ -32,7 +32,8 @@ import {
 export const JITESH_MEMBER_ID = "8be0a4f9-1f77-40f1-bf52-745aee913372";
 export const JITESH_PACK_START_DATE = "2026-06-15";
 const JITESH_PACK_WEEKS = 6;
-const JITESH_PACK_TITLE = "Jitesh Anne | Baywatch Cut | Weeks 1-6";
+const JITESH_PACK_TITLE = "Jitesh Anne | Lean Physique Block | Weeks 1-6";
+const JITESH_LEGACY_PACK_TITLES = ["Jitesh Anne | Baywatch Cut | Weeks 1-6"];
 
 type WeightLog = {
   date: string;
@@ -206,7 +207,7 @@ const workoutDayTemplates: WorkoutDayTemplate[] = [
   {
     title: "Legs + shoulders",
     dayType: "training",
-    summary: "Lower-body base work plus the shoulder volume needed for the Baywatch look.",
+    summary: "Lower-body base work plus the shoulder volume needed for a lean, athletic upper-body look.",
     emphasis: "Smith and barbell work build the leg base; shoulder cap work stays high-rep and controlled.",
     cardio: "Normal steps only unless this day gets moved and one of the LISS sessions needs to land here.",
     recovery: "The first squat and hinge each stay technical. Do not let fatigue ruin depth or bar path.",
@@ -489,7 +490,7 @@ function buildQuickStartSections() {
       "- 8,000 daily steps",
       "- 3 x 20-minute treadmill LISS sessions per week",
       "",
-      "Cardio is moderate on purpose. The goal is a lean, athletic Baywatch look, not living on the treadmill.",
+      "Cardio is moderate on purpose. The goal is a lean, athletic physique, not living on the treadmill.",
     ].join("\n"),
     misc: [
       "Platform expectations:",
@@ -533,7 +534,7 @@ function buildNutritionParagraphs() {
 function buildPdfDefinitions(source: PackSource) {
   const nutritionCopy = buildNutritionParagraphs();
   const goalDescription =
-    source.application.payload.goalDescription?.trim() || "a lean, athletic Baywatch look";
+    source.application.payload.goalDescription?.trim() || "a lean, athletic physique";
   const currentTrainingPlan =
     source.application.payload.currentTrainingPlan?.trim() ||
     "Push / Pull / Legs + shoulders / Rest";
@@ -582,7 +583,7 @@ function buildPdfDefinitions(source: PackSource) {
       {
         heading: "Phase objective",
         paragraphs: [
-          `The target for this phase is not bodybuilder-level depletion or a dramatic crash cut. The target is the leaner Baywatch-style look requested in the intake: sharper waistline, better shoulder-to-waist contrast, and more visible upper-body shape while still moving and training like an athlete.`,
+          "The target for this phase is not bodybuilder-level depletion or a dramatic crash cut. The target is a leaner, more athletic physique with a sharper waistline, stronger shoulder-to-waist contrast, and clearer upper-body shape while still moving and training like an athlete.",
           `The program builds from the split already being run — ${currentTrainingPlan} — but turns it into a full 7-day rhythm that is easier to coach, easier to progress, and better suited to the actual equipment on hand: ${equipmentSummary}.`,
         ],
       },
@@ -860,12 +861,12 @@ async function buildGeneratedDocuments(source: PackSource) {
 function buildGeneratedPlan(source: PackSource) {
   const sections = buildQuickStartSections();
   const goalDescription =
-    source.application.payload.goalDescription?.trim() || "a lean, athletic Baywatch look";
+    source.application.payload.goalDescription?.trim() || "a lean, athletic physique";
 
   return {
     title: JITESH_PACK_TITLE,
     summary:
-      `Six-week cut built around the stated goal of "${goalDescription}", a home gym, moderate cardio, and food structure Jitesh is already adhering to.`,
+      `Six-week lean-physique block built around the stated goal of "${goalDescription}", a home gym, moderate cardio, and food structure Jitesh is already adhering to.`,
     cadence:
       "5 lifting days, 1 conditioning day, 1 recovery/steps day. Daily bodyweight, hydration, and sleep logging. 8k steps minimum and 3 x 20-minute treadmill LISS each week.",
     body: serializePlanSections(sections),
@@ -934,7 +935,7 @@ export async function generateJiteshCoachingPackForMember(options: {
       .where(
         and(
           eq(planAssignments.memberId, options.memberId),
-          eq(plans.title, pack.plan.title),
+          inArray(plans.title, [pack.plan.title, ...JITESH_LEGACY_PACK_TITLES]),
         ),
       )
       .orderBy(desc(planAssignments.createdAt))
