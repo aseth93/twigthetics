@@ -1,11 +1,14 @@
 import { NextResponse } from "next/server";
 import { getDbReady } from "@/db";
-import { generateCoachingPack } from "@/lib/coaching/coaching-pack";
+import {
+  DEFAULT_GENERATED_MEMBER_PASSWORD,
+  generateCoachingPack,
+} from "@/lib/coaching/coaching-pack";
 import { getPortalViewer } from "@/lib/portal/auth";
 
 type RouteContext = {
   params: Promise<{
-    memberId: string;
+    applicationId: string;
   }>;
 };
 
@@ -23,11 +26,12 @@ export async function POST(_request: Request, context: RouteContext) {
   }
 
   try {
-    const { memberId } = await context.params;
+    const { applicationId } = await context.params;
     const result = await generateCoachingPack({
       db,
-      memberId,
+      applicationId,
       coachId: viewer.profile.id,
+      tempPassword: DEFAULT_GENERATED_MEMBER_PASSWORD,
     });
 
     return NextResponse.json({

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { GenerateCoachingPackButton } from "@/components/portal/generate-coaching-pack-button";
 import { siteConfig } from "@/content/site-config";
 import { requirePortalViewer } from "@/lib/portal/auth";
 import { getAdminApplicationDetailData } from "@/lib/portal/data";
@@ -119,6 +120,14 @@ export default async function AdminApplicationDetailPage({ params }: PageProps) 
             </div>
           ) : null}
         </div>
+      </section>
+
+      <section className="surface-panel p-6 sm:p-8">
+        <GenerateCoachingPackButton
+          applicationId={detail.application.id}
+          subjectName={detail.application.fullName}
+          redirectToMemberOnSuccess
+        />
       </section>
 
       {detail.application.attachments.length ? (

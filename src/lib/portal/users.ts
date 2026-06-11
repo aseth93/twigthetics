@@ -1,5 +1,6 @@
 import { hash } from "bcryptjs";
 import { eq } from "drizzle-orm";
+import type { AppDb } from "@/db";
 import { getDbReady } from "@/db";
 import { users } from "@/db/schema";
 import type { PortalProfile } from "@/types/portal";
@@ -51,6 +52,79 @@ export async function findUserById(userId: string) {
 
 export async function hashPassword(password: string) {
   return hash(password, 12);
+}
+
+export async function ensureMemberUser(options: {
+  db: AppDb;
+  email: string;
+  fullName: string;
+  password: string;
+  instagramHandle?: string | null;
+}) {
+  const email = normalizeEmail(options.email);
+  const fullName = options.fullName.trim() || email;
+  const instagramHandle = options.instagramHandle?.trim() || null;
+  const [existingUser] = await options.db
+    .select()
+    .from(users)
+    .where(eq(users.email, email))
+    .limit(1);
+
+  if (existingUser) {
+    if (existingUser.role !== "member") {
+      throw new Error("A non-member account already exists with this email.");
+    }
+
+    const shouldUpdate =
+      existingUser.fullName !== fullName ||
+      (instagramHandle && existingUser.instagramHandle !== instagramHandle);
+
+    if (!shouldUpdate) {
+      return {
+        user: existingUser,
+        created: false,
+      };
+    }
+
+    const [updatedUser] = await options.db
+      .update(users)
+      .set({
+        fullName,
+        instagramHandle: instagramHandle || existingUser.instagramHandle,
+        updatedAt: new Date(),
+      })
+      .where(eq(users.id, existingUser.id))
+      .returning();
+
+    return {
+      user: updatedUser || existingUser,
+      created: false,
+    };
+  }
+
+  const passwordHash = await hashPassword(options.password);
+  const [createdUser] = await options.db
+    .insert(users)
+    .values({
+      email,
+      fullName,
+      passwordHash,
+      role: "member",
+      instagramHandle,
+      joinedAt: new Date(),
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    })
+    .returning();
+
+  if (!createdUser) {
+    throw new Error("Unable to create the member account.");
+  }
+
+  return {
+    user: createdUser,
+    created: true,
+  };
 }
 
 export async function ensureBootstrapAdmin() {
