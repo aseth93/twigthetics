@@ -660,7 +660,7 @@ function buildPdfDefinitions(source: PackSource) {
           "Chicken stays the default because it is lean and predictable.",
           "White fish can replace chicken one-for-one when appetite is lower and digestion needs to stay light.",
           "Goat is fine as a rotation protein, but remember it usually carries more fat than chicken. Keep the portion size comparable and do not accidentally turn a swap into a surplus.",
-          "If hunger is high late in the day, add fibrous vegetables before adding random snack calories.",
+          "If hunger is high late in the day, add fibrous vegetables.",
         ],
       },
       {
