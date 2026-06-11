@@ -311,6 +311,15 @@ summary {
   will-change: transform;
 }
 
+.calendar-day-workout-title {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+  line-height: 1.25;
+  word-break: break-word;
+}
+
 .modal-shell {
   position: fixed;
   inset: 0;

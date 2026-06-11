@@ -342,7 +342,7 @@ export function MemberCheckinWorkspace({
             </button>
           </div>
 
-          <div className="mt-5 grid grid-cols-7 gap-2">
+          <div className="mt-5 grid grid-cols-7 gap-2 md:gap-3">
             {weekdayLabels.map((label) => (
               <p
                 key={label}
@@ -358,7 +358,7 @@ export function MemberCheckinWorkspace({
                 type="button"
                 onClick={() => setCheckinDate(day.isoDate)}
                 className={[
-                  "min-h-[5.75rem] rounded-[1.1rem] border px-2 py-2 text-left",
+                  "min-h-[8.25rem] overflow-hidden rounded-[1.1rem] border px-2 py-2 text-left md:min-h-[9.5rem] md:px-3 md:py-3",
                   day.isSelected
                     ? "border-[var(--ink)] bg-[var(--ink)] text-white"
                     : day.entry && day.scheduledWorkout
@@ -386,7 +386,7 @@ export function MemberCheckinWorkspace({
                 </div>
 
                 {day.entry || day.scheduledWorkout ? (
-                  <div className="mt-3 space-y-1">
+                  <div className="mt-3 space-y-2">
                     {day.entry ? (
                       <p className="text-xs font-medium">
                         {formatWeightPounds(day.entry.weightPounds)}
@@ -396,20 +396,27 @@ export function MemberCheckinWorkspace({
                         Programmed
                       </p>
                     )}
-                    <div
-                      className={[
-                        "flex flex-wrap gap-1 text-[10px] uppercase tracking-[0.12em]",
-                        day.isSelected ? "text-white/78" : "text-[var(--muted)]",
-                      ].join(" ")}
-                    >
-                      {day.entry ? (
-                        <>
-                          <span>{formatHydrationOunces(day.entry.hydrationOunces)}</span>
-                          <span>{formatSleepHours(day.entry.sleepHours)}</span>
-                        </>
-                      ) : null}
-                      {day.scheduledWorkout ? <span>{day.scheduledWorkout.title}</span> : null}
-                    </div>
+                    {day.entry ? (
+                      <div
+                        className={[
+                          "flex flex-wrap gap-x-2 gap-y-1 text-[10px] uppercase tracking-[0.12em]",
+                          day.isSelected ? "text-white/78" : "text-[var(--muted)]",
+                        ].join(" ")}
+                      >
+                        <span>{formatHydrationOunces(day.entry.hydrationOunces)}</span>
+                        <span>{formatSleepHours(day.entry.sleepHours)}</span>
+                      </div>
+                    ) : null}
+                    {day.scheduledWorkout ? (
+                      <p
+                        className={[
+                          "calendar-day-workout-title text-[10px] font-medium uppercase tracking-[0.1em]",
+                          day.isSelected ? "text-white/88" : "text-[var(--muted)]",
+                        ].join(" ")}
+                      >
+                        {day.scheduledWorkout.title}
+                      </p>
+                    ) : null}
                   </div>
                 ) : (
                   <p
