@@ -674,6 +674,13 @@ function buildPdfDefinitions(source: PackSource) {
         ],
       },
       {
+        heading: "Macro priority",
+        paragraphs: [
+          "The main priorities are staying within the calorie target and hitting the protein goal.",
+          "Fats and carbs do not need to land perfectly every day. They can trade off when needed if that is more convenient, as long as total calories and protein are controlled.",
+        ],
+      },
+      {
         heading: "Execution guardrails",
         bullets: [
           "Do not freestyle a meal plan until the exact version has been executed cleanly first.",

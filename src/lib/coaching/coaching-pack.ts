@@ -712,6 +712,16 @@ function buildHighVolumeFoodSection(options: {
   };
 }
 
+function buildMacroPrioritySection(): CoachingPdfSection {
+  return {
+    heading: "Macro priority",
+    paragraphs: [
+      "The main priorities are staying within the calorie target and hitting the protein goal.",
+      "Fats and carbs do not need to land perfectly every day. They can trade off when needed if that is more convenient, as long as total calories and protein are controlled.",
+    ],
+  };
+}
+
 function buildBrendaProfile(source: PackSource): ClientPackProfile {
   const memberName = source.member.fullName;
   const startDate =
@@ -953,6 +963,7 @@ function buildBrendaProfile(source: PackSource): ClientPackProfile {
           "Track sauces, oils, nut butters, bites, and drinks. Recomp plans get ruined by small misses more than by the big obvious meals.",
         ],
       },
+      buildMacroPrioritySection(),
       {
         heading: "Example day",
         bullets: [
@@ -1268,6 +1279,7 @@ function buildDanielProfile(source: PackSource): ClientPackProfile {
           "Do not guess on oils, sauces, or restaurant add-ons.",
         ],
       },
+      buildMacroPrioritySection(),
       {
         heading: "Example day",
         bullets: [
@@ -1590,6 +1602,7 @@ function buildLeonardProfile(source: PackSource): ClientPackProfile {
           "Fat swaps: whole eggs, avocado, olive oil, fattier fish portions.",
         ],
       },
+      buildMacroPrioritySection(),
       buildHighVolumeFoodSection({ mode: "meal-plan" }),
       {
         heading: "Non-negotiables",
@@ -1844,7 +1857,7 @@ function buildSelenaProfile(source: PackSource): ClientPackProfile {
         heading: "Progression and stalls",
         bullets: [
           "Weeks 1-2 build comfort and consistency. Weeks 3-4 push the rep ranges. Weeks 5-6 add load only where the movement is already owned.",
-          "If compliance is messy, fix that before calling the plan ineffective.",
+          "If you're having trouble sticking to the plan, just let me know - we will adjust.",
           "Do not make nutrition or cardio changes on your own. Keep logging cleanly so I can review the plan if needed.",
         ],
       },
@@ -1880,6 +1893,7 @@ function buildSelenaProfile(source: PackSource): ClientPackProfile {
           "If eating out, choose the protein source first and keep extras controlled.",
         ],
       },
+      buildMacroPrioritySection(),
       {
         heading: "Example day",
         bullets: [
