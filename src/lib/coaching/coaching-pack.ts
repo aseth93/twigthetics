@@ -1058,7 +1058,7 @@ function buildDanielProfile(source: PackSource): ClientPackProfile {
       training:
         "Four structured 50-minute lifts: upper 1, lower 1, upper 2, lower 2. The goal is better tone, cleaner execution, and predictable weekly output.",
       nutrition:
-        "Start at 2,000 kcal with 170 g protein, 210 g carbs, and 55 g fat. Macro tracking stays primary, with carbs clustered around training and cardio days kept productive.",
+        "Start at 1,900 kcal with 170 g protein, 180 g carbs, and 55 g fat. Macro tracking stays primary, with carbs clustered around training and cardio days kept productive.",
       supplements:
         "Creatine 5 g daily, whey isolate only as needed, optional caffeine pre-lift, and basic hydration support.",
       cardio:
@@ -1241,9 +1241,9 @@ function buildDanielProfile(source: PackSource): ClientPackProfile {
       "Macro-tracked lean-out setup that supports four solid workouts per week without dragging food lower than needed.",
     nutritionModeLabel: "Macro tracking with MyFitnessPal",
     macroTargets: {
-      calories: 2000,
+      calories: 1900,
       protein: 170,
-      carbs: 210,
+      carbs: 180,
       fats: 55,
     },
     nutritionSections: [
@@ -1252,9 +1252,9 @@ function buildDanielProfile(source: PackSource): ClientPackProfile {
         paragraphs: [
           "At 168 lb, 5'9, on your feet often, and already clearing roughly 10k steps, the most useful move is a controlled deficit with moderate cardio rather than an aggressive crash.",
           `The starting target is ${formatMacroTargets({
-            calories: 2000,
+            calories: 1900,
             protein: 170,
-            carbs: 210,
+            carbs: 180,
             fats: 55,
           })}. That keeps training performance and adherence in a good place while fat loss runs at a steady pace.`,
         ],
