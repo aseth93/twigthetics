@@ -61,17 +61,28 @@ export function SiteHeader({
       </div>
 
       <div className="border-t border-[var(--line)] md:hidden">
-        <nav className="mx-auto flex w-full max-w-7xl gap-2.5 overflow-x-auto px-4 py-1.5 sm:px-6">
-          {navItems.map((item) => (
+        <div className="mx-auto flex w-full max-w-7xl items-center gap-3 px-4 py-1.5 sm:px-6">
+          <nav className="flex min-w-0 flex-1 gap-2.5 overflow-x-auto">
+            {navItems.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="shrink-0 text-[0.62rem] uppercase tracking-[0.16em] text-[var(--muted)] transition hover:text-[var(--ink)]"
+              >
+                {item.label}
+              </Link>
+            ))}
+          </nav>
+
+          {secondaryHref ? (
             <Link
-              key={item.href}
-              href={item.href}
-              className="shrink-0 text-[0.62rem] uppercase tracking-[0.16em] text-[var(--muted)] transition hover:text-[var(--ink)]"
+              href={secondaryHref}
+              className="shrink-0 rounded-full border border-[var(--line)] bg-white/45 px-3 py-1.5 text-[0.62rem] uppercase tracking-[0.16em] text-[var(--ink)] transition hover:bg-white/75"
             >
-              {item.label}
+              Sign in
             </Link>
-          ))}
-        </nav>
+          ) : null}
+        </div>
       </div>
     </header>
   );
