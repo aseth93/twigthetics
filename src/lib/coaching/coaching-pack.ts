@@ -1163,8 +1163,8 @@ function buildDanielProfile(source: PackSource): ClientPackProfile {
           "Flat press: 3 x 8-10",
           "Lat pulldown: 3 x 8-12",
           "Cable lateral raise: 2 x 12-20",
-          "Rope pressdown: 2 x 10-15",
-          "EZ-bar curl: 2 x 10-12",
+          "Rope pressdown: 3 x 10-15",
+          "EZ-bar curl: 3 x 10-12",
         ],
       },
       {
@@ -1186,7 +1186,7 @@ function buildDanielProfile(source: PackSource): ClientPackProfile {
           "Single-arm cable row: 3 x 10-12 each side",
           "Machine shoulder press: 2 x 8-10",
           "Reverse pec deck: 2 x 15-20",
-          "Cable curl + rope pressdown: 2 x 12-15 each",
+          "Cable curl + rope pressdown: 3 x 12-15 each",
         ],
       },
       {
