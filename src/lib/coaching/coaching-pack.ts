@@ -1476,7 +1476,7 @@ function buildLeonardProfile(source: PackSource): ClientPackProfile {
       },
     ],
     trainingSubtitle:
-      "Straightforward cut-phase setup for a commercial gym: more structure than “same as yours,” more consistency than random hard days.",
+      "Straightforward commercial-gym fat-loss setup with clear weekly structure, planned progression, and controlled conditioning.",
     trainingMetrics: [
       { label: "Goal", value: "Commercial-gym fat-loss cut" },
       { label: "Schedule", value: "5 sessions + moderate cardio" },
@@ -1484,13 +1484,6 @@ function buildLeonardProfile(source: PackSource): ClientPackProfile {
       { label: "Start", value: startDate },
     ],
     trainingSections: [
-      {
-        heading: "Block objective",
-        paragraphs: [
-          `${memberName}, the goal is a clean fat-loss phase, not an overcomplicated prep-style setup. Because you are already on your feet a lot and already doing steps, this plan tightens the structure instead of piling on chaos.`,
-          "The gym plan also needs to be more specific than “same as yours.” You should know exactly what the day is and what progression is being chased.",
-        ],
-      },
       {
         heading: "Weekly rhythm",
         bullets: [
