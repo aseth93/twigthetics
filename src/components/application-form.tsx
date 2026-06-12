@@ -1,7 +1,6 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { FRIEND_DISCOUNT_CODE } from "@/lib/portal/discount-codes";
 import type { ApplicationFormField } from "@/types/site";
 
 type ApplicationFormProps = {
@@ -13,9 +12,7 @@ type FormState = Record<string, string>;
 type FileState = Record<string, File | null>;
 type ErrorState = Record<string, string>;
 type SubmissionConfirmation = {
-  mode: "payment" | "thank-you";
   fullName: string;
-  email: string;
 };
 
 const emailPattern = /\S+@\S+\.\S+/;
@@ -102,9 +99,6 @@ export function ApplicationForm({
     message: "",
   });
   const [confirmation, setConfirmation] = useState<SubmissionConfirmation | null>(null);
-  const [isRedirectingToCheckout, setIsRedirectingToCheckout] = useState(false);
-  const [discountCode, setDiscountCode] = useState("");
-  const [discountError, setDiscountError] = useState("");
 
   const visibleFields = useMemo(() => getVisibleFields(fields, values), [fields, values]);
 
@@ -186,9 +180,7 @@ export function ApplicationForm({
     try {
       setIsSubmitting(true);
       const submissionSnapshot = {
-        mode: "payment" as const,
         fullName: values.fullName || values.name || "",
-        email: values.email || "",
       };
 
       const formData = new FormData();
@@ -226,10 +218,8 @@ export function ApplicationForm({
       setResetKey((current) => current + 1);
       setStatus({
         tone: "success",
-        message: "Intake submitted.",
+        message: "Waitlist submitted.",
       });
-      setDiscountCode("");
-      setDiscountError("");
       setConfirmation(submissionSnapshot);
     } catch (error) {
       setStatus({
@@ -327,50 +317,8 @@ export function ApplicationForm({
     return field.name === "preferredStartDate";
   }
 
-  function handleDismissConfirmation() {
-    setConfirmation((current) =>
-      current
-        ? {
-            ...current,
-            mode: "thank-you",
-          }
-        : null,
-    );
-    setIsRedirectingToCheckout(false);
-    setDiscountError("");
-  }
-
   function handleCloseThankYou() {
     setConfirmation(null);
-    setIsRedirectingToCheckout(false);
-    setDiscountCode("");
-    setDiscountError("");
-  }
-
-  function handleCheckoutNow() {
-    if (!confirmation?.email || isRedirectingToCheckout) {
-      return;
-    }
-
-    const normalizedDiscountCode = discountCode.trim().toUpperCase();
-
-    if (normalizedDiscountCode && normalizedDiscountCode !== FRIEND_DISCOUNT_CODE) {
-      setDiscountError("That discount code is not valid.");
-      return;
-    }
-
-    setIsRedirectingToCheckout(true);
-    setDiscountError("");
-
-    const searchParams = new URLSearchParams({
-      email: confirmation.email,
-    });
-
-    if (normalizedDiscountCode) {
-      searchParams.set("discountCode", normalizedDiscountCode);
-    }
-
-    window.location.href = `/api/coaching/checkout?${searchParams.toString()}`;
   }
 
   return (
@@ -413,7 +361,7 @@ export function ApplicationForm({
             disabled={isSubmitting}
             className="btn-primary"
           >
-            {isSubmitting ? "Submitting..." : "Submit Intake"}
+            {isSubmitting ? "Submitting..." : "Submit Waitlist"}
           </button>
 
           <a href={instagramUrl} target="_blank" rel="noreferrer" className="quiet-link">
@@ -441,100 +389,33 @@ export function ApplicationForm({
 
       {confirmation ? (
         <section
-          aria-labelledby={
-            confirmation.mode === "payment"
-              ? "intake-submitted-title"
-              : "intake-thank-you-title"
-          }
+          aria-labelledby="intake-thank-you-title"
           aria-modal="true"
           role="dialog"
           className="modal-shell"
         >
           <div className="modal-card relative z-10 w-full max-w-2xl">
             <div className="rounded-[1.6rem] border border-[var(--line)] bg-[rgba(246,239,230,0.96)] px-5 py-5 shadow-[var(--shadow)] sm:px-6 sm:py-6">
-              {confirmation.mode === "payment" ? (
-                <>
-                  <p className="eyebrow">Intake Submitted</p>
-                  <h2
-                    id="intake-submitted-title"
-                    className="mt-3 text-2xl font-semibold text-[var(--ink)] sm:text-3xl"
-                  >
-                    Submitted.
-                  </h2>
-                  <p className="mt-3 text-sm leading-6 text-[var(--muted)] sm:text-base sm:leading-7">
-                    Your intake has been received{confirmation.fullName ? `, ${confirmation.fullName}` : ""}. Do you want to pay and reserve your coaching spot now? There are limited spots, so reserving now will guarantee you a coaching spot.
-                  </p>
+              <p className="eyebrow">Waitlist Submitted</p>
+              <h2
+                id="intake-thank-you-title"
+                className="mt-3 text-2xl font-semibold text-[var(--ink)] sm:text-3xl"
+              >
+                Submitted.
+              </h2>
+              <p className="mt-3 text-sm leading-6 text-[var(--muted)] sm:text-base sm:leading-7">
+                Thank you{confirmation.fullName ? `, ${confirmation.fullName}` : ""}. Your waitlist intake has been submitted. I&apos;ll reach back out when coaching spots open up and if it looks like a fit.
+              </p>
 
-                  <div className="mt-5">
-                    <label htmlFor="discountCode" className="mb-2 block text-sm font-medium text-[var(--ink)]">
-                      Discount code
-                      <span className="ml-2 text-xs font-normal text-[var(--muted)]">
-                        Optional
-                      </span>
-                    </label>
-                    <input
-                      id="discountCode"
-                      name="discountCode"
-                      type="text"
-                      value={discountCode}
-                      onChange={(event) => {
-                        setDiscountCode(event.target.value.toUpperCase());
-                        if (discountError) {
-                          setDiscountError("");
-                        }
-                      }}
-                      placeholder="Enter code"
-                      autoComplete="off"
-                      className="w-full rounded-[1.15rem] border border-[var(--line)] bg-white/80 px-4 py-3 text-[15px] uppercase tracking-[0.08em] text-[var(--ink)] outline-none transition placeholder:normal-case placeholder:tracking-normal placeholder:text-[var(--muted)] focus:border-[var(--accent)] focus:bg-white"
-                    />
-                    {discountError ? (
-                      <p className="mt-2 text-xs leading-5 text-[#8a3c2d]">{discountError}</p>
-                    ) : null}
-                  </div>
-
-                  <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
-                    <button
-                      type="button"
-                      onClick={handleCheckoutNow}
-                      disabled={isRedirectingToCheckout}
-                      className="btn-primary"
-                    >
-                      {isRedirectingToCheckout ? "Redirecting..." : "Yes, reserve my spot"}
-                    </button>
-                    <button
-                      type="button"
-                      onClick={handleDismissConfirmation}
-                      disabled={isRedirectingToCheckout}
-                      className="btn-secondary"
-                    >
-                      No, I&apos;ll do it later
-                    </button>
-                  </div>
-                </>
-              ) : (
-                <>
-                  <p className="eyebrow">Thank You</p>
-                  <h2
-                    id="intake-thank-you-title"
-                    className="mt-3 text-2xl font-semibold text-[var(--ink)] sm:text-3xl"
-                  >
-                    Form submitted.
-                  </h2>
-                  <p className="mt-3 text-sm leading-6 text-[var(--muted)] sm:text-base sm:leading-7">
-                    Thank you, your form has been submitted. I will reach back out if you qualify for a coaching spot.
-                  </p>
-
-                  <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
-                    <button
-                      type="button"
-                      onClick={handleCloseThankYou}
-                      className="btn-primary"
-                    >
-                      Done
-                    </button>
-                  </div>
-                </>
-              )}
+              <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
+                <button
+                  type="button"
+                  onClick={handleCloseThankYou}
+                  className="btn-primary"
+                >
+                  Done
+                </button>
+              </div>
             </div>
           </div>
         </section>

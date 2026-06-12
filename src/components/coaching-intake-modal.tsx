@@ -61,10 +61,10 @@ function ModalContent({
               id="coaching-intake-title"
               className="mt-2 text-2xl font-semibold text-[var(--ink)] sm:text-3xl"
             >
-              Sign up for coaching.
+              Join the coaching waitlist.
             </h2>
             <p className="mt-3 max-w-2xl text-sm leading-6 text-[var(--muted)] sm:text-base sm:leading-7">
-              Please fill out the intake questionnaire below.
+              Please fill out the waitlist intake questionnaire below.
             </p>
           </div>
 

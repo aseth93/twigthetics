@@ -157,7 +157,7 @@ export function LoginPanel({ authConfigured, nextPath, notice }: LoginPanelProps
           Back to the front page
         </Link>
         <Link href="/#apply" className="quiet-link">
-          Apply for coaching
+          Join the coaching waitlist
         </Link>
       </div>
     </div>
