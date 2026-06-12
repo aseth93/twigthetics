@@ -237,7 +237,7 @@ function buildPdfDocumentSpecs(
     },
     {
       title: `${memberName} | Nutrition Plan + Backup Macros`,
-      description: "Primary nutrition system, starting calories and macros, sample meals, and adjustment rules.",
+      description: "Primary nutrition system, starting calories and macros, sample meals, and execution notes.",
       section: "nutrition",
       fileName: buildDocumentFileName(memberName, "nutrition-plan-backup-macros"),
       definition: {
@@ -965,15 +965,6 @@ function buildBrendaProfile(source: PackSource): ClientPackProfile {
       },
       buildHighVolumeFoodSection({ mode: "macro" }),
       {
-        heading: "Adjustment rules",
-        bullets: [
-          "Hold the setup steady for 10-14 days before touching calories unless adherence was perfect and the 7-day average is truly not moving.",
-          "If the weekly average is flat for two straight compliant weeks, drop 15-20 g carbs or add one short cardio session before doing both.",
-          "If energy, pumps, and lower-body performance fall hard while weight is dropping quickly, keep calories stable and tighten execution first.",
-          "Waist and lower-ab look matter more than one random lean morning.",
-        ],
-      },
-      {
         heading: "Non-negotiables",
         bullets: [
           "No untracked bites, licks, and tastes.",
@@ -1238,11 +1229,11 @@ function buildDanielProfile(source: PackSource): ClientPackProfile {
         ],
       },
       {
-        heading: "Progression and adjustments",
+        heading: "Progression and coach review",
         bullets: [
-          "If the weekly average is trending down and strength is stable, keep the structure exactly the same.",
-          "If the scale is stalled for two compliant weeks, first add 5-10 minutes to one cardio session or trim 20-25 g carbs before doing both.",
-          "If lifts are regressing hard while compliance is good, recovery is the first thing to inspect, not motivation.",
+          "Keep the assigned structure stable until I update it.",
+          "Do not make nutrition or cardio changes on your own. Log the trend and flag it in the portal so I can review the full picture.",
+          "If lifts are regressing hard while compliance is good, log the details clearly so recovery can be reviewed.",
         ],
       },
     ],
@@ -1288,15 +1279,6 @@ function buildDanielProfile(source: PackSource): ClientPackProfile {
         ],
       },
       buildHighVolumeFoodSection({ mode: "macro" }),
-      {
-        heading: "Adjustment rules",
-        bullets: [
-          "Look at the 7-day average, not random weigh-ins after a high-sodium day.",
-          "If the average is not falling after two compliant weeks, either trim 20-25 g carbs or add 10 minutes to one cardio session.",
-          "If hunger is manageable and recovery is still good, keep the plan stable instead of chasing faster scale drops.",
-          "If weight falls too fast and upper-body pumps disappear, hold calories steady and tighten tracking before changing anything.",
-        ],
-      },
       {
         heading: "Non-negotiables",
         bullets: [
@@ -1561,9 +1543,9 @@ function buildLeonardProfile(source: PackSource): ClientPackProfile {
       {
         heading: "Progression and stalls",
         bullets: [
-          "If the weekly average is falling and gym numbers are stable, do not change the plan just because one mirror check felt off.",
-          "If the weekly average is flat for two compliant weeks, add 10 minutes to one treadmill piece or pull 20 g carbs before doing both.",
-          "If work stress or step count spikes hard, report it so fatigue is interpreted correctly before calories are cut.",
+          "Keep the assigned plan stable instead of reacting to one mirror check or one weigh-in.",
+          "Do not make nutrition or cardio changes on your own. Log stalls clearly so I can review the plan.",
+          "If work stress or step count spikes hard, report it so fatigue is interpreted correctly during review.",
         ],
       },
     ],
@@ -1609,14 +1591,6 @@ function buildLeonardProfile(source: PackSource): ClientPackProfile {
         ],
       },
       buildHighVolumeFoodSection({ mode: "meal-plan" }),
-      {
-        heading: "Adjustment rules",
-        bullets: [
-          "Run the exact meal plan first. Do not start improvising because one day felt hungry or one weigh-in looked high.",
-          "If the 7-day average is flat for two straight compliant weeks, pull 20-25 g carbs or add 10 minutes to one treadmill session.",
-          "If energy or recovery slips hard while the average is already dropping, tighten adherence before pushing food lower.",
-        ],
-      },
       {
         heading: "Non-negotiables",
         bullets: [
@@ -1871,7 +1845,7 @@ function buildSelenaProfile(source: PackSource): ClientPackProfile {
         bullets: [
           "Weeks 1-2 build comfort and consistency. Weeks 3-4 push the rep ranges. Weeks 5-6 add load only where the movement is already owned.",
           "If compliance is messy, fix that before calling the plan ineffective.",
-          "If the 7-day average is flat for two straight clean weeks, add 10 minutes to one cardio slot or trim 15-20 g carbs.",
+          "Do not make nutrition or cardio changes on your own. Keep logging cleanly so I can review the plan if needed.",
         ],
       },
     ],
@@ -1916,14 +1890,6 @@ function buildSelenaProfile(source: PackSource): ClientPackProfile {
         ],
       },
       buildHighVolumeFoodSection({ mode: "macro" }),
-      {
-        heading: "Adjustment rules",
-        bullets: [
-          "Use the 7-day average bodyweight, not one random low weigh-in after a lighter day.",
-          "If progress is stalled for two compliant weeks, add 10 minutes to one incline walk or trim 15-20 g carbs.",
-          "If hunger or adherence gets rough, simplify the menu before assuming calories are too low.",
-        ],
-      },
       {
         heading: "Non-negotiables",
         bullets: [

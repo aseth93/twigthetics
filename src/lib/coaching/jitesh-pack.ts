@@ -619,7 +619,7 @@ function buildPdfDefinitions(source: PackSource) {
         bullets: [
           "If the same lift misses the bottom of the rep range for two straight exposures, keep the load fixed and beat the technique before forcing another increase.",
           "If joints feel bad but strength is still fine, keep the exercise pattern and adjust the range, tempo, or setup before changing the whole plan.",
-          "If bodyweight drops fast and pumps collapse, do not add random cheat meals. Use the nutrition adjustment rules instead.",
+          "If bodyweight drops fast and pumps collapse, log the pattern clearly so I can review the nutrition setup.",
         ],
       },
     ],
@@ -674,15 +674,6 @@ function buildPdfDefinitions(source: PackSource) {
         ],
       },
       {
-        heading: "Adjustment rules",
-        bullets: [
-          "Use the 7-day average bodyweight, not isolated lows, to judge progress.",
-          "If the weekly average does not move for 10 to 14 days and the waist look is unchanged, pull 20 to 25 g carbs or add 10 minutes to one or two LISS sessions.",
-          "If the weekly average drops faster than about 1.5 lb per week after the initial water drop and training performance fades, add 20 to 25 g carbs back around the workout window.",
-          "Keep sodium, meal timing, and food selection consistent enough that the scale is actually readable.",
-        ],
-      },
-      {
         heading: "Execution guardrails",
         bullets: [
           "Do not freestyle a meal plan until the exact version has been executed cleanly first.",
@@ -693,7 +684,7 @@ function buildPdfDefinitions(source: PackSource) {
       },
     ],
     footerNote:
-      "The first win is making the intake repeatable enough that adjustments mean something.",
+      "The first win is making the intake repeatable enough that coach review means something.",
   };
 
   const supplementDefinition: CoachingPdfDefinition = {
@@ -735,7 +726,7 @@ function buildPdfDefinitions(source: PackSource) {
         bullets: [
           "Daily fluid target starts around 110 to 130 oz, adjusted upward on hot days or higher-step days.",
           "Salt food normally and keep sodium consistent so scale trends are easier to interpret.",
-          "If pumps are flat and bodyweight is moving fast, check hydration and sodium consistency before assuming calories are the problem.",
+          "If pumps are flat and bodyweight is moving fast, log hydration and sodium consistency so the plan can be reviewed correctly.",
         ],
       },
       {
@@ -841,7 +832,7 @@ async function buildGeneratedDocuments(source: PackSource) {
   ];
   const descriptions = [
     "Full 6-week training block with exercise selection, substitutions, progression rules, and daily structure.",
-    "Exact meal template, calorie/macro rationale, food swaps, and weekly-adjustment rules.",
+    "Exact meal template, calorie/macro rationale, food swaps, and coach review notes.",
     "Simple daily supplement protocol with hydration, electrolyte, and caffeine guidance.",
     "Portal instructions, daily logging rules, calendar usage, and feedback expectations for coaching.",
   ];
