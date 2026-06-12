@@ -40,6 +40,9 @@ export const DEFAULT_GENERATED_MEMBER_PASSWORD = "Temppass1029!";
 
 const DEFAULT_PACK_WEEKS = 6;
 const TWIGTHETICS_BRAND_EYEBROW = "Twigthetics coaching";
+const VOLUME_EATING_GUIDE_URL = "https://health.clevelandclinic.org/volume-eating";
+const FILLING_FOODS_GUIDE_URL =
+  "https://health.clevelandclinic.org/healthy-and-filling-foods";
 
 type PackSource = {
   member: typeof users.$inferSelect;
@@ -676,6 +679,39 @@ function buildCommonInstructionSections(options: {
   ] satisfies CoachingPdfSection[];
 }
 
+function buildHighVolumeFoodSection(options: {
+  mode: "macro" | "meal-plan";
+}): CoachingPdfSection {
+  const leadParagraph =
+    options.mode === "meal-plan"
+      ? "If hunger is high, keep the meal plan intact and push food volume up with very low-calorie choices before thinking about extra carb portions, extra fats, or off-plan food."
+      : "If hunger is high, keep the macro target intact and bias food choices toward high-volume, lower-calorie foods instead of reaching for random extras.";
+
+  const controlRule =
+    options.mode === "meal-plan"
+      ? "Use these mostly as side-volume foods or approved add-ons to the existing meals, not as free extra meals."
+      : "These still count. Fruit, yogurt, and egg whites should still be logged, but they are much easier to fit than random snack foods.";
+
+  return {
+    heading: "Low-calorie, high-volume hunger control",
+    paragraphs: [
+      leadParagraph,
+      "The goal is to stay full enough to execute the plan cleanly without turning hunger into unstructured eating.",
+    ],
+    bullets: [
+      "Berries: strawberries, blueberries, raspberries, blackberries.",
+      "Fat-free Greek yogurt with Splenda or another zero-calorie sweetener.",
+      "Egg whites added to breakfast or used as a later protein top-up.",
+      "Big vegetable volume: lettuce, cucumber, zucchini, mushrooms, broccoli, cauliflower, green beans, bell peppers.",
+      "Broth-based vegetable soup, salad, or extra steamed vegetables when appetite is high.",
+      "Lean protein anchors when needed: chicken breast, deli turkey, tuna, or white fish.",
+      controlRule,
+      `Reference list: ${VOLUME_EATING_GUIDE_URL}`,
+      `Extra filling-food ideas: ${FILLING_FOODS_GUIDE_URL}`,
+    ],
+  };
+}
+
 function buildBrendaProfile(source: PackSource): ClientPackProfile {
   const memberName = source.member.fullName;
   const startDate =
@@ -927,6 +963,7 @@ function buildBrendaProfile(source: PackSource): ClientPackProfile {
           "Protein close-out only if needed to hit the target cleanly, not as an excuse to improvise extra food.",
         ],
       },
+      buildHighVolumeFoodSection({ mode: "macro" }),
       {
         heading: "Adjustment rules",
         bullets: [
@@ -1250,6 +1287,7 @@ function buildDanielProfile(source: PackSource): ClientPackProfile {
           "Use whey isolate only if the protein number is short, not as extra casual calories.",
         ],
       },
+      buildHighVolumeFoodSection({ mode: "macro" }),
       {
         heading: "Adjustment rules",
         bullets: [
@@ -1570,6 +1608,7 @@ function buildLeonardProfile(source: PackSource): ClientPackProfile {
           "Fat swaps: whole eggs, avocado, olive oil, fattier fish portions.",
         ],
       },
+      buildHighVolumeFoodSection({ mode: "meal-plan" }),
       {
         heading: "Adjustment rules",
         bullets: [
@@ -1876,6 +1915,7 @@ function buildSelenaProfile(source: PackSource): ClientPackProfile {
           "Meal 4: Protein shake or yogurt only if needed to finish the protein target.",
         ],
       },
+      buildHighVolumeFoodSection({ mode: "macro" }),
       {
         heading: "Adjustment rules",
         bullets: [
