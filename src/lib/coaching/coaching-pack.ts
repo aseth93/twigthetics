@@ -1823,7 +1823,7 @@ function buildSelenaProfile(source: PackSource): ClientPackProfile {
         heading: "Lower body + glutes",
         bullets: [
           "Hip thrust or glute bridge: 4 x 8-10",
-          "Hack squat or smith/goblet squat: 3 x 8-10",
+          "Wide stance leg press: 3 x 8-10",
           "Split squat: 3 x 8 each leg",
           "Leg curl: 3 x 10-12",
           "Calf raise: 3 x 12-15",
