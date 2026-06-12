@@ -686,7 +686,7 @@ function buildBrendaProfile(source: PackSource): ClientPackProfile {
     planSummary:
       "Six-week recomposition block centered on glute growth, cleaner ab definition, macro tracking, and low-cardio sustainability at a commercial gym.",
     cadence:
-      "3 mandatory lifting days, 1 optional glute/conditioning session, 10k daily steps, and 1-2 short cardio pieces each week.",
+      "3 mandatory lifting days, 1 optional glute/conditioning session, 10k daily steps, and 2 x 20-minute incline walks or 3k extra steps twice per week.",
     notes:
       "Generated from Brenda's intake with glute growth, moderate ab-definition work, macro tracking, and a low-cardio bias.",
     startDate,
@@ -698,7 +698,7 @@ function buildBrendaProfile(source: PackSource): ClientPackProfile {
       supplements:
         "Creatine 5 g daily, multivitamin, optional whey isolate to close protein gaps, and fish oil if fatty fish is low.",
       cardio:
-        "Keep 10k steps daily. Add only 1-2 short incline or stair sessions per week so food intake does not have to get pushed too low.",
+        "Keep 10k steps daily. Add 2 x 20-minute incline walking sessions per week or an extra 3,000 steps outside on top of the 10k baseline.",
       misc:
         "Daily weight, hydration, sleep, and workout notes stay mandatory. Glute performance, waist trend, and weekly average scale change drive adjustments.",
     },
@@ -762,14 +762,14 @@ function buildBrendaProfile(source: PackSource): ClientPackProfile {
         ],
       },
       {
-        title: "Optional glute pump + incline walk",
+        title: "Optional glute pump + incline walk / extra steps",
         dayType: "conditioning",
         summary: "Only run this if recovery is good and the main four sessions were completed cleanly.",
         details: [
           "Hip thrust or glute bridge 3 x 12",
           "Cable abduction 3 x 20",
           "Walking lunge 2 x 12 each leg",
-          "Incline walk 15-20 minutes",
+          "Incline walk 20 minutes or 3,000 extra steps above the 10k baseline",
         ],
       },
       {
