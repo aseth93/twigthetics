@@ -912,7 +912,6 @@ function buildBrendaProfile(source: PackSource): ClientPackProfile {
       {
         heading: "How to run the macros",
         bullets: [
-          "Get 25-35 g protein in each meal instead of backloading all of it late.",
           "Put a decent chunk of carbs in the meals before and after lower-body training days.",
           "Keep fats a little lower around the workout window so digestion stays easy and carbs can do their job.",
           "Track sauces, oils, nut butters, bites, and drinks. Recomp plans get ruined by small misses more than by the big obvious meals.",
