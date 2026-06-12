@@ -884,8 +884,6 @@ function buildBrendaProfile(source: PackSource): ClientPackProfile {
         bullets: [
           "Weeks 1-2 establish loads and clean execution. Weeks 3-4 push reps upward. Weeks 5-6 add load where the rep range is already owned.",
           "If a lift stalls for two straight exposures, keep the exercise but shave one set and push the first work set harder the following week.",
-          "If glute work performance drops while scale trend is also falling fast, that is a recovery flag. Do not try to fix it with random cheat meals.",
-          "Use pictures, waist fit, and weekly average bodyweight together before making changes.",
         ],
       },
     ],
