@@ -1619,15 +1619,6 @@ function buildLeonardProfile(source: PackSource): ClientPackProfile {
       },
       buildMacroPrioritySection(),
       buildHighVolumeFoodSection({ mode: "meal-plan" }),
-      {
-        heading: "Non-negotiables",
-        bullets: [
-          "No unplanned snacks between meals.",
-          "Only use the two planned snacks listed above unless I adjust the plan.",
-          "Do not let restaurant meals become “close enough” guesses multiple times a week.",
-          "Meal repetition is part of the tool here, not a flaw in the plan.",
-        ],
-      },
     ],
     supplementSubtitle:
       "Straightforward supplement stack that supports the cut without distracting from the real work: training, food, and steps.",
