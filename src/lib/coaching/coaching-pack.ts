@@ -1595,14 +1595,14 @@ function buildLeonardProfile(source: PackSource): ClientPackProfile {
         ],
       },
       {
-        heading: "Primary meal plan - measured day",
+        heading: "Primary meal plan - 3 meals + planned snacks",
         bullets: [
-          "Meal 1: 1 protein bar that is about 190-220 kcal and 18-22 g protein. Coffee with up to 1/2 cup nonfat milk and Splenda.",
-          "Meal 2: 5 oz cooked grilled chicken breast, 100 g cooked white rice, 250 g broccoli/cauliflower/carrots, and 50 g avocado.",
-          "Meal 3: 5 oz cooked 90/10 ground beef, 1 fiber tortilla that is 60-80 kcal, 150 g lettuce/salad, and 100 g carrots.",
-          "Meal 4 / snack: 250 g fat-free Greek yogurt, 150 g berries, and 15 g nuts.",
-          "Meal 5: 4 oz cooked tilapia or cod, 75 g cooked white rice, 200 g broccoli/cauliflower/carrots or salad, 30 g avocado, and 15 g nuts.",
-          "Daily total: approximately 1,950-1,980 kcal, 180-185 g protein, 175-185 g carbs, and 60-62 g fat depending on the exact bar, tortilla, and yogurt brand.",
+          "Meal 1 / breakfast: 1 protein bar that is about 190-220 kcal and 18-22 g protein. Coffee with up to 1/2 cup nonfat milk and Splenda.",
+          "Meal 2 / lunch: 6 oz cooked grilled chicken breast, 100 g cooked white rice, 1 fiber tortilla that is 60-80 kcal, 250 g broccoli/cauliflower/carrots, and 50 g avocado.",
+          "Meal 3 / dinner: 4 oz cooked 90/10 ground beef, 200 g egg whites, 60 g cooked white rice, 250 g broccoli/cauliflower/carrots or lettuce/salad, and 60 g avocado.",
+          "Snack 1: 250 g fat-free Greek yogurt and 150 g berries. Strawberries, blueberries, blackberries, and raspberries all work.",
+          "Snack 2: 25 g nuts and 100 g berries.",
+          "Daily total: approximately 1,920-1,960 kcal, 180-185 g protein, 175-185 g carbs, and 58-60 g fat depending on the exact protein bar, tortilla, yogurt, and beef label.",
         ],
       },
       {
@@ -1622,7 +1622,8 @@ function buildLeonardProfile(source: PackSource): ClientPackProfile {
       {
         heading: "Non-negotiables",
         bullets: [
-          "No off-plan snacks between meals.",
+          "No unplanned snacks between meals.",
+          "Only use the two planned snacks listed above unless I adjust the plan.",
           "Do not let restaurant meals become “close enough” guesses multiple times a week.",
           "Meal repetition is part of the tool here, not a flaw in the plan.",
         ],
