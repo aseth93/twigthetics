@@ -128,7 +128,7 @@ const workoutDayTemplates: WorkoutDayTemplate[] = [
     title: "Push",
     dayType: "training",
     summary: "Chest, front-delt, and triceps work built around presses that fit a home-gym setup.",
-    emphasis: "Smith and barbell pressing stay heavy enough to drive shape, while isolation volume finishes the chest, delt, and triceps work without needing heavy dumbbells.",
+    emphasis: "Smith and barbell pressing stay heavy enough to drive shape, while isolation volume finishes the chest, delt, and triceps work with dumbbells loaded only as heavy as clean form allows.",
     cardio: "No extra treadmill required after this lift unless steps are well short of target.",
     recovery: "Rest 2 to 3 minutes on presses, 60 to 90 seconds on isolation work, and stop most compound sets with 1 to 2 reps in reserve.",
     exercises: [
@@ -150,7 +150,7 @@ const workoutDayTemplates: WorkoutDayTemplate[] = [
       {
         name: "DB lateral raise",
         prescription: "4 sets x 15-25 reps",
-        notes: "Use the 15 lb dumbbells only if the target muscle is still owning the set. Slow the lowering if load is light.",
+        notes: "Dumbbells go up to 50 lb, so choose the load that keeps the side delt owning the set for the full rep range. Add weight only after the top of the range is clean without swinging.",
       },
       {
         name: "Lying barbell triceps extension",
@@ -235,7 +235,7 @@ const workoutDayTemplates: WorkoutDayTemplate[] = [
       {
         name: "DB lateral raise",
         prescription: "4 sets x 15-25 reps",
-        notes: "High output but clean execution. Slow the eccentric if load is easy.",
+        notes: "Use the corrected dumbbell range up to 50 lb, but do not chase load at the expense of clean side-delt tension. Progress reps first, then load.",
       },
       {
         name: "Bent-over rear-delt raise",
@@ -258,14 +258,9 @@ const workoutDayTemplates: WorkoutDayTemplate[] = [
         notes: "Counts as LISS session 1 of the week.",
       },
       {
-        name: "Reverse crunch",
-        prescription: "3 sets x 12-20 reps",
-        notes: "Controlled, pelvis curling up, not just legs kicking.",
-      },
-      {
-        name: "Front plank",
-        prescription: "3 rounds x 45-60 seconds",
-        notes: "Brace hard and keep ribs down.",
+        name: "Weighted rope ab crunch",
+        prescription: "4 sets x 10-15 reps",
+        notes: "Round the spine down under control, keep hips fixed, and progress load only when the crunch stays strict. This is ab slot 1 of 2 for the week.",
       },
       {
         name: "Hip flexor / hamstring / thoracic mobility",
@@ -305,7 +300,7 @@ const workoutDayTemplates: WorkoutDayTemplate[] = [
       {
         name: "DB lateral raise",
         prescription: "4 sets x 18-25 reps",
-        notes: "Chase burn, not swinging. This is shape work.",
+        notes: "Use a load that keeps the side delt in control. With dumbbells up to 50 lb available, progression is allowed, but swinging reps do not count.",
       },
       {
         name: "EZ-bar curl",
@@ -346,6 +341,11 @@ const workoutDayTemplates: WorkoutDayTemplate[] = [
         name: "Standing calf raise",
         prescription: "3 sets x 12-15 reps",
         notes: "Controlled stretch and pause.",
+      },
+      {
+        name: "Hanging or lying leg raise",
+        prescription: "4 sets x 10-15 reps",
+        notes: "Curl the pelvis up and control the lowering. This is ab slot 2 of 2 for the week.",
       },
       {
         name: "Treadmill incline walk",
@@ -456,6 +456,10 @@ function buildQuickStartSections() {
       "Fri Upper hypertrophy / pump",
       "Sat Lower + posterior chain + conditioning finisher",
       "Sun Recovery walk + steps target",
+      "",
+      "Ab work:",
+      "- Thu weighted rope ab crunch",
+      "- Sat hanging or lying leg raise",
       "",
       "Rules:",
       "- Compounds: stop around 1 to 2 RIR.",
