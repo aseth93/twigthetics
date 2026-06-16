@@ -162,6 +162,11 @@ const workoutDayTemplates: WorkoutDayTemplate[] = [
         prescription: "2 rounds to near failure",
         notes: "Feet-elevated to flat-floor push-ups as a finish, only after all main work is done.",
       },
+      {
+        name: "Ab superset: weighted rope ab crunch + hanging or lying leg raise",
+        prescription: "3 rounds x 10-15 reps each",
+        notes: "Do rope crunches first, then leg raises immediately after. Rest 60-90 seconds after each full round. This is ab slot 1 of 2 for the week.",
+      },
     ],
   },
   {
@@ -245,22 +250,17 @@ const workoutDayTemplates: WorkoutDayTemplate[] = [
     ],
   },
   {
-    title: "Conditioning + abs + mobility",
+    title: "Conditioning + mobility",
     dayType: "conditioning",
     summary: "A low-stress day that keeps the deficit working without burying recovery.",
     emphasis: "The goal is not to make cardio heroic. The goal is to stay leaner while still recovering well enough to look and perform athletic.",
     cardio: "20 minutes treadmill LISS, incline walk pace that keeps breathing steady enough to hold a conversation.",
-    recovery: "Finish with mobility and abdominal work, then get away from the session before it turns into junk fatigue.",
+    recovery: "Finish with mobility, then get away from the session before it turns into junk fatigue. Direct abs stay on lifting days.",
     exercises: [
       {
         name: "Treadmill incline walk",
         prescription: "20 minutes",
         notes: "Counts as LISS session 1 of the week.",
-      },
-      {
-        name: "Weighted rope ab crunch",
-        prescription: "4 sets x 10-15 reps",
-        notes: "Round the spine down under control, keep hips fixed, and progress load only when the crunch stays strict. This is ab slot 1 of 2 for the week.",
       },
       {
         name: "Hip flexor / hamstring / thoracic mobility",
@@ -343,9 +343,9 @@ const workoutDayTemplates: WorkoutDayTemplate[] = [
         notes: "Controlled stretch and pause.",
       },
       {
-        name: "Hanging or lying leg raise",
-        prescription: "4 sets x 10-15 reps",
-        notes: "Curl the pelvis up and control the lowering. This is ab slot 2 of 2 for the week.",
+        name: "Ab superset: weighted rope ab crunch + hanging or lying leg raise",
+        prescription: "3 rounds x 10-15 reps each",
+        notes: "Do rope crunches first, then leg raises immediately after. Rest 60-90 seconds after each full round. This is ab slot 2 of 2 for the week.",
       },
       {
         name: "Treadmill incline walk",
@@ -452,14 +452,14 @@ function buildQuickStartSections() {
       "Mon Push",
       "Tue Pull",
       "Wed Legs + shoulders",
-      "Thu Treadmill conditioning + abs + mobility",
+      "Thu Treadmill conditioning + mobility",
       "Fri Upper hypertrophy / pump",
       "Sat Lower + posterior chain + conditioning finisher",
       "Sun Recovery walk + steps target",
       "",
       "Ab work:",
-      "- Thu weighted rope ab crunch",
-      "- Sat hanging or lying leg raise",
+      "- Mon ab superset: weighted rope ab crunch + hanging or lying leg raise, 3 rounds x 10-15 each",
+      "- Sat ab superset: weighted rope ab crunch + hanging or lying leg raise, 3 rounds x 10-15 each",
       "",
       "Rules:",
       "- Compounds: stop around 1 to 2 RIR.",

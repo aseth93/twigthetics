@@ -770,7 +770,8 @@ function buildBrendaProfile(source: PackSource): ClientPackProfile {
           "Lat pulldown 3 x 8-12",
           "Chest-supported row 3 x 10-12",
           "Cable lateral raise 3 x 12-20",
-          "Cable crunch + dead bug finisher",
+          "Cable crunch 3 x 12-15",
+          "Dead bug 2 x 8 each side",
         ],
       },
       {
@@ -780,7 +781,7 @@ function buildBrendaProfile(source: PackSource): ClientPackProfile {
         details: [
           "10k steps minimum",
           "8-10 minutes hip and adductor mobility",
-          "Light core bracing work only if energy is good",
+          "No extra ab work here. Save direct abs for Tuesday and Friday.",
         ],
       },
       {
@@ -1067,7 +1068,7 @@ function buildDanielProfile(source: PackSource): ClientPackProfile {
     startDate,
     quickSections: {
       training:
-        "Four structured 50-minute lifts: upper 1, lower 1, upper 2, lower 2. The goal is better tone, cleaner execution, and predictable weekly output.",
+        "Four structured 50-minute lifts: upper 1, lower 1, upper 2, lower 2. The goal is better tone, cleaner execution, predictable weekly output, and two direct ab-superset slots with exact rounds and reps.",
       nutrition:
         "Start at 1,900 kcal with 170 g protein, 180 g carbs, and 55 g fat. Macro tracking stays primary, with carbs clustered around training and cardio days kept productive.",
       supplements:
@@ -1099,7 +1100,7 @@ function buildDanielProfile(source: PackSource): ClientPackProfile {
           "Romanian deadlift 3 x 8-10",
           "Leg curl 3 x 10-12",
           "Walking lunge 2 x 10 each leg",
-          "Cable crunch 3 x 12-15",
+          "Ab superset 3 rounds: cable crunch 12-15 reps + ab machine crunch 10-15 reps",
         ],
       },
       {
@@ -1134,6 +1135,7 @@ function buildDanielProfile(source: PackSource): ClientPackProfile {
           "Split squat 3 x 8 each leg",
           "Seated leg curl 3 x 12-15",
           "Calf raise 3 x 10-15",
+          "Ab superset 3 rounds: cable crunch 12-15 reps + ab machine crunch 10-15 reps",
         ],
       },
       {
@@ -1192,6 +1194,7 @@ function buildDanielProfile(source: PackSource): ClientPackProfile {
           "Because sessions are capped around 50 minutes, move efficiently between exercises instead of adding extra fluff work.",
           "Beat the rep range first. Once the full prescribed range is owned for every set, add a small amount of load next exposure.",
           "Cardio days are productive but controlled. They are not punishment sessions.",
+          "Abs are trained twice weekly on lifting days. Each ab slot is a superset: cable crunches plus the ab machine for the prescribed rounds and reps.",
         ],
       },
       {
@@ -1214,7 +1217,8 @@ function buildDanielProfile(source: PackSource): ClientPackProfile {
           "Leg curl: 3 x 10-12",
           "Walking lunge: 2 x 10 each leg",
           "Standing calf raise: 3 x 10-15",
-          "Cable crunch: 3 x 12-15",
+          "Ab superset: 3 rounds of cable crunch 12-15 reps + ab machine crunch 10-15 reps",
+          "Rest 45-75 seconds after each full superset round.",
         ],
       },
       {
@@ -1236,6 +1240,8 @@ function buildDanielProfile(source: PackSource): ClientPackProfile {
           "Split squat: 3 x 8 each leg",
           "Seated leg curl: 3 x 12-15",
           "Calf raise: 3 x 10-15",
+          "Ab superset: 3 rounds of cable crunch 12-15 reps + ab machine crunch 10-15 reps",
+          "Rest 45-75 seconds after each full superset round.",
           "Short incline walk finisher only if session time allows",
         ],
       },
@@ -1383,7 +1389,7 @@ function buildLeonardProfile(source: PackSource): ClientPackProfile {
     startDate,
     quickSections: {
       training:
-        "Five-day split: chest + shoulders, back + arms, legs, chest + back, then shoulders + arms. Cardio stays planned around the lifting week.",
+        "Five-day split: chest + shoulders, back + arms, legs, chest + back, then shoulders + arms. Cardio stays planned around the lifting week, and direct abs are hit twice weekly with exact ab-superset rounds and reps.",
       nutrition:
         "Primary system is a laid-out meal plan built around roughly 1,950 kcal with a backup target of 180 g protein, 180 g carbs, and 60 g fat.",
       supplements:
@@ -1442,6 +1448,7 @@ function buildLeonardProfile(source: PackSource): ClientPackProfile {
           "Incline press 2 x 10-12",
           "Single-arm cable row 3 x 10-12",
           "Cable fly 2 x 12-15",
+          "Ab superset 3 rounds: cable crunch 12-15 reps + ab machine crunch 10-15 reps",
           "Treadmill LISS 20-25 minutes",
         ],
       },
@@ -1456,6 +1463,7 @@ function buildLeonardProfile(source: PackSource): ClientPackProfile {
           "Rope pressdown 3 x 10-15",
           "EZ-bar curl 3 x 10-12",
           "Overhead cable extension + hammer curl 2 x 12-15 each",
+          "Ab superset 3 rounds: cable crunch 12-15 reps + ab machine crunch 10-15 reps",
         ],
       },
       {
@@ -1507,6 +1515,7 @@ function buildLeonardProfile(source: PackSource): ClientPackProfile {
           "Because your job already keeps movement high, cardio stays moderate and deliberate instead of aggressive.",
           "Progress reps first. Once the full rep range is owned, increase load slightly the next week.",
           "Keep the exercise menu stable for the full block unless pain or equipment issues force a real change.",
+          "Abs are trained twice weekly on lifting days. Each ab slot is a superset: cable crunches plus the ab machine for the prescribed rounds and reps.",
         ],
       },
       {
@@ -1549,6 +1558,8 @@ function buildLeonardProfile(source: PackSource): ClientPackProfile {
           "Incline press: 2 x 10-12",
           "Single-arm cable row: 3 x 10-12 each side",
           "Cable fly: 2 x 12-15",
+          "Ab superset: 3 rounds of cable crunch 12-15 reps + ab machine crunch 10-15 reps",
+          "Rest 45-75 seconds after each full superset round.",
           "Treadmill LISS: 20-25 minutes",
         ],
       },
@@ -1561,6 +1572,8 @@ function buildLeonardProfile(source: PackSource): ClientPackProfile {
           "Rope pressdown: 3 x 10-15",
           "EZ-bar curl: 3 x 10-12",
           "Overhead cable extension + hammer curl: 2 x 12-15 each",
+          "Ab superset: 3 rounds of cable crunch 12-15 reps + ab machine crunch 10-15 reps",
+          "Rest 45-75 seconds after each full superset round.",
         ],
       },
       {
@@ -1703,7 +1716,7 @@ function buildSelenaProfile(source: PackSource): ClientPackProfile {
     startDate,
     quickSections: {
       training:
-        "Three lifting days with a simple full-body/lower/upper split so the schedule feels easy to repeat instead of overwhelming.",
+        "Three lifting days with a simple full-body/lower/upper split so the schedule feels easy to repeat instead of overwhelming. Abs are trained twice weekly with cable crunches and the ab machine, including exact sets and reps.",
       nutrition:
         "Start at 1,610 kcal with 140 g protein, 155 g carbs, and 50 g fat. Macro tracking stays primary, with repeatable meals and pre-logging used to cut decision fatigue.",
       supplements:
@@ -1723,17 +1736,18 @@ function buildSelenaProfile(source: PackSource): ClientPackProfile {
           "Chest press 3 x 8-10",
           "Pulldown 3 x 10-12",
           "Romanian deadlift 3 x 8-10",
-          "Cable lateral raise + cable crunch",
+          "Cable lateral raise 2 x 12-15",
+          "Cable crunch 3 x 12-15",
+          "Ab machine crunch 3 x 10-15",
         ],
       },
       {
-        title: "Incline walk + core",
+        title: "Incline walk",
         dayType: "conditioning",
         summary: "First formal cardio day. Moderate pace, no burnout approach.",
         details: [
           "Incline treadmill 25-30 minutes",
           "8k-10k total steps",
-          "Cable crunch + dead bug or plank",
         ],
       },
       {
@@ -1759,7 +1773,7 @@ function buildSelenaProfile(source: PackSource): ClientPackProfile {
         ],
       },
       {
-        title: "Upper body + glute accessories",
+        title: "Upper body + glute accessories + abs",
         dayType: "training",
         summary: "Upper-body shaping day with a small glute touch so the week still feels balanced.",
         details: [
@@ -1768,6 +1782,8 @@ function buildSelenaProfile(source: PackSource): ClientPackProfile {
           "Shoulder press machine 2 x 8-10",
           "Pulldown 2 x 10-12",
           "Cable kickback + lateral raise finish",
+          "Cable crunch 3 x 12-15",
+          "Ab machine crunch 3 x 10-15",
         ],
       },
       {
@@ -1811,10 +1827,10 @@ function buildSelenaProfile(source: PackSource): ClientPackProfile {
         heading: "Weekly rhythm",
         bullets: [
           "Monday: Full body A",
-          "Tuesday: Incline walk + core",
+          "Tuesday: Incline walk",
           "Wednesday: Lower body + glutes",
           "Thursday: Recovery walk",
-          "Friday: Upper body + glute accessories",
+          "Friday: Upper body + glute accessories + abs",
           "Saturday: Incline walk + mobility",
           "Sunday: Recovery or outdoor walk",
         ],
@@ -1826,6 +1842,7 @@ function buildSelenaProfile(source: PackSource): ClientPackProfile {
           "The goal is not to cram in extra exercises because motivation feels high one day.",
           "Every workout should feel clear and finishable. Success here comes from stacking good weeks, not random perfect days.",
           "Cardio stays moderate. It supports the pace, but it should not leave you dreading the week.",
+          "Abs are trained twice weekly on lifting days, not standalone cardio days. Use the same structure both times: cable crunches first, then the ab machine. Do the listed sets and reps rather than guessing.",
         ],
       },
       {
@@ -1837,6 +1854,8 @@ function buildSelenaProfile(source: PackSource): ClientPackProfile {
           "Romanian deadlift: 3 x 8-10",
           "Cable lateral raise: 2 x 12-15",
           "Cable crunch: 3 x 12-15",
+          "Ab machine crunch: 3 x 10-15",
+          "Rest 45-75 seconds between ab sets. Use a controlled crunch, not momentum.",
         ],
       },
       {
@@ -1850,7 +1869,7 @@ function buildSelenaProfile(source: PackSource): ClientPackProfile {
         ],
       },
       {
-        heading: "Upper body + glute accessories",
+        heading: "Upper body + glute accessories + abs",
         bullets: [
           "Machine chest press: 3 x 10-12",
           "Seated cable row: 3 x 10-12",
@@ -1858,6 +1877,8 @@ function buildSelenaProfile(source: PackSource): ClientPackProfile {
           "Neutral pulldown: 2 x 10-12",
           "Cable kickback: 2 x 15-20",
           "Cable lateral raise: 2 x 15-20",
+          "Cable crunch: 3 x 12-15",
+          "Ab machine crunch: 3 x 10-15",
         ],
       },
       {
