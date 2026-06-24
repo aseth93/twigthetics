@@ -1710,13 +1710,13 @@ function buildSelenaProfile(source: PackSource): ClientPackProfile {
     planSummary:
       "Six-week adherence-first fat-loss phase built to tighten things up for Selena's wedding without depending on random vibes or all-or-nothing motivation.",
     cadence:
-      "3 lifting days, 3 planned cardio exposures, 8k-10k daily steps, and a simple macro setup that prioritizes consistency over perfectionism.",
+      "4 lifting days, 2 planned cardio exposures, 8k-10k daily steps, and a simple macro setup that prioritizes consistency over perfectionism.",
     notes:
       "Generated from Selena's intake with a wedding deadline, beginner/inconsistent training background, macro tracking preference, and the choice to lean slightly more on cardio than ultra-low calories.",
     startDate,
     quickSections: {
       training:
-        "Three lifting days with a simple full-body/lower/upper split so the schedule feels easy to repeat instead of overwhelming. Abs are trained twice weekly with cable crunches and the ab machine, including exact sets and reps.",
+        "Four lifting days with a simple upper/lower/lower/upper rhythm so the week has more structure without making every session hard. Abs are trained twice weekly with cable crunches and the ab machine, including exact sets and reps.",
       nutrition:
         "Start at 1,610 kcal with 140 g protein, 155 g carbs, and 50 g fat. Macro tracking stays primary, with repeatable meals and pre-logging used to cut decision fatigue.",
       supplements:
@@ -1728,30 +1728,33 @@ function buildSelenaProfile(source: PackSource): ClientPackProfile {
     },
     scheduleTemplates: [
       {
-        title: "Full body A",
+        title: "Upper A + abs",
         dayType: "training",
-        summary: "Straightforward whole-body lift to build rhythm and cover the main movement patterns cleanly.",
+        summary: "Upper-body base day with the first focused ab slot of the week.",
         details: [
-          "Leg press or squat pattern 3 x 8-10",
-          "Chest press 3 x 8-10",
-          "Pulldown 3 x 10-12",
-          "Romanian deadlift 3 x 8-10",
+          "Machine chest press 3 x 8-10",
+          "Lat pulldown 3 x 10-12",
+          "Seated cable row 3 x 10-12",
           "Cable lateral raise 2 x 12-15",
           "Cable crunch 3 x 12-15",
           "Ab machine crunch 3 x 10-15",
         ],
       },
       {
-        title: "Incline walk",
-        dayType: "conditioning",
-        summary: "First formal cardio day. Moderate pace, no burnout approach.",
+        title: "Lower A | Easier legs + glutes",
+        dayType: "training",
+        summary: "Lighter lower-body day that builds rhythm without crushing recovery.",
         details: [
-          "Incline treadmill 25-30 minutes",
-          "8k-10k total steps",
+          "Wide stance leg press 3 x 10-12",
+          "Dumbbell Romanian deadlift 3 x 10-12",
+          "Cable glute kickback 2 x 15-20 each side",
+          "Seated or lying leg curl 2 x 12-15",
+          "Calf raise 2 x 12-15",
+          "Optional incline walk 10-15 minutes easy",
         ],
       },
       {
-        title: "Lower body + glutes",
+        title: "Lower B | Glute priority",
         dayType: "training",
         summary: "Lower-body emphasis day to build shape while the fat-loss phase runs.",
         details: [
@@ -1773,7 +1776,7 @@ function buildSelenaProfile(source: PackSource): ClientPackProfile {
         ],
       },
       {
-        title: "Upper body + glute accessories + abs",
+        title: "Upper B + glute accessories + abs",
         dayType: "training",
         summary: "Upper-body shaping day with a small glute touch so the week still feels balanced.",
         details: [
@@ -1808,10 +1811,10 @@ function buildSelenaProfile(source: PackSource): ClientPackProfile {
       },
     ],
     trainingSubtitle:
-      "Simple, adherence-first wedding lean-out plan built for someone who needs structure more than complexity.",
+      "Simple, adherence-first wedding lean-out plan built around four manageable lifting days instead of one overloaded full-body day.",
     trainingMetrics: [
       { label: "Goal", value: "Wedding-focused fat loss" },
-      { label: "Schedule", value: "3 lifts + 3 cardio exposures" },
+      { label: "Schedule", value: "4 lifts + 2 cardio exposures" },
       { label: "Equipment", value: "Commercial gym" },
       { label: "Start", value: startDate },
     ],
@@ -1826,11 +1829,11 @@ function buildSelenaProfile(source: PackSource): ClientPackProfile {
       {
         heading: "Weekly rhythm",
         bullets: [
-          "Monday: Full body A",
-          "Tuesday: Incline walk",
-          "Wednesday: Lower body + glutes",
+          "Monday: Upper A + abs",
+          "Tuesday: Lower A | easier legs + glutes",
+          "Wednesday: Lower B | glute priority",
           "Thursday: Recovery walk",
-          "Friday: Upper body + glute accessories + abs",
+          "Friday: Upper B + glute accessories + abs",
           "Saturday: Incline walk + mobility",
           "Sunday: Recovery or outdoor walk",
         ],
@@ -1839,19 +1842,18 @@ function buildSelenaProfile(source: PackSource): ClientPackProfile {
         heading: "Execution rules",
         bullets: [
           "Keep compound lifts around 1-2 RIR. This is enough intensity to improve without making consistency harder.",
-          "The goal is not to cram in extra exercises because motivation feels high one day.",
+          "The goal is not to cram in extra exercises because motivation feels high one day. The fourth lift is intentionally easier so the schedule is more structured without beating you up.",
           "Every workout should feel clear and finishable. Success here comes from stacking good weeks, not random perfect days.",
           "Cardio stays moderate. It supports the pace, but it should not leave you dreading the week.",
           "Abs are trained twice weekly on lifting days, not standalone cardio days. Use the same structure both times: cable crunches first, then the ab machine. Do the listed sets and reps rather than guessing.",
         ],
       },
       {
-        heading: "Full body A",
+        heading: "Upper A + abs",
         bullets: [
-          "Leg press or squat pattern: 3 x 8-10",
           "Machine chest press: 3 x 8-10",
           "Lat pulldown: 3 x 10-12",
-          "Romanian deadlift: 3 x 8-10",
+          "Seated cable row: 3 x 10-12",
           "Cable lateral raise: 2 x 12-15",
           "Cable crunch: 3 x 12-15",
           "Ab machine crunch: 3 x 10-15",
@@ -1859,7 +1861,21 @@ function buildSelenaProfile(source: PackSource): ClientPackProfile {
         ],
       },
       {
-        heading: "Lower body + glutes",
+        heading: "Lower A | easier legs + glutes",
+        paragraphs: [
+          "This is the easier lower day. Keep the effort clean and controlled so Wednesday can still be productive.",
+        ],
+        bullets: [
+          "Wide stance leg press: 3 x 10-12",
+          "Dumbbell Romanian deadlift: 3 x 10-12",
+          "Cable glute kickback: 2 x 15-20 each side",
+          "Seated or lying leg curl: 2 x 12-15",
+          "Calf raise: 2 x 12-15",
+          "Optional incline walk: 10-15 minutes easy",
+        ],
+      },
+      {
+        heading: "Lower B | Glute priority",
         bullets: [
           "Hip thrust or glute bridge: 4 x 8-10",
           "Wide stance leg press: 3 x 8-10",
@@ -1869,7 +1885,7 @@ function buildSelenaProfile(source: PackSource): ClientPackProfile {
         ],
       },
       {
-        heading: "Upper body + glute accessories + abs",
+        heading: "Upper B + glute accessories + abs",
         bullets: [
           "Machine chest press: 3 x 10-12",
           "Seated cable row: 3 x 10-12",
