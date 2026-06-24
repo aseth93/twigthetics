@@ -26,6 +26,7 @@ export default async function MemberLayout({
       title="Member portal"
       subtitle="Plans, section files, check-ins, billing, and direct coaching messages all live inside the same Twigthetics site."
       navItems={memberNavItems}
+      contentFirstOnMobile
     >
       <MemberOnboardingModal
         fullName={viewer.profile.fullName}

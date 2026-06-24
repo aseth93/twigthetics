@@ -8,6 +8,7 @@ type PortalShellProps = {
   title: string;
   subtitle: string;
   navItems: Array<{ href: string; label: string }>;
+  contentFirstOnMobile?: boolean;
   children: React.ReactNode;
 };
 
@@ -16,12 +17,18 @@ export function PortalShell({
   title,
   subtitle,
   navItems,
+  contentFirstOnMobile = false,
   children,
 }: PortalShellProps) {
   return (
     <div className="min-h-screen bg-[linear-gradient(180deg,#fbf7f2_0%,var(--canvas)_56%,#efe1cf_100%)]">
       <div className="mx-auto grid min-h-screen w-full max-w-7xl grid-cols-1 gap-6 px-5 py-5 lg:grid-cols-[18rem_1fr] lg:px-8">
-        <aside className="surface-panel h-fit overflow-hidden lg:sticky lg:top-5">
+        <aside
+          className={[
+            "surface-panel h-fit overflow-hidden lg:sticky lg:top-5",
+            contentFirstOnMobile ? "order-2 lg:order-1" : "",
+          ].join(" ")}
+        >
           <div className="border-b border-[var(--line)] px-5 py-5">
             <Link href="/" className="type-display text-2xl uppercase text-[var(--ink)]">
               Twigthetics
@@ -50,7 +57,7 @@ export function PortalShell({
           </div>
         </aside>
 
-        <div className="space-y-6">
+        <div className={["space-y-6", contentFirstOnMobile ? "order-1 lg:order-2" : ""].join(" ")}>
           <section className="surface-panel overflow-hidden">
             <div className="bg-[linear-gradient(135deg,rgba(141,107,61,0.14),rgba(39,49,39,0.08))] px-6 py-7 md:px-8">
               <p className="eyebrow">Portal</p>

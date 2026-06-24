@@ -249,6 +249,125 @@ export function MemberCheckinWorkspace({
 
   return (
     <div className="space-y-6">
+      <section
+        id="daily-checkin-editor"
+        className="rounded-[2rem] border border-[rgba(141,107,61,0.32)] bg-[linear-gradient(135deg,rgba(23,20,17,0.96),rgba(57,44,29,0.94))] p-1 shadow-[0_28px_90px_rgba(37,24,10,0.24)]"
+      >
+        <form
+          onSubmit={handleSubmit}
+          className="grid grid-cols-1 gap-5 rounded-[1.75rem] border border-white/10 bg-[radial-gradient(circle_at_top_right,rgba(201,168,116,0.2),transparent_34%),rgba(255,255,255,0.04)] p-5 sm:p-6 lg:grid-cols-[0.88fr_1.12fr] lg:items-start"
+        >
+          <div className="text-white">
+            <p className="eyebrow text-[var(--accent-soft)]">Today&apos;s check-in</p>
+            <h2 className="mt-3 text-3xl font-semibold leading-tight sm:text-4xl">
+              Log your weigh-in first.
+            </h2>
+            <p className="mt-4 text-sm leading-7 text-white/72">
+              Enter bodyweight every morning. Hydration, sleep, and workout notes help
+              keep the plan accurate without guessing.
+            </p>
+
+            <div className="mt-6 grid grid-cols-2 gap-3">
+              <div className="rounded-[1.2rem] border border-white/10 bg-white/8 px-4 py-4">
+                <p className="text-[10px] uppercase tracking-[0.18em] text-white/48">
+                  This week
+                </p>
+                <p className="mt-2 text-xl font-semibold text-white">
+                  {formatWeightPounds(currentWeekAverageWeightPounds)}
+                </p>
+              </div>
+              <div className="rounded-[1.2rem] border border-white/10 bg-white/8 px-4 py-4">
+                <p className="text-[10px] uppercase tracking-[0.18em] text-white/48">
+                  Latest
+                </p>
+                <p className="mt-2 text-xl font-semibold text-white">
+                  {formatWeightPounds(latestCheckin?.weightPounds)}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 gap-4 rounded-[1.5rem] border border-white/12 bg-white/92 p-4 shadow-[0_18px_55px_rgba(0,0,0,0.16)] sm:p-5">
+            <input
+              type="date"
+              value={checkinDate}
+              onChange={(event) => setCheckinDate(event.target.value)}
+              max={getTodayIsoDate()}
+              aria-label="Check-in date"
+              className="w-full rounded-[1rem] border border-[var(--line)] bg-white px-4 py-4 text-[16px] text-[var(--ink)] outline-none focus:border-[var(--accent)]"
+            />
+
+            <input
+              type="number"
+              step="0.1"
+              min="1"
+              value={weightPounds}
+              onChange={(event) => setWeightPounds(event.target.value)}
+              placeholder="Bodyweight (lb)"
+              aria-label="Bodyweight in pounds"
+              className="w-full rounded-[1rem] border-2 border-[rgba(141,107,61,0.36)] bg-white px-4 py-4 text-[18px] font-semibold text-[var(--ink)] outline-none placeholder:font-normal placeholder:text-[var(--muted)] focus:border-[var(--accent)]"
+            />
+
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <input
+                type="number"
+                step="1"
+                min="0"
+                value={hydrationOunces}
+                onChange={(event) => setHydrationOunces(event.target.value)}
+                placeholder="Hydration (oz)"
+                aria-label="Hydration in ounces"
+                className="w-full rounded-[1rem] border border-[var(--line)] bg-white px-4 py-4 text-[16px] text-[var(--ink)] outline-none focus:border-[var(--accent)]"
+              />
+
+              <input
+                type="number"
+                step="0.1"
+                min="0"
+                max="24"
+                value={sleepHours}
+                onChange={(event) => setSleepHours(event.target.value)}
+                placeholder="Sleep (hours)"
+                aria-label="Sleep in hours"
+                className="w-full rounded-[1rem] border border-[var(--line)] bg-white px-4 py-4 text-[16px] text-[var(--ink)] outline-none focus:border-[var(--accent)]"
+              />
+            </div>
+
+            <textarea
+              value={workoutNotes}
+              onChange={(event) => setWorkoutNotes(event.target.value)}
+              rows={5}
+              placeholder="Workout notes after training: performance, energy, pumps, soreness, missed sets, recovery, or anything I should know."
+              className="w-full rounded-[1rem] border border-[var(--line)] bg-white px-4 py-4 text-[16px] text-[var(--ink)] outline-none focus:border-[var(--accent)]"
+            />
+
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-[auto_1fr] sm:items-center">
+              <button
+                type="submit"
+                className="btn-primary min-h-[4rem] w-full shadow-[0_14px_40px_rgba(23,20,17,0.22)] sm:w-auto"
+                disabled={isSubmitting}
+              >
+                {isSubmitting
+                  ? "Saving..."
+                  : selectedEntry
+                    ? "Update check-in"
+                    : "Save check-in"}
+              </button>
+              {status ? (
+                <p className="rounded-full border border-[rgba(141,107,61,0.16)] bg-[rgba(141,107,61,0.08)] px-4 py-3 text-sm text-[var(--muted)]">
+                  {status}
+                </p>
+              ) : (
+                <p className="text-sm leading-6 text-[var(--muted)]">
+                  Takes under a minute. Daily consistency makes the weekly average
+                  useful.
+                </p>
+              )}
+            </div>
+          </div>
+        </form>
+      </section>
+
       <section className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
         <article className="surface-panel p-6">
           <p className="eyebrow">Current week average</p>
@@ -529,83 +648,6 @@ export function MemberCheckinWorkspace({
       </section>
 
       <section className="grid grid-cols-1 gap-6 xl:grid-cols-[0.95fr_1.05fr]">
-        <form
-          id="daily-checkin-editor"
-          onSubmit={handleSubmit}
-          className="surface-panel grid grid-cols-1 gap-4 p-6"
-        >
-          <div>
-            <p className="eyebrow">Daily check-in</p>
-            <h2 className="mt-3 text-2xl font-semibold text-[var(--ink)]">
-              Log bodyweight, hydration, sleep, and workout notes.
-            </h2>
-            <p className="mt-3 text-sm leading-6 text-[var(--muted)]">
-              Log the weigh-in, water, and sleep daily. Add workout notes right after you
-              train so the weekly average and session feedback stay usable.
-            </p>
-          </div>
-
-          <input
-            type="date"
-            value={checkinDate}
-            onChange={(event) => setCheckinDate(event.target.value)}
-            max={getTodayIsoDate()}
-            className="w-full rounded-[1rem] border border-[var(--line)] bg-white/80 px-4 py-3 text-[15px] text-[var(--ink)] outline-none focus:border-[var(--accent)]"
-          />
-
-          <input
-            type="number"
-            step="0.1"
-            min="1"
-            value={weightPounds}
-            onChange={(event) => setWeightPounds(event.target.value)}
-            placeholder="Bodyweight (lb)"
-            className="w-full rounded-[1rem] border border-[var(--line)] bg-white/80 px-4 py-3 text-[15px] text-[var(--ink)] outline-none focus:border-[var(--accent)]"
-          />
-
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-            <input
-              type="number"
-              step="1"
-              min="0"
-              value={hydrationOunces}
-              onChange={(event) => setHydrationOunces(event.target.value)}
-              placeholder="Hydration (oz)"
-              className="w-full rounded-[1rem] border border-[var(--line)] bg-white/80 px-4 py-3 text-[15px] text-[var(--ink)] outline-none focus:border-[var(--accent)]"
-            />
-
-            <input
-              type="number"
-              step="0.1"
-              min="0"
-              max="24"
-              value={sleepHours}
-              onChange={(event) => setSleepHours(event.target.value)}
-              placeholder="Sleep (hours)"
-              className="w-full rounded-[1rem] border border-[var(--line)] bg-white/80 px-4 py-3 text-[15px] text-[var(--ink)] outline-none focus:border-[var(--accent)]"
-            />
-          </div>
-
-          <textarea
-            value={workoutNotes}
-            onChange={(event) => setWorkoutNotes(event.target.value)}
-            rows={8}
-            placeholder="Workout notes, performance notes, pumps, energy, digestion, recovery, or anything worth flagging for the day."
-            className="w-full rounded-[1rem] border border-[var(--line)] bg-white/80 px-4 py-3 text-[15px] text-[var(--ink)] outline-none focus:border-[var(--accent)]"
-          />
-
-          <div className="flex flex-wrap items-center gap-3">
-            <button type="submit" className="btn-primary" disabled={isSubmitting}>
-              {isSubmitting
-                ? "Saving..."
-                : selectedEntry
-                  ? "Update check-in"
-                  : "Save check-in"}
-            </button>
-            {status ? <p className="text-sm text-[var(--muted)]">{status}</p> : null}
-          </div>
-        </form>
-
         <div className="space-y-6">
           <article className="surface-panel p-6">
             <p className="eyebrow">Weekly average weight</p>
