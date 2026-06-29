@@ -21,37 +21,56 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        await ensureBootstrapAdmin();
+        try {
+          await ensureBootstrapAdmin();
 
-        if (!credentials?.email || !credentials?.password) {
-          throw new Error("Email and password are required.");
+          if (!credentials?.email || !credentials?.password) {
+            throw new Error("Email and password are required.");
+          }
+
+          const db = await getDbReady();
+
+          if (!db) {
+            throw new Error("Portal auth is not configured yet.");
+          }
+
+          const email = normalizeEmail(credentials.email);
+          const [user] = await db
+            .select()
+            .from(users)
+            .where(eq(users.email, email))
+            .limit(1);
+
+          if (!user) {
+            throw new Error("No account found with that email.");
+          }
+
+          const isValid = await compare(credentials.password, user.passwordHash);
+
+          if (!isValid) {
+            throw new Error("Invalid password.");
+          }
+
+          return {
+            id: user.id,
+            email: user.email,
+            name: user.fullName,
+            role: user.role,
+          };
+        } catch (error) {
+          const safeMessages = new Set([
+            "Email and password are required.",
+            "Portal auth is not configured yet.",
+            "No account found with that email.",
+            "Invalid password.",
+          ]);
+          const message =
+            error instanceof Error && safeMessages.has(error.message)
+              ? error.message
+              : "Portal login is temporarily unavailable. Please try again shortly.";
+
+          throw new Error(message);
         }
-
-        const db = await getDbReady();
-
-        if (!db) {
-          throw new Error("Portal auth is not configured yet.");
-        }
-
-        const email = normalizeEmail(credentials.email);
-        const [user] = await db.select().from(users).where(eq(users.email, email)).limit(1);
-
-        if (!user) {
-          throw new Error("No account found with that email.");
-        }
-
-        const isValid = await compare(credentials.password, user.passwordHash);
-
-        if (!isValid) {
-          throw new Error("Invalid password.");
-        }
-
-        return {
-          id: user.id,
-          email: user.email,
-          name: user.fullName,
-          role: user.role,
-        };
       },
     }),
   ],
