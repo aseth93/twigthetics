@@ -2,6 +2,8 @@ import { MemberOnboardingModal } from "@/components/portal/member-onboarding-mod
 import { PortalShell } from "@/components/portal/portal-shell";
 import { requirePortalViewer } from "@/lib/portal/auth";
 
+export const dynamic = "force-dynamic";
+
 const memberNavItems = [
   { href: "/member", label: "Overview" },
   { href: "/member/plans", label: "Plans" },

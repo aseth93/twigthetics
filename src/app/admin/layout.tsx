@@ -1,6 +1,8 @@
 import { PortalShell } from "@/components/portal/portal-shell";
 import { requirePortalViewer } from "@/lib/portal/auth";
 
+export const dynamic = "force-dynamic";
+
 const adminNavItems = [
   { href: "/admin", label: "Dashboard" },
   { href: "/admin/intakes", label: "Intakes" },
