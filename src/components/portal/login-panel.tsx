@@ -122,26 +122,24 @@ export function LoginPanel({ authConfigured, nextPath, notice }: LoginPanelProps
 
         <div className="dark-panel grid grid-cols-1 gap-4 p-5">
           <div>
-            <p className="eyebrow text-white/60">New Clients</p>
+            <p className="eyebrow text-white/60">Active clients</p>
             <h3 className="mt-3 text-2xl font-semibold text-white">
-              Checkout first, then create your account
+              Use the account I gave you.
             </h3>
             <p className="mt-3 text-sm leading-6 text-white/72">
-              Coaching checkout sends you into the portal signup flow so your payment,
-              billing record, and account all line up under the same email.
+              If you are already working with me, sign in with your assigned email and
+              password. Do not use the signup page unless I specifically send you a
+              checkout setup link.
             </p>
           </div>
 
-          <Link href="/#coaching" className="btn-ghost">
-            Back to coaching
-          </Link>
-          <Link href="/signup" className="btn-ghost">
-            Open signup
+          <Link href="/#apply" className="btn-ghost">
+            Join the waitlist
           </Link>
 
           <p className="text-xs leading-6 text-white/60">
-            The signup page only activates when it can verify a completed Stripe checkout
-            session.
+            Existing members should stay on this login page. If your login does not work,
+            message me and I will reset it.
           </p>
         </div>
       </div>
