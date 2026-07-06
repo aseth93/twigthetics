@@ -1710,7 +1710,7 @@ function buildSelenaProfile(source: PackSource): ClientPackProfile {
     planSummary:
       "Six-week adherence-first fat-loss phase built to tighten things up for Selena's wedding without depending on random vibes or all-or-nothing motivation.",
     cadence:
-      "4 lifting days, 2 planned cardio exposures, 8k-10k daily steps, and a simple macro setup that prioritizes consistency over perfectionism.",
+      "4 lifting days, 4 planned cardio sessions, 8k-10k daily steps, and a simple macro setup that prioritizes consistency over perfectionism.",
     notes:
       "Generated from Selena's intake with a wedding deadline, beginner/inconsistent training background, macro tracking preference, and the choice to lean slightly more on cardio than ultra-low calories.",
     startDate,
@@ -1718,11 +1718,11 @@ function buildSelenaProfile(source: PackSource): ClientPackProfile {
       training:
         "Four lifting days with a simple upper/lower/lower/upper rhythm so the week has more structure without making every session hard. Abs are trained twice weekly with cable crunches and the ab machine, including exact sets and reps.",
       nutrition:
-        "Start at 1,500 kcal with 140 g protein, 130 g carbs, and 45 g fat. Macro tracking stays primary, with repeatable meals and pre-logging used to cut decision fatigue.",
+        "Start at 1,400 kcal with 140 g protein, 110 g carbs, and 45 g fat. Macro tracking stays primary, with repeatable meals and pre-logging used to cut decision fatigue.",
       supplements:
         "Keep the stack minimal: creatine, whey only if needed, multivitamin, and optional magnesium for sleep support.",
       cardio:
-        "8k steps minimum moving toward 9-10k, plus 3 x 25-30 minute incline-walk sessions each week.",
+        "8k steps minimum moving toward 9-10k, plus 4 x 25-30 minute incline-walk sessions each week.",
       misc:
         "Daily logging and the calendar matter here because consistency, not intensity spikes, is what will tighten things up by the wedding.",
     },
@@ -1741,16 +1741,16 @@ function buildSelenaProfile(source: PackSource): ClientPackProfile {
         ],
       },
       {
-        title: "Lower A | Easier legs + glutes",
+        title: "Lower A | Easier legs + incline",
         dayType: "training",
-        summary: "Lighter lower-body day that builds rhythm without crushing recovery.",
+        summary: "Lighter lower-body day with the first planned incline-walk session of the week.",
         details: [
           "Wide stance leg press 3 x 10-12",
           "Dumbbell Romanian deadlift 3 x 10-12",
           "Cable glute kickback 2 x 15-20 each side",
           "Seated or lying leg curl 2 x 12-15",
           "Calf raise 2 x 12-15",
-          "Optional incline walk 10-15 minutes easy",
+          "Incline treadmill 25 minutes",
         ],
       },
       {
@@ -1767,18 +1767,19 @@ function buildSelenaProfile(source: PackSource): ClientPackProfile {
       },
       {
         title: "Recovery walk",
-        dayType: "recovery",
-        summary: "Keep movement high and the diet clean without trying to do extra for the sake of it.",
+        dayType: "conditioning",
+        summary: "Second planned cardio session with a low-stress recovery emphasis.",
         details: [
+          "Incline treadmill 25-30 minutes",
           "8k-10k steps",
           "Mobility or easy stretch 5-10 minutes",
           "No skipped meals followed by night snacking",
         ],
       },
       {
-        title: "Upper B + glute accessories + abs",
+        title: "Upper B + glutes + abs + incline",
         dayType: "training",
-        summary: "Upper-body shaping day with a small glute touch so the week still feels balanced.",
+        summary: "Upper-body shaping day with abs and the third planned incline-walk session.",
         details: [
           "Machine chest press 3 x 10-12",
           "Seated cable row 3 x 10-12",
@@ -1787,12 +1788,13 @@ function buildSelenaProfile(source: PackSource): ClientPackProfile {
           "Cable kickback + lateral raise finish",
           "Cable crunch 3 x 12-15",
           "Ab machine crunch 3 x 10-15",
+          "Incline treadmill 25 minutes",
         ],
       },
       {
         title: "Incline walk + mobility",
         dayType: "conditioning",
-        summary: "Second formal cardio day with a mobility reset to keep the week sustainable.",
+        summary: "Fourth formal cardio day with a mobility reset to keep the week sustainable.",
         details: [
           "Incline treadmill 25-30 minutes",
           "8k-10k total steps",
@@ -1801,10 +1803,10 @@ function buildSelenaProfile(source: PackSource): ClientPackProfile {
       },
       {
         title: "Recovery or outdoor walk",
-        dayType: "conditioning",
+        dayType: "recovery",
         summary: "Low-pressure movement day to keep adherence high.",
         details: [
-          "Outdoor walk or light treadmill 30 minutes",
+          "Outdoor walk or easy steps only",
           "Meal plan structure stays intact",
           "Review next week's calendar so nothing is done “on vibes”",
         ],
@@ -1814,7 +1816,7 @@ function buildSelenaProfile(source: PackSource): ClientPackProfile {
       "Simple, adherence-first wedding lean-out plan built around four manageable lifting days instead of one overloaded full-body day.",
     trainingMetrics: [
       { label: "Goal", value: "Wedding-focused fat loss" },
-      { label: "Schedule", value: "4 lifts + 2 cardio exposures" },
+      { label: "Schedule", value: "4 lifts + 4 cardio sessions" },
       { label: "Equipment", value: "Commercial gym" },
       { label: "Start", value: startDate },
     ],
@@ -1830,10 +1832,10 @@ function buildSelenaProfile(source: PackSource): ClientPackProfile {
         heading: "Weekly rhythm",
         bullets: [
           "Monday: Upper A + abs",
-          "Tuesday: Lower A | easier legs + glutes",
+          "Tuesday: Lower A | easier legs + incline",
           "Wednesday: Lower B | glute priority",
-          "Thursday: Recovery walk",
-          "Friday: Upper B + glute accessories + abs",
+          "Thursday: Incline walk + recovery mobility",
+          "Friday: Upper B + glute accessories + abs + incline",
           "Saturday: Incline walk + mobility",
           "Sunday: Recovery or outdoor walk",
         ],
@@ -1861,7 +1863,7 @@ function buildSelenaProfile(source: PackSource): ClientPackProfile {
         ],
       },
       {
-        heading: "Lower A | easier legs + glutes",
+        heading: "Lower A | easier legs + incline",
         paragraphs: [
           "This is the easier lower day. Keep the effort clean and controlled so Wednesday can still be productive.",
         ],
@@ -1871,7 +1873,7 @@ function buildSelenaProfile(source: PackSource): ClientPackProfile {
           "Cable glute kickback: 2 x 15-20 each side",
           "Seated or lying leg curl: 2 x 12-15",
           "Calf raise: 2 x 12-15",
-          "Optional incline walk: 10-15 minutes easy",
+          "Incline treadmill: 25 minutes",
         ],
       },
       {
@@ -1885,7 +1887,7 @@ function buildSelenaProfile(source: PackSource): ClientPackProfile {
         ],
       },
       {
-        heading: "Upper B + glute accessories + abs",
+        heading: "Upper B + glute accessories + abs + incline",
         bullets: [
           "Machine chest press: 3 x 10-12",
           "Seated cable row: 3 x 10-12",
@@ -1895,6 +1897,7 @@ function buildSelenaProfile(source: PackSource): ClientPackProfile {
           "Cable lateral raise: 2 x 15-20",
           "Cable crunch: 3 x 12-15",
           "Ab machine crunch: 3 x 10-15",
+          "Incline treadmill: 25 minutes",
         ],
       },
       {
@@ -1910,9 +1913,9 @@ function buildSelenaProfile(source: PackSource): ClientPackProfile {
       "Simple macro-tracking setup that reduces decision fatigue and keeps the wedding phase moving without extremes.",
     nutritionModeLabel: "Macro tracking with MyFitnessPal",
     macroTargets: {
-      calories: 1500,
+      calories: 1400,
       protein: 140,
-      carbs: 130,
+      carbs: 110,
       fats: 45,
     },
     nutritionSections: [
@@ -1921,11 +1924,11 @@ function buildSelenaProfile(source: PackSource): ClientPackProfile {
         paragraphs: [
           "This is a slightly tighter deficit while still keeping protein high enough to support training.",
           `The opening target is ${formatMacroTargets({
-            calories: 1500,
+            calories: 1400,
             protein: 140,
-            carbs: 130,
+            carbs: 110,
             fats: 45,
-          })}. This trims food down a bit without turning the wedding phase into an extreme crash diet.`,
+          })}. This trims food down again while keeping protein high and using cardio to help the pace without turning the wedding phase into an extreme crash diet.`,
         ],
       },
       {
@@ -1961,7 +1964,7 @@ function buildSelenaProfile(source: PackSource): ClientPackProfile {
       "Minimal, practical supplement setup that supports consistency and recovery without adding complexity.",
     supplementMetrics: [
       { label: "Hydration floor", value: "90-100 oz daily" },
-      { label: "Cardio", value: "3 x 25-30 min + 8k-10k steps" },
+      { label: "Cardio", value: "4 x 25-30 min + 8k-10k steps" },
       { label: "Sleep target", value: "Push toward 7+ hours" },
       { label: "Nutrition mode", value: "Macro tracking" },
     ],
