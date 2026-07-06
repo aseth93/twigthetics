@@ -14,6 +14,7 @@ import {
   coachingApplications,
   documentAccess,
   documents,
+  memberPlanUpdates,
   memberWorkoutScheduleEntries,
   planAssignments,
   plans,
@@ -22,6 +23,9 @@ import {
 import {
   type PlanSectionKey,
   type PlanSections,
+  PLAN_SECTION_KEYS,
+  PLAN_SECTION_LABELS,
+  parsePlanSections,
   serializePlanSections,
 } from "@/lib/portal/plan-sections";
 import { ensureMemberUser, normalizeEmail } from "@/lib/portal/users";
@@ -172,6 +176,37 @@ function formatMacroTargets(targets: MacroTargets) {
 
 function formatScheduleDetails(details: string[]) {
   return details.map((item) => `• ${item}`).join("\n");
+}
+
+function summarizePlanSection(value: string) {
+  const normalized = value.replace(/\s+/g, " ").trim();
+
+  if (normalized.length <= 180) {
+    return normalized;
+  }
+
+  return `${normalized.slice(0, 177).trim()}...`;
+}
+
+function buildPlanUpdateItems(options: {
+  previousSections?: PlanSections;
+  nextSections: PlanSections;
+}) {
+  return PLAN_SECTION_KEYS.flatMap((key) => {
+    const nextValue = options.nextSections[key]?.trim() || "";
+
+    if (!nextValue) {
+      return [];
+    }
+
+    const previousValue = options.previousSections?.[key]?.trim() || "";
+
+    if (options.previousSections && previousValue === nextValue) {
+      return [];
+    }
+
+    return [`${PLAN_SECTION_LABELS[key]}: ${summarizePlanSection(nextValue)}`];
+  });
 }
 
 function buildScheduledWorkouts(
@@ -421,6 +456,9 @@ async function upsertGeneratedPack(options: {
 
     let planId = existingAssignment?.plan.id || "";
     let assignmentId = existingAssignment?.assignment.id || "";
+    const previousSections = existingAssignment
+      ? parsePlanSections(existingAssignment.plan.body).sections
+      : undefined;
 
     if (existingAssignment) {
       await tx
@@ -610,6 +648,26 @@ async function upsertGeneratedPack(options: {
           updatedAt: new Date(),
         })),
       );
+    }
+
+    const planUpdateItems = buildPlanUpdateItems({
+      previousSections,
+      nextSections: options.pack.plan.sections,
+    });
+
+    if (planUpdateItems.length) {
+      await tx.insert(memberPlanUpdates).values({
+        memberId: options.memberId,
+        planAssignmentId: assignmentId,
+        createdByUserId: options.coachId,
+        title: previousSections ? "Your coaching plan was updated" : "New coaching plan assigned",
+        summary: previousSections
+          ? "Review the changed sections before your next workout or check-in."
+          : "Your first coaching block is ready. Review the key sections before starting.",
+        items: planUpdateItems,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      });
     }
 
     return {

@@ -174,6 +174,33 @@ export const planAssignments = pgTable(
   ],
 );
 
+export const memberPlanUpdates = pgTable(
+  "member_plan_updates",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    memberId: uuid("member_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    planAssignmentId: uuid("plan_assignment_id").references(() => planAssignments.id, {
+      onDelete: "cascade",
+    }),
+    createdByUserId: uuid("created_by_user_id").references(() => users.id, {
+      onDelete: "set null",
+    }),
+    title: varchar("title", { length: 200 }).notNull(),
+    summary: text("summary").notNull().default(""),
+    items: jsonb("items").$type<string[]>().notNull().default([]),
+    seenAt: timestamp("seen_at", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [
+    index("idx_member_plan_updates_member_seen").on(table.memberId, table.seenAt),
+    index("idx_member_plan_updates_assignment").on(table.planAssignmentId),
+    index("idx_member_plan_updates_created_at").on(table.createdAt),
+  ],
+);
+
 export const documents = pgTable(
   "documents",
   {

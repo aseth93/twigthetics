@@ -1,6 +1,8 @@
 import { MemberOnboardingModal } from "@/components/portal/member-onboarding-modal";
+import { MemberPlanUpdatesModal } from "@/components/portal/member-plan-updates-modal";
 import { PortalShell } from "@/components/portal/portal-shell";
 import { requirePortalViewer } from "@/lib/portal/auth";
+import { getUnseenMemberPlanUpdates } from "@/lib/portal/data";
 
 export const dynamic = "force-dynamic";
 
@@ -21,6 +23,10 @@ export default async function MemberLayout({
     role: "member",
     returnTo: "/member",
   });
+  const isOnboardingSeen = Boolean(viewer.profile.memberOnboardingSeenAt);
+  const unseenPlanUpdates = await getUnseenMemberPlanUpdates({
+    memberId: viewer.profile.id,
+  });
 
   return (
     <PortalShell
@@ -32,7 +38,11 @@ export default async function MemberLayout({
     >
       <MemberOnboardingModal
         fullName={viewer.profile.fullName}
-        isSeen={Boolean(viewer.profile.memberOnboardingSeenAt)}
+        isSeen={isOnboardingSeen}
+      />
+      <MemberPlanUpdatesModal
+        updates={unseenPlanUpdates}
+        isOnboardingSeen={isOnboardingSeen}
       />
       {children}
     </PortalShell>

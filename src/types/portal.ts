@@ -49,6 +49,18 @@ export type PlanAssignment = {
   plan: PortalPlan;
 };
 
+export type MemberPlanUpdate = {
+  id: string;
+  memberId: string;
+  planAssignmentId?: string | null;
+  title: string;
+  summary: string;
+  items: string[];
+  seenAt?: string | null;
+  createdAt: string;
+  updatedAt: string;
+};
+
 export type PortalDocument = {
   id: string;
   title: string;
@@ -128,6 +140,7 @@ export type MemberDashboardData = {
   messages: ConversationMessage[];
   dailyCheckins: DailyCheckinEntry[];
   scheduledWorkouts: PortalWorkoutScheduleEntry[];
+  unseenPlanUpdates: MemberPlanUpdate[];
   weeklyWeightAverages: WeeklyWeightAverage[];
   latestCheckin: DailyCheckinEntry | null;
   currentWeekAverageWeightPounds: number | null;

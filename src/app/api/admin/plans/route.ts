@@ -1,11 +1,24 @@
 import { NextResponse } from "next/server";
 import { getDbReady } from "@/db";
-import { planAssignments, plans } from "@/db/schema";
+import { memberPlanUpdates, planAssignments, plans } from "@/db/schema";
 import { getPortalViewer } from "@/lib/portal/auth";
 import {
+  PLAN_SECTION_KEYS,
+  PLAN_SECTION_LABELS,
+  parsePlanSections,
   serializePlanSections,
   type PlanSections,
 } from "@/lib/portal/plan-sections";
+
+function summarizePlanSection(value: string) {
+  const normalized = value.replace(/\s+/g, " ").trim();
+
+  if (normalized.length <= 180) {
+    return normalized;
+  }
+
+  return `${normalized.slice(0, 177).trim()}...`;
+}
 
 export async function POST(request: Request) {
   const viewer = await getPortalViewer();
@@ -74,16 +87,43 @@ export async function POST(request: Request) {
   const memberId = payload.memberId?.trim() || "";
 
   if (memberId) {
-    await db.insert(planAssignments).values({
-      memberId,
-      planId: plan.id,
-      assignedByUserId: viewer.profile.id,
-      status: "active",
-      startsOn: payload.startsOn?.trim() || null,
-      notes: payload.notes?.trim() || null,
-      createdAt: new Date(),
-      updatedAt: new Date(),
+    const [assignment] = await db
+      .insert(planAssignments)
+      .values({
+        memberId,
+        planId: plan.id,
+        assignedByUserId: viewer.profile.id,
+        status: "active",
+        startsOn: payload.startsOn?.trim() || null,
+        notes: payload.notes?.trim() || null,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      })
+      .returning({ id: planAssignments.id });
+
+    const parsedSections = parsePlanSections(structuredBody).sections;
+    const updateItems = PLAN_SECTION_KEYS.flatMap((key) => {
+      const value = parsedSections[key]?.trim() || "";
+
+      if (!value) {
+        return [];
+      }
+
+      return [`${PLAN_SECTION_LABELS[key]}: ${summarizePlanSection(value)}`];
     });
+
+    if (assignment && updateItems.length) {
+      await db.insert(memberPlanUpdates).values({
+        memberId,
+        planAssignmentId: assignment.id,
+        createdByUserId: viewer.profile.id,
+        title: "New coaching plan assigned",
+        summary: "Review the key sections before your next workout or check-in.",
+        items: updateItems,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      });
+    }
   }
 
   return NextResponse.json({

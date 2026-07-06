@@ -1,4 +1,4 @@
-import { asc, desc, eq, inArray } from "drizzle-orm";
+import { and, asc, desc, eq, inArray, isNull } from "drizzle-orm";
 import { getDbReady } from "@/db";
 import {
   billingAccounts,
@@ -8,6 +8,7 @@ import {
   dailyCheckins,
   documentAccess,
   documents,
+  memberPlanUpdates,
   memberWorkoutScheduleEntries,
   messages,
   planAssignments,
@@ -31,6 +32,7 @@ import type {
   ConversationThread,
   DailyCheckinEntry,
   MemberDashboardData,
+  MemberPlanUpdate,
   PlanAssignment,
   PortalDocument,
   PortalPlan,
@@ -172,6 +174,22 @@ function mapDailyCheckinRow(row: typeof dailyCheckins.$inferSelect): DailyChecki
   };
 }
 
+function mapMemberPlanUpdateRow(
+  row: typeof memberPlanUpdates.$inferSelect,
+): MemberPlanUpdate {
+  return {
+    id: row.id,
+    memberId: row.memberId,
+    planAssignmentId: row.planAssignmentId,
+    title: row.title,
+    summary: row.summary,
+    items: Array.isArray(row.items) ? row.items : [],
+    seenAt: toIsoDate(row.seenAt),
+    createdAt: toIsoDate(row.createdAt) || new Date().toISOString(),
+    updatedAt: toIsoDate(row.updatedAt) || new Date().toISOString(),
+  };
+}
+
 function mapScheduledWorkoutRow(
   row: typeof memberWorkoutScheduleEntries.$inferSelect,
 ): PortalWorkoutScheduleEntry {
@@ -232,6 +250,7 @@ export async function getMemberDashboardData(
       messages: [],
       dailyCheckins: [],
       scheduledWorkouts: [],
+      unseenPlanUpdates: [],
       weeklyWeightAverages: [],
       latestCheckin: null,
       currentWeekAverageWeightPounds: null,
@@ -245,6 +264,7 @@ export async function getMemberDashboardData(
     threadRow,
     dailyCheckinRows,
     scheduledWorkoutRows,
+    unseenPlanUpdateRows,
   ] =
     await Promise.all([
     db
@@ -284,6 +304,17 @@ export async function getMemberDashboardData(
       .from(memberWorkoutScheduleEntries)
       .where(eq(memberWorkoutScheduleEntries.memberId, viewer.profile.id))
       .orderBy(desc(memberWorkoutScheduleEntries.scheduledDate)),
+    db
+      .select()
+      .from(memberPlanUpdates)
+      .where(
+        and(
+          eq(memberPlanUpdates.memberId, viewer.profile.id),
+          isNull(memberPlanUpdates.seenAt),
+        ),
+      )
+      .orderBy(desc(memberPlanUpdates.createdAt))
+      .limit(5),
   ]);
 
   const conversation = threadRow[0] ? mapConversationRow(threadRow[0]) : null;
@@ -309,6 +340,7 @@ export async function getMemberDashboardData(
     messages: messageRows.map((row) => mapMessageRow(row)),
     dailyCheckins: mappedDailyCheckins,
     scheduledWorkouts: scheduledWorkoutRows.map((row) => mapScheduledWorkoutRow(row)),
+    unseenPlanUpdates: unseenPlanUpdateRows.map((row) => mapMemberPlanUpdateRow(row)),
     weeklyWeightAverages,
     latestCheckin: mappedDailyCheckins[0] || null,
     currentWeekAverageWeightPounds: getCurrentWeekAverageWeight(weeklyWeightAverages),
@@ -462,6 +494,30 @@ export async function getConversationMessages(options: {
     .orderBy(asc(messages.createdAt));
 
   return messageRows.map((row) => mapMessageRow(row));
+}
+
+export async function getUnseenMemberPlanUpdates(options: {
+  memberId: string;
+}): Promise<MemberPlanUpdate[]> {
+  const db = await getDbReady();
+
+  if (!db) {
+    return [];
+  }
+
+  const rows = await db
+    .select()
+    .from(memberPlanUpdates)
+    .where(
+      and(
+        eq(memberPlanUpdates.memberId, options.memberId),
+        isNull(memberPlanUpdates.seenAt),
+      ),
+    )
+    .orderBy(desc(memberPlanUpdates.createdAt))
+    .limit(5);
+
+  return rows.map((row) => mapMemberPlanUpdateRow(row));
 }
 
 export async function getAdminMemberDetailData(options: {
