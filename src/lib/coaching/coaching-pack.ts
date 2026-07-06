@@ -1718,7 +1718,7 @@ function buildSelenaProfile(source: PackSource): ClientPackProfile {
       training:
         "Four lifting days with a simple upper/lower/lower/upper rhythm so the week has more structure without making every session hard. Abs are trained twice weekly with cable crunches and the ab machine, including exact sets and reps.",
       nutrition:
-        "Start at 1,610 kcal with 140 g protein, 155 g carbs, and 50 g fat. Macro tracking stays primary, with repeatable meals and pre-logging used to cut decision fatigue.",
+        "Start at 1,500 kcal with 140 g protein, 130 g carbs, and 45 g fat. Macro tracking stays primary, with repeatable meals and pre-logging used to cut decision fatigue.",
       supplements:
         "Keep the stack minimal: creatine, whey only if needed, multivitamin, and optional magnesium for sleep support.",
       cardio:
