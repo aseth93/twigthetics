@@ -1910,22 +1910,22 @@ function buildSelenaProfile(source: PackSource): ClientPackProfile {
       "Simple macro-tracking setup that reduces decision fatigue and keeps the wedding phase moving without extremes.",
     nutritionModeLabel: "Macro tracking with MyFitnessPal",
     macroTargets: {
-      calories: 1610,
+      calories: 1500,
       protein: 140,
-      carbs: 155,
-      fats: 50,
+      carbs: 130,
+      fats: 45,
     },
     nutritionSections: [
       {
         heading: "Starting setup",
         paragraphs: [
-          "The best starting move here is not a huge calorie drop. It is a clean structure you can actually run consistently.",
+          "This is a slightly tighter deficit while still keeping protein high enough to support training.",
           `The opening target is ${formatMacroTargets({
-            calories: 1610,
+            calories: 1500,
             protein: 140,
-            carbs: 155,
-            fats: 50,
-          })}. That keeps the cut moving while still leaving enough food for lifting and cardio.`,
+            carbs: 130,
+            fats: 45,
+          })}. This trims food down a bit without turning the wedding phase into an extreme crash diet.`,
         ],
       },
       {
