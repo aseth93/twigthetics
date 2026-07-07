@@ -26,7 +26,6 @@ export default async function MemberDashboardPage() {
       <RuntimeBanner
         viewer={viewer}
         databaseConfigured={runtime.databaseConfigured}
-        emailConfigured={runtime.emailConfigured}
         stripeConfigured={runtime.stripeConfigured}
       />
 

@@ -24,7 +24,6 @@ export default async function AdminDashboardPage() {
       <RuntimeBanner
         viewer={viewer}
         databaseConfigured={runtime.databaseConfigured}
-        emailConfigured={runtime.emailConfigured}
         stripeConfigured={runtime.stripeConfigured}
       />
 
