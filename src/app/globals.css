@@ -329,8 +329,10 @@ summary {
   justify-content: center;
   padding: 1rem;
   padding-top: calc(env(safe-area-inset-top) + 0.75rem);
-  padding-bottom: calc(env(safe-area-inset-bottom) + 0.75rem);
-  overflow: hidden;
+  padding-bottom: calc(env(safe-area-inset-bottom) + 4rem);
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch;
   background: rgba(15, 14, 12, 0.54);
   backdrop-filter: blur(20px);
@@ -338,8 +340,11 @@ summary {
 
 .modal-card {
   margin-top: clamp(1rem, 3vh, 2.5rem);
-  margin-bottom: calc(env(safe-area-inset-bottom) + 0.5rem);
+  margin-bottom: calc(env(safe-area-inset-bottom) + 4rem);
   max-height: calc(100svh - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 2rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
 }
 
 @keyframes rise-in {
