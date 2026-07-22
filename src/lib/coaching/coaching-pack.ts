@@ -1449,7 +1449,7 @@ function buildLeonardProfile(source: PackSource): ClientPackProfile {
       training:
         "Five-day split: chest + shoulders, back + arms, legs, chest + back, then shoulders + arms. Cardio stays planned around the lifting week, and direct abs are hit twice weekly with exact ab-superset rounds and reps.",
       nutrition:
-        "Primary system is a laid-out meal plan built around roughly 1,950 kcal with a backup target of 180 g protein, 180 g carbs, and 60 g fat.",
+        "Primary system is a laid-out meal plan now reduced to roughly 1,750 kcal with a backup target of 180 g protein, 145 g carbs, and 50 g fat.",
       supplements:
         "Creatine 5 g daily, fish oil, multivitamin, and protein powder only as a convenience tool.",
       cardio:
@@ -1647,10 +1647,10 @@ function buildLeonardProfile(source: PackSource): ClientPackProfile {
       "Meal-plan-first cut setup built for a physically active day and a straightforward, repeatable food structure.",
     nutritionModeLabel: "Specific meal plan laid out",
     macroTargets: {
-      calories: 1950,
+      calories: 1750,
       protein: 180,
-      carbs: 180,
-      fats: 60,
+      carbs: 145,
+      fats: 50,
     },
     nutritionSections: [
       {
@@ -1658,31 +1658,32 @@ function buildLeonardProfile(source: PackSource): ClientPackProfile {
         paragraphs: [
           "Because you specifically asked for a laid-out meal plan, the exact meals are the primary system and the macros are the backup reference.",
           `The food layout is built around roughly ${formatMacroTargets({
-            calories: 1950,
+            calories: 1750,
             protein: 180,
-            carbs: 180,
-            fats: 60,
-          })}, which fits a cut for your current body size, on-feet job, and moderate cardio preference.`,
+            carbs: 145,
+            fats: 50,
+          })}. This is about 200 calories lower than the previous setup while keeping protein high enough to support training.`,
         ],
       },
       {
         heading: "Primary meal plan - 3 meals + planned snacks",
         bullets: [
           "Meal 1 / breakfast: 1 protein bar that is about 190-220 kcal and 18-22 g protein. Coffee with up to 1/2 cup nonfat milk and Splenda.",
-          "Meal 2 / lunch: 6 oz cooked grilled chicken breast, 100 g cooked white rice, 1 fiber tortilla that is 60-80 kcal, 250 g broccoli/cauliflower/carrots, and 50 g avocado.",
-          "Meal 3 / dinner: 4 oz cooked 90/10 ground beef, 200 g egg whites, 60 g cooked white rice, 250 g broccoli/cauliflower/carrots or lettuce/salad, and 60 g avocado.",
+          "Meal 2 / lunch: 7 oz cooked grilled chicken breast, 60 g cooked white rice, 1 fiber tortilla that is 60-80 kcal, 250 g broccoli/cauliflower/carrots, and 25 g avocado.",
+          "Meal 3 / dinner: 4 oz cooked 90/10 ground beef, 200 g egg whites, 300 g broccoli/cauliflower/carrots or lettuce/salad, and 40 g avocado. No rice at this meal in the updated version.",
           "Snack 1: 250 g fat-free Greek yogurt and 150 g berries. Strawberries, blueberries, blackberries, and raspberries all work.",
-          "Snack 2: 25 g nuts and 100 g berries.",
-          "Daily total: approximately 1,920-1,960 kcal, 180-185 g protein, 175-185 g carbs, and 58-60 g fat depending on the exact protein bar, tortilla, yogurt, and beef label.",
+          "Snack 2: 15 g nuts and 100 g berries.",
+          "Daily total: approximately 1,730-1,770 kcal, 180-185 g protein, 140-150 g carbs, and 48-52 g fat depending on the exact protein bar, tortilla, yogurt, and beef label.",
+          "Calorie reduction math: rice is down about 120 g cooked across the day, avocado is down 45 g, and nuts are down 10 g. Meal 2 chicken is increased to 7 oz so protein stays high while total calories drop by about 200.",
         ],
       },
       {
         heading: "Measured swaps if needed",
         bullets: [
           "Protein bar rule: keep it near 200 kcal and 20 g protein. If the bar is much higher calorie, message me before making that swap.",
-          "Chicken swap: replace 5 oz cooked chicken with 5 oz cooked tilapia/cod, 5 oz cooked chicken sausage, or 250 g egg whites + 1 whole egg.",
-          "Ground beef swap: replace 5 oz cooked 90/10 beef with 2 whole eggs + 250 g egg whites, or 5 oz cooked chicken sausage if the label calories are similar.",
-          "Carb swap: replace 100 g cooked rice with one 60-80 kcal fiber tortilla. Do not add both unless I tell you to.",
+          "Chicken swap: replace the 7 oz cooked chicken breast with 7 oz cooked tilapia/cod, 6 oz cooked chicken sausage, or 300 g egg whites + 1 whole egg.",
+          "Ground beef swap: replace the 4 oz cooked 90/10 beef with 2 whole eggs + 250 g egg whites, or 5 oz cooked chicken sausage if the label calories are similar.",
+          "Carb swap: replace the 60 g cooked rice at lunch with one 60-80 kcal fiber tortilla. Do not add both unless I tell you to.",
           "Volume foods: broccoli, cauliflower, carrots, lettuce, salad, strawberries, blueberries, blackberries, and raspberries are the main hunger-control foods.",
           "Fat sources: use the listed avocado and nuts amounts. Do not free-pour fats or add extra nuts.",
           "Coffee: 2-3 coffees per day is fine with nonfat milk preferred. One coffee with 2% milk is okay. Use Splenda or another zero-calorie sweetener when possible.",
