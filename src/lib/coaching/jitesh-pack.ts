@@ -508,11 +508,11 @@ function buildQuickStartSections() {
       "Start with the exact meal template in the Nutrition PDF for 14 clean days before changing anything.",
       "",
       "Nutrition lane:",
-      "- Starting intake: about 1,770 kcal/day",
-      "- Backup macro target: 180 g protein / 150 g carbs / 50 g fats",
+      "- Updated intake: about 1,570 kcal/day",
+      "- Backup macro target: 185 g protein / 120 g carbs / 40 g fats",
       "- Preference honored: eat a little less and do a little less cardio, not high food plus excessive cardio",
       "",
-      "Anchor foods stay the same: eggs, pear, ladoo, chicken/fish/goat, white rice, peas/vegetables, whey isolate.",
+      "Anchor foods stay the same: eggs, pear, ladoo, chicken breast, chicken thighs, white fish, white rice, peas/vegetables, whey isolate.",
     ].join("\n"),
     supplements: [
       "Core stack:",
@@ -555,17 +555,18 @@ function buildNutritionParagraphs() {
     rationale: [
       `The recent scale run went from ${weightLogs[0].weight.toFixed(1)} lb on May 26, 2026 to ${weightLogs[weightLogs.length - 1].weight.toFixed(1)} lb on May 31, 2026, with the logged average landing around ${averageWeight.toFixed(1)} lb.`,
       "That drop is too fast to treat as pure fat loss. The most realistic read is some actual loss mixed with water and glycogen clearing out as compliance tightened.",
-      "Because of that, the coached setup does not slash food harder right away. It starts in a lane that is still lean enough to keep progress moving, but stable enough to train well and hold muscle fullness.",
+      "The original setup started conservatively so training performance did not collapse. This update trims roughly 200 kcal from the exact meal plan while keeping protein high and adding chicken thighs in a controlled portion.",
     ],
     mealMathBullets: [
-      "Breakfast as written is roughly 300 to 360 kcal depending on the ladoo size.",
-      "Meals 2 and 3 together, using 2 total 5 oz chicken portions, 2 cups peas, and 1.5 cups cooked rice, land around 1,000 to 1,050 kcal total.",
-      "Post-workout whey can swing the day meaningfully depending on whether that 120-calorie label is per scoop or for the full shake.",
-      "That is why the honest current-intake estimate is roughly 1,550 to 1,750 kcal per day, not one fake precise number.",
+      "Meal 1 is now roughly 380 kcal: 5 egg whites, 1 whole egg, 1 medium pear, and 1 small mixed-nut ladoo.",
+      "Meal 2 is roughly 455 kcal: 5 oz cooked chicken breast, 1 cup peas or green vegetables, and 0.5 cup cooked white rice.",
+      "Meal 3 is roughly 495 kcal: 6 oz cooked skinless chicken thighs, 2 cups fibrous vegetables, and 0.25 cup cooked white rice.",
+      "Post-workout whey is estimated at roughly 240 kcal for 2 scoops in water.",
+      "Daily total lands around 1,570 kcal depending on the exact ladoo size and chicken thigh label. That is about 200 kcal lower than the prior 1,770 kcal starting setup.",
     ],
     mealPlanParagraphs: [
-      "The exact food plan keeps his current foods in place and only tightens the structure enough to make the intake reliable.",
-      "Use the same breakfast base, the same two prep meals, and the same post-workout whey. The only real additions are a little more deliberate fat and a cleaner protein setup so the day lands closer to the coaching target instead of accidentally under-eating.",
+      "The updated food plan keeps the foods that have been easiest to repeat, adds chicken thighs as a planned protein source, and trims calories through smaller rice portions plus removal of the added nut-butter serving.",
+      "This is still a meal-plan-first setup. The exact quantities below are the plan; the macro target is only a backup reference if a meal has to be swapped.",
     ],
   };
 }
@@ -593,10 +594,10 @@ function buildPdfDefinitions(source: PackSource) {
     { label: "Treadmill work", value: "3 x 20 min LISS" },
   ];
   const nutritionMetrics = [
-    { label: "Calories", value: "~1,770 / day" },
-    { label: "Protein floor", value: "180 g" },
-    { label: "Carb start", value: "150 g" },
-    { label: "Fat cap", value: "Up to 50 g" },
+    { label: "Calories", value: "~1,570 / day" },
+    { label: "Protein floor", value: "185 g" },
+    { label: "Carb start", value: "120 g" },
+    { label: "Fat target", value: "~40 g" },
   ];
   const supplementMetrics = [
     { label: "Creatine", value: "5 g daily" },
@@ -679,16 +680,16 @@ function buildPdfDefinitions(source: PackSource) {
         paragraphs: nutritionCopy.rationale,
       },
       {
-        heading: "Current intake math",
+        heading: "Calorie math for the update",
         bullets: nutritionCopy.mealMathBullets,
       },
       {
-        heading: "Exact meal plan starting June 15",
+        heading: "Updated exact meal plan",
         paragraphs: nutritionCopy.mealPlanParagraphs,
         bullets: [
-          "Meal 1: 5 egg whites, 1 whole egg, 1 medium pear, 1 small mixed-nut ladoo, and 1 tablespoon almond butter or a similar nut serving.",
-          "Meal 2: 5 oz cooked chicken or white fish, 1 cup peas or green vegetables, and 0.75 cup cooked white rice.",
-          "Meal 3: 5 oz cooked chicken, fish, or goat, 1 cup peas or green vegetables, and 0.75 cup cooked white rice.",
+          "Meal 1: 5 egg whites, 1 whole egg, 1 medium pear, and 1 small mixed-nut ladoo. No added almond butter in this version.",
+          "Meal 2: 5 oz cooked chicken breast or white fish, 1 cup peas or green vegetables, and 0.5 cup cooked white rice.",
+          "Meal 3: 6 oz cooked skinless chicken thighs, 2 cups fibrous vegetables, and 0.25 cup cooked white rice.",
           "Post-workout: 2 scoops whey isolate in water.",
           "Seasonings are fine. Keep oil low unless it is deliberately accounted for.",
         ],
@@ -697,18 +698,19 @@ function buildPdfDefinitions(source: PackSource) {
         heading: "Protein and meal swaps",
         bullets: [
           "Chicken stays the default because it is lean and predictable.",
-          "White fish can replace chicken one-for-one when appetite is lower and digestion needs to stay light.",
-          "Goat is fine as a rotation protein, but remember it usually carries more fat than chicken. Keep the portion size comparable and do not accidentally turn a swap into a surplus.",
+          "Chicken thighs are now included deliberately at Meal 3. Use skinless thighs and keep the portion at 6 oz cooked.",
+          "White fish can replace chicken breast one-for-one at Meal 2 when appetite is lower and digestion needs to stay light.",
+          "Goat is fine as an occasional rotation protein, but only if the portion and calories stay comparable to the assigned chicken-thigh meal.",
           "If hunger is high late in the day, add fibrous vegetables.",
         ],
       },
       {
         heading: "Backup macro target",
         bullets: [
-          "Calories: about 1,770 per day.",
-          "Protein floor: 180 g.",
-          "Carbs: about 150 g.",
-          "Fats: up to 50 g, with the exact food plan likely landing somewhat leaner unless a fattier protein swap is used.",
+          "Calories: about 1,570 per day.",
+          "Protein floor: 185 g.",
+          "Carbs: about 120 g.",
+          "Fats: about 40 g, with chicken thighs already accounted for inside the exact meal plan.",
           "If flexibility is needed for one meal out, hit protein first, keep carbs near training, and do not let fats quietly blow up the day.",
         ],
       },
