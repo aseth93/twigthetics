@@ -36,3 +36,9 @@ services:
         sync: false
       - key: STRIPE_COACHING_PRICE_ID
         sync: false
+      - key: NEXT_PUBLIC_META_PIXEL_ID
+        sync: false
+      - key: META_PIXEL_ID
+        sync: false
+      - key: META_CONVERSIONS_API_ACCESS_TOKEN
+        sync: false
