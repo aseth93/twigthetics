@@ -191,6 +191,30 @@ summary {
   background: rgba(255, 255, 255, 0.82);
 }
 
+.btn-guide-glow {
+  position: relative;
+  border: 1px solid rgba(113, 210, 119, 0.82);
+  background: linear-gradient(135deg, #1f4d2c 0%, #2f6b3a 56%, #438d4d 100%);
+  color: #fff;
+  box-shadow:
+    0 0 0 3px rgba(92, 190, 101, 0.2),
+    0 0 24px rgba(65, 174, 79, 0.48),
+    0 14px 34px rgba(27, 92, 40, 0.3),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.16);
+  animation: guide-glow-pulse 2.4s ease-in-out infinite;
+}
+
+.btn-guide-glow:hover {
+  border-color: rgba(153, 235, 157, 0.96);
+  background: linear-gradient(135deg, #285f35 0%, #397b44 56%, #4c9c56 100%);
+  color: #fff;
+  box-shadow:
+    0 0 0 4px rgba(92, 190, 101, 0.26),
+    0 0 34px rgba(65, 174, 79, 0.58),
+    0 18px 40px rgba(27, 92, 40, 0.34),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.2);
+}
+
 .btn-disabled {
   min-height: 3.5rem;
   padding: 0.95rem 1.5rem;
@@ -380,10 +404,30 @@ summary {
   }
 }
 
+@keyframes guide-glow-pulse {
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 3px rgba(92, 190, 101, 0.18),
+      0 0 20px rgba(65, 174, 79, 0.4),
+      0 14px 34px rgba(27, 92, 40, 0.28),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.16);
+  }
+
+  50% {
+    box-shadow:
+      0 0 0 5px rgba(92, 190, 101, 0.26),
+      0 0 34px rgba(65, 174, 79, 0.58),
+      0 16px 38px rgba(27, 92, 40, 0.34),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.2);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .page-reveal,
   .proof-carousel-track,
-  .proof-float {
+  .proof-float,
+  .btn-guide-glow {
     animation: none;
   }
 }

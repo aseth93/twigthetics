@@ -243,7 +243,7 @@ export default function Home() {
                 </CoachingIntakeButton>
                 <Link
                   href="#guide"
-                  className="btn-secondary w-full text-[var(--ink)] sm:w-auto"
+                  className="btn-secondary btn-guide-glow w-full sm:w-auto"
                 >
                   Get the Guide - $49.99
                 </Link>
@@ -439,22 +439,15 @@ export default function Home() {
               />
 
               <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center">
-                <Link href={siteConfig.links.guideCheckout} className="btn-primary">
+                <Link
+                  href={siteConfig.links.guideCheckout}
+                  className="btn-primary btn-guide-glow"
+                >
                   {siteConfig.guideOffer.ctaLabel}
                 </Link>
 
                 <p className="text-sm leading-6 text-[var(--muted)]">
                   {siteConfig.guideOffer.statusNote}
-                </p>
-              </div>
-
-              <div className="mt-6 rounded-[1.25rem] border border-[rgba(39,49,39,0.2)] bg-[rgba(39,49,39,0.08)] px-4 py-4">
-                <p className="text-sm font-semibold text-[var(--forest)]">
-                  Private, personalized access
-                </p>
-                <p className="mt-2 text-xs leading-6 text-[var(--muted)]">
-                  Every purchase is tied to a Twigthetics login. Each served copy is
-                  marked with the purchaser&apos;s email and order reference.
                 </p>
               </div>
 
