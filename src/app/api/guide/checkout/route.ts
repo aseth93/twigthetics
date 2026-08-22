@@ -38,6 +38,7 @@ export async function GET(request: Request) {
     const checkoutSession = await stripe.checkout.sessions.create({
       mode: "payment",
       submit_type: "pay",
+      payment_method_types: ["card"],
       customer_creation: "always",
       customer_email: sessionUser?.email || undefined,
       billing_address_collection: "auto",
