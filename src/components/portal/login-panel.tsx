@@ -54,10 +54,10 @@ export function LoginPanel({ authConfigured, nextPath, notice }: LoginPanelProps
   return (
     <div className="surface-panel p-8 md:p-10">
       <p className="eyebrow">Member Login</p>
-      <h2 className="display-title mt-4 text-[var(--ink)]">Portal access for active clients.</h2>
+      <h2 className="display-title mt-4 text-[var(--ink)]">Your private Twigthetics access.</h2>
       <p className="mt-4 max-w-2xl text-base leading-7 text-[var(--muted)]">
-        Sign in for plans, billing, documents, and direct coaching messages inside the
-        same Twigthetics site.
+        Sign in for coaching plans, check-ins, billing, messages, or your purchased
+        guide inside the same Twigthetics site.
       </p>
 
       {notice ? (
@@ -115,21 +115,20 @@ export function LoginPanel({ authConfigured, nextPath, notice }: LoginPanelProps
           </button>
 
           <p className="text-xs leading-6 text-[var(--muted)]">
-            Bought coaching already? Use the portal account setup step after checkout, then
-            sign in here going forward.
+            Bought coaching or the guide already? Finish the account setup step after
+            checkout, then sign in here going forward.
           </p>
         </form>
 
         <div className="dark-panel grid grid-cols-1 gap-4 p-5">
           <div>
-            <p className="eyebrow text-white/60">Active clients</p>
+            <p className="eyebrow text-white/60">Coaching + guide members</p>
             <h3 className="mt-3 text-2xl font-semibold text-white">
               Use the account I gave you.
             </h3>
             <p className="mt-3 text-sm leading-6 text-white/72">
-              If you are already working with me, sign in with your assigned email and
-              password. Do not use the signup page unless I specifically send you a
-              checkout setup link.
+              Existing coaching clients should use their assigned account. Guide buyers
+              should use the login created immediately after checkout.
             </p>
           </div>
 

@@ -2,6 +2,11 @@ import Stripe from "stripe";
 import { and, eq, isNull, or } from "drizzle-orm";
 import { getDbReady } from "@/db";
 import { billingAccounts, stripeCheckoutSessions } from "@/db/schema";
+import {
+  GUIDE_CURRENCY,
+  GUIDE_PRICE_CENTS,
+  isGuideCheckoutMetadata,
+} from "@/lib/guide/constants";
 import { getStripeClient } from "./stripe";
 import { findUserByEmail, normalizeEmail } from "./users";
 
@@ -46,6 +51,10 @@ function extractCheckoutPriceId(session: Stripe.Checkout.Session) {
 
   if (typeof session.metadata?.priceId === "string") {
     return session.metadata.priceId;
+  }
+
+  if (isGuideCheckoutMetadata(session.metadata)) {
+    return `guide:${session.metadata?.guideId || "digital-guide"}`;
   }
 
   return process.env.STRIPE_COACHING_PRICE_ID?.trim() || null;
@@ -311,6 +320,7 @@ export async function getStripeSignupContext(sessionId: string) {
       customerName: null,
       existingUserExists: false,
       alreadyClaimed: false,
+      purchaseType: null,
       message: "Stripe checkout is not connected.",
     };
   }
@@ -333,6 +343,9 @@ export async function getStripeSignupContext(sessionId: string) {
             .limit(1)
         : [];
     const existingUser = email ? await findUserByEmail(email) : null;
+    const purchaseType = isGuideCheckoutMetadata(session.metadata)
+      ? ("guide" as const)
+      : ("coaching" as const);
 
     if (!email) {
       return {
@@ -341,17 +354,31 @@ export async function getStripeSignupContext(sessionId: string) {
         customerName: null,
         existingUserExists: false,
         alreadyClaimed: false,
+        purchaseType,
         message: "Stripe checkout did not return an email address.",
       };
     }
 
-    if (session.mode !== "subscription" || session.status !== "complete") {
+    const isEligibleGuidePurchase =
+      purchaseType === "guide" &&
+      session.mode === "payment" &&
+      session.status === "complete" &&
+      session.payment_status !== "unpaid" &&
+      session.amount_total === GUIDE_PRICE_CENTS &&
+      session.currency === GUIDE_CURRENCY;
+    const isEligibleCoachingPurchase =
+      purchaseType === "coaching" &&
+      session.mode === "subscription" &&
+      session.status === "complete";
+
+    if (!isEligibleGuidePurchase && !isEligibleCoachingPurchase) {
       return {
         valid: false,
         email,
         customerName: session.customer_details?.name || localSession?.customerName || null,
         existingUserExists: Boolean(existingUser),
         alreadyClaimed: Boolean(localSession?.claimedByUserId),
+        purchaseType,
         message: "That checkout is not complete yet.",
       };
     }
@@ -362,6 +389,7 @@ export async function getStripeSignupContext(sessionId: string) {
       customerName: session.customer_details?.name || localSession?.customerName || null,
       existingUserExists: Boolean(existingUser),
       alreadyClaimed: Boolean(localSession?.claimedByUserId),
+      purchaseType,
       message: null,
     };
   } catch {
@@ -371,6 +399,7 @@ export async function getStripeSignupContext(sessionId: string) {
       customerName: null,
       existingUserExists: false,
       alreadyClaimed: false,
+      purchaseType: null,
       message: "That checkout session could not be verified.",
     };
   }
@@ -402,6 +431,10 @@ export async function syncBillingFromSubscriptionEvent(subscription: Stripe.Subs
 }
 
 export async function attachCheckoutToExistingUserByEmail(session: Stripe.Checkout.Session) {
+  if (session.mode !== "subscription") {
+    return null;
+  }
+
   const email = extractCheckoutEmail(session);
 
   if (!email) {

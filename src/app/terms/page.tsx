@@ -21,9 +21,19 @@ export default function TermsPage() {
             factors outside the scope of any template or coaching structure.
           </p>
           <p>
-            The guide checkout uses an external purchase flow once connected.
-            Coaching applications are reviewed for fit before any onboarding or
-            payment step is offered.
+            The digital guide is sold as a one-time purchase through Stripe. A completed
+            payment grants the buyer permanent account access to the purchased guide
+            version while Twigthetics continues operating the service.
+          </p>
+          <p>
+            Guide access is a personal, non-transferable license. Buyers may use their
+            copy for themselves but may not share, resell, upload, reproduce, or
+            redistribute it. Guide copies are personalized with the account email and
+            order reference to enforce that license.
+          </p>
+          <p>
+            Coaching applications are reviewed for fit before onboarding. Coaching and
+            guide purchases are separate products.
           </p>
         </div>
 

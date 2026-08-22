@@ -1,6 +1,8 @@
 import Stripe from "stripe";
 import { NextResponse } from "next/server";
 import { getDbReady } from "@/db";
+import { fulfillGuideCheckoutSession } from "@/lib/guide/access";
+import { isGuideCheckoutMetadata } from "@/lib/guide/constants";
 import {
   attachCheckoutToExistingUserByEmail,
   syncBillingFromSubscriptionEvent,
@@ -47,7 +49,19 @@ export async function POST(request: Request) {
     const session = event.data.object as Stripe.Checkout.Session;
 
     await upsertStripeCheckoutSessionRecord(session);
-    await attachCheckoutToExistingUserByEmail(session);
+    if (isGuideCheckoutMetadata(session.metadata)) {
+      await fulfillGuideCheckoutSession(session);
+    } else {
+      await attachCheckoutToExistingUserByEmail(session);
+    }
+  }
+
+  if (event.type === "checkout.session.async_payment_succeeded") {
+    const session = event.data.object as Stripe.Checkout.Session;
+
+    if (isGuideCheckoutMetadata(session.metadata)) {
+      await fulfillGuideCheckoutSession(session);
+    }
   }
 
   if (

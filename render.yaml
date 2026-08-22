@@ -16,8 +16,6 @@ services:
         value: https://www.instagram.com/twigthetics/
       - key: NEXT_PUBLIC_SITE_URL
         sync: false
-      - key: NEXT_PUBLIC_GUIDE_CHECKOUT_URL
-        sync: false
       - key: DATABASE_URL
         sync: false
       - key: NEXTAUTH_SECRET

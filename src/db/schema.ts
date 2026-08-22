@@ -300,6 +300,37 @@ export const stripeCheckoutSessions = pgTable(
   ],
 );
 
+export const guidePurchases = pgTable(
+  "guide_purchases",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    memberId: uuid("member_id").references(() => users.id, { onDelete: "set null" }),
+    stripeCheckoutSessionId: varchar("stripe_checkout_session_id", {
+      length: 255,
+    })
+      .notNull()
+      .unique(),
+    stripePaymentIntentId: varchar("stripe_payment_intent_id", { length: 255 }),
+    stripeCustomerId: varchar("stripe_customer_id", { length: 255 }),
+    email: varchar("email", { length: 255 }).notNull(),
+    customerName: varchar("customer_name", { length: 255 }),
+    guideId: varchar("guide_id", { length: 120 }).notNull(),
+    guideVersion: varchar("guide_version", { length: 32 }).notNull(),
+    amountTotal: integer("amount_total").notNull(),
+    currency: varchar("currency", { length: 12 }).notNull().default("usd"),
+    paymentStatus: varchar("payment_status", { length: 64 }).notNull(),
+    accessStatus: varchar("access_status", { length: 32 }).notNull().default("active"),
+    purchasedAt: timestamp("purchased_at", { withTimezone: true }).notNull().defaultNow(),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [
+    index("idx_guide_purchases_member").on(table.memberId),
+    index("idx_guide_purchases_email").on(table.email),
+    index("idx_guide_purchases_access").on(table.accessStatus),
+  ],
+);
+
 export const passwordResetTokens = pgTable(
   "password_reset_tokens",
   {

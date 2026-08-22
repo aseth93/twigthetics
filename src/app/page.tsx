@@ -59,7 +59,7 @@ function TransformationCard({
               image: transformation.comparison.after,
             },
           ].map((item) => (
-            <div key={item.caption} className="bg-[var(--canvas)]">
+            <div key={item.image.src} className="bg-[var(--canvas)]">
               <div className="aspect-square bg-[#efe5d7] p-2">
                 <div className="relative h-full w-full overflow-hidden rounded-[1rem]">
                 <Image
@@ -188,7 +188,6 @@ function ClientTransformationCard({
 }
 
 export default function Home() {
-  const hasGuideCheckout = Boolean(siteConfig.links.guideCheckout);
   const featuredClientTransformations = siteConfig.clientTransformations.slice(0, 4);
   const desktopHeroTransformations = [
     ...featuredClientTransformations,
@@ -246,7 +245,7 @@ export default function Home() {
                   href="#guide"
                   className="btn-secondary w-full text-[var(--ink)] sm:w-auto"
                 >
-                  Guide Coming Soon
+                  Get the Guide - $49.99
                 </Link>
               </div>
 
@@ -439,7 +438,27 @@ export default function Home() {
                 description={siteConfig.guideOffer.summary}
               />
 
-              <div className="mt-8 space-y-3">
+              <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center">
+                <Link href={siteConfig.links.guideCheckout} className="btn-primary">
+                  {siteConfig.guideOffer.ctaLabel}
+                </Link>
+
+                <p className="text-sm leading-6 text-[var(--muted)]">
+                  {siteConfig.guideOffer.statusNote}
+                </p>
+              </div>
+
+              <div className="mt-6 rounded-[1.25rem] border border-[rgba(39,49,39,0.2)] bg-[rgba(39,49,39,0.08)] px-4 py-4">
+                <p className="text-sm font-semibold text-[var(--forest)]">
+                  Private, personalized access
+                </p>
+                <p className="mt-2 text-xs leading-6 text-[var(--muted)]">
+                  Every purchase is tied to a Twigthetics login. Each served copy is
+                  marked with the purchaser&apos;s email and order reference.
+                </p>
+              </div>
+
+              <div className="mt-6 space-y-3">
                 {siteConfig.guideOffer.features.map((feature) => (
                   <div
                     key={feature}
@@ -448,27 +467,6 @@ export default function Home() {
                     {feature}
                   </div>
                 ))}
-              </div>
-
-              <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center">
-                {hasGuideCheckout ? (
-                  <a
-                    href={siteConfig.links.guideCheckout}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="btn-primary"
-                  >
-                    {siteConfig.guideOffer.ctaLabel}
-                  </a>
-                ) : (
-                  <button type="button" className="btn-disabled" disabled>
-                    {siteConfig.guideOffer.placeholderLabel}
-                  </button>
-                )}
-
-                <p className="text-sm leading-6 text-[var(--muted)]">
-                  {siteConfig.guideOffer.statusNote}
-                </p>
               </div>
             </div>
 
@@ -684,8 +682,8 @@ export default function Home() {
                 {siteConfig.brand.name}
               </p>
               <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
-                Online physique coaching and a practical guide for maintaining an
-                aesthetic build without living on extremes.
+                Online physique coaching and a complete guide for getting lean,
+                building muscle, or recomposing without living in the gym.
               </p>
             </div>
 

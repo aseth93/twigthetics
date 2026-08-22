@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export const metadata = {
   title: "Privacy | Twigthetics",
-  description: "Privacy details for Twigthetics coaching applications.",
+  description: "Privacy details for Twigthetics coaching and digital guide accounts.",
 };
 
 export default function PrivacyPage() {
@@ -13,18 +13,20 @@ export default function PrivacyPage() {
         <h1 className="display-title mt-4">Application data stays in the coaching lane.</h1>
         <div className="mt-8 space-y-5 text-sm leading-7 text-[var(--muted)] md:text-base">
           <p>
-            Twigthetics collects only the information submitted through the
-            coaching application form: contact details, training background, and
-            goal context.
+            Twigthetics collects information submitted through the coaching application
+            and member account flows, including contact details, training background,
+            goal context, and account activity needed to operate the portal.
           </p>
           <p>
-            That information is used only to review coaching fit, follow up on
-            inquiries, and organize onboarding once the live workflow is wired.
-            It is not sold or repackaged.
+            That information is used to review coaching fit, operate member accounts,
+            deliver purchased digital products, and provide coaching services. It is not
+            sold or repackaged.
           </p>
           <p>
-            While the first launch version is still wiring external form
-            delivery, Instagram remains the fallback contact route.
+            Stripe processes payments. Twigthetics stores the resulting purchase and
+            account identifiers needed to verify access, but does not store full card
+            details. Personalized guide copies include the buyer&apos;s account email and
+            order reference.
           </p>
         </div>
 

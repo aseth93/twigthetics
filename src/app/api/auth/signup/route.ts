@@ -1,7 +1,13 @@
 import { NextResponse } from "next/server";
-import { and, eq, isNull } from "drizzle-orm";
+import { and, eq, isNull, or } from "drizzle-orm";
 import { getDbReady } from "@/db";
-import { billingAccounts, stripeCheckoutSessions, users } from "@/db/schema";
+import {
+  billingAccounts,
+  guidePurchases,
+  stripeCheckoutSessions,
+  users,
+} from "@/db/schema";
+import { fulfillGuideCheckoutSession } from "@/lib/guide/access";
 import { getCoachingPlanName, getStripeSignupContext } from "@/lib/portal/billing";
 import { getStripeClient } from "@/lib/portal/stripe";
 import { hashPassword, normalizeEmail } from "@/lib/portal/users";
@@ -66,6 +72,21 @@ export async function POST(request: Request) {
   }
 
   const normalizedEmail = normalizeEmail(signupContext.email);
+  const checkoutSession = await stripe.checkout.sessions.retrieve(sessionId, {
+    expand: ["subscription", "line_items.data.price"],
+  });
+
+  if (signupContext.purchaseType === "guide") {
+    const purchase = await fulfillGuideCheckoutSession(checkoutSession);
+
+    if (!purchase) {
+      return NextResponse.json(
+        { error: "That guide purchase could not be verified." },
+        { status: 400 },
+      );
+    }
+  }
+
   const existingUser = await db
     .select({ id: users.id, role: users.role })
     .from(users)
@@ -100,10 +121,6 @@ export async function POST(request: Request) {
       { status: 409 },
     );
   }
-
-  const checkoutSession = await stripe.checkout.sessions.retrieve(sessionId, {
-    expand: ["subscription"],
-  });
 
   const passwordHash = await hashPassword(password);
 
@@ -151,6 +168,33 @@ export async function POST(request: Request) {
 
       if (!claimedSessions[0]) {
         throw new Error("That checkout session has already been claimed.");
+      }
+
+      if (signupContext.purchaseType === "guide") {
+        const claimedPurchases = await tx
+          .update(guidePurchases)
+          .set({
+            memberId: insertedUser.id,
+            updatedAt: new Date(),
+          })
+          .where(
+            and(
+              eq(guidePurchases.stripeCheckoutSessionId, sessionId),
+              eq(guidePurchases.email, normalizedEmail),
+              or(
+                isNull(guidePurchases.memberId),
+                eq(guidePurchases.memberId, insertedUser.id),
+              ),
+            ),
+          )
+          .returning({ id: guidePurchases.id });
+
+        if (!claimedPurchases[0]) {
+          throw new Error("Unable to attach the guide purchase to this account.");
+        }
+
+        redirectTo = "/member/guide";
+        return;
       }
 
       const subscription =

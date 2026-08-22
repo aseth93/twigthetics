@@ -1,16 +1,30 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { MemberCheckinWorkspace } from "@/components/portal/member-checkin-workspace";
 import { RuntimeBanner } from "@/components/portal/runtime-banner";
 import { requirePortalViewer } from "@/lib/portal/auth";
 import { getMemberDashboardData } from "@/lib/portal/data";
 import { getPortalRuntime } from "@/lib/portal/env";
 import { getPlanSectionPreview } from "@/lib/portal/plan-sections";
+import {
+  getGuidePurchaseForMember,
+  hasCoachingPortalAccess,
+} from "@/lib/guide/access";
 
 export default async function MemberDashboardPage() {
   const viewer = await requirePortalViewer({
     role: "member",
     returnTo: "/member",
   });
+  const [guidePurchase, hasCoachingAccess] = await Promise.all([
+    getGuidePurchaseForMember(viewer.profile.id),
+    hasCoachingPortalAccess(viewer.profile.id),
+  ]);
+
+  if (guidePurchase && !hasCoachingAccess) {
+    redirect("/member/guide");
+  }
+
   const runtime = getPortalRuntime();
   const dashboard = await getMemberDashboardData(viewer);
   const activePlan = dashboard.assignments[0]?.plan || null;

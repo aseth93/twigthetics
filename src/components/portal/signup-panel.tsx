@@ -12,6 +12,7 @@ type SignupPanelProps = {
   valid: boolean;
   existingUserExists: boolean;
   alreadyClaimed: boolean;
+  purchaseType: "coaching" | "guide" | null;
   message: string | null;
 };
 
@@ -22,6 +23,7 @@ export function SignupPanel({
   valid,
   existingUserExists,
   alreadyClaimed,
+  purchaseType,
   message,
 }: SignupPanelProps) {
   const router = useRouter();
@@ -33,6 +35,7 @@ export function SignupPanel({
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const canSubmit = valid && !existingUserExists && !alreadyClaimed;
+  const isGuidePurchase = purchaseType === "guide";
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -99,8 +102,9 @@ export function SignupPanel({
       <p className="eyebrow">Portal Signup</p>
       <h1 className="display-title mt-4 text-[var(--ink)]">Finish your account setup.</h1>
       <p className="mt-4 max-w-2xl text-base leading-7 text-[var(--muted)]">
-        This step ties your coaching purchase to your private Twigthetics portal so billing,
-        plans, documents, and messaging all live under one login.
+        {isGuidePurchase
+          ? "Create your private Twigthetics login to access your personalized copy of the guide."
+          : "This step ties your coaching purchase to your private Twigthetics portal so billing, plans, documents, and messaging all live under one login."}
       </p>
 
       {message ? (
@@ -163,7 +167,10 @@ export function SignupPanel({
       {existingUserExists || alreadyClaimed ? (
         <p className="mt-5 text-sm leading-6 text-[var(--muted)]">
           This checkout is already tied to an account.{" "}
-          <Link href="/login" className="quiet-link">
+          <Link
+            href={isGuidePurchase ? "/login?next=/member/guide" : "/login"}
+            className="quiet-link"
+          >
             Sign in here
           </Link>
           .

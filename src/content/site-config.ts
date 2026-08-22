@@ -14,7 +14,7 @@ export const siteConfig: SiteConfig = {
   },
   links: {
     instagram: instagramUrl,
-    guideCheckout: "",
+    guideCheckout: "/api/guide/checkout",
   },
   coach: {
     name: "Abe Seth",
@@ -62,47 +62,47 @@ export const siteConfig: SiteConfig = {
     ctaLabel: "Join the waitlist",
   },
   guideOffer: {
-    title: "The Lean Aesthetic Guide",
+    title: "The Lean, Athletic Physique Guide",
     summary:
-      "A practical digital guide for staying lean, athletic, and visually sharp year-round without turning maintenance into another form of prep.",
-    statusNote: "Coming soon.",
-    ctaLabel: "Buy the guide",
-    placeholderLabel: "Coming soon",
+      "A complete, science-based system for getting lean, building muscle, or doing both together - with calculators, clear instructions, sample routines, and practical nutrition tools.",
+    statusNote: "$49.99 once. Permanent access through your private account.",
+    ctaLabel: "Get instant access - $49.99",
+    placeholderLabel: "Get instant access - $49.99",
     features: [
-      "A framework for staying lean enough to look good year-round without running yourself into the ground.",
-      "Clear rules for food structure, training, steps, cardio, and weekly adjustments.",
-      "Written for people who want a physique that still looks deliberate when life gets busy.",
+      "Plug-in formulas for estimating calories, protein, macros, and a realistic starting target for your goal.",
+      "Step-by-step fat-loss, muscle-gain, and recomposition systems built for complete beginners through experienced lifters.",
+      "Efficient sample training programs, progression rules, appetite control, high-volume foods, recovery, supplements, and troubleshooting.",
     ],
     modules: [
       {
-        title: "Maintenance calories without the rebound",
+        title: "Start with your numbers",
         description:
-          "How to move out of a deficit without overshooting body-fat gain or losing the look you worked to build.",
+          "Calculate a practical calorie and macro starting point, then choose the right goal path without guessing.",
       },
       {
-        title: "Training for shape and athleticism",
+        title: "Nutrition you can execute",
         description:
-          "Exercise selection, progression, and volume rules that keep the physique sharp and athletic instead of just beat up.",
+          "Build meals, track accurately, control hunger, eat more high-volume foods, and handle restaurants or travel.",
       },
       {
-        title: "The weekly adjustment filter",
+        title: "Efficient muscle-building training",
         description:
-          "What to change, what to leave alone, and how to stop reacting to every small fluctuation.",
+          "Use proven exercise, volume, effort, and progression principles without living in the gym.",
       },
       {
-        title: "Social meals, travel, and weekends",
+        title: "Sample routines",
         description:
-          "A realistic system for staying tight when life is not running on a prep schedule.",
+          "Select a complete routine based on your experience, schedule, equipment, and weekly availability.",
       },
       {
-        title: "Supplements, recovery, and routine",
+        title: "Track real progress",
         description:
-          "The small habits that keep the maintenance phase looking composed instead of sloppy.",
+          "Use bodyweight trends, measurements, photos, gym performance, sleep, and adherence to judge what is working.",
       },
       {
-        title: "Long-term aesthetic standards",
+        title: "Troubleshooting and maintenance",
         description:
-          "How to define the look you are trying to keep, measure drift early, and tighten things before they get away from you.",
+          "Know what to do when hunger, plateaus, recovery, weekends, or maintenance become the limiting factor.",
       },
     ],
   },
