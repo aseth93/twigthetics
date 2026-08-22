@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { GuideCheckoutLink } from "@/components/guide-checkout-link";
 import { requirePortalViewer } from "@/lib/portal/auth";
 import { getGuidePurchaseForMember } from "@/lib/guide/access";
 import { GUIDE_TITLE } from "@/lib/guide/constants";
@@ -24,9 +24,9 @@ export default async function MemberGuidePage() {
               progress tracking, and evidence-based adjustments.
             </p>
           </div>
-          <Link href="/api/guide/checkout" className="btn-primary">
+          <GuideCheckoutLink className="btn-primary">
             Buy once - $49.99
-          </Link>
+          </GuideCheckoutLink>
         </div>
       </section>
     );

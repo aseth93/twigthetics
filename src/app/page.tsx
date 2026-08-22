@@ -5,6 +5,7 @@ import {
   CoachingIntakeButton,
   CoachingIntakeProvider,
 } from "@/components/coaching-intake-modal";
+import { GuideCheckoutLink } from "@/components/guide-checkout-link";
 import { SectionHeading } from "@/components/section-heading";
 import { SiteHeader } from "@/components/site-header";
 import { siteConfig } from "@/content/site-config";
@@ -241,12 +242,11 @@ export default function Home() {
                 <CoachingIntakeButton className="btn-primary btn-home-cta w-full text-white sm:w-auto">
                   Join the waitlist
                 </CoachingIntakeButton>
-                <a
-                  href={siteConfig.links.guideCheckout}
+                <GuideCheckoutLink
                   className="btn-secondary btn-guide-glow w-full sm:w-auto"
                 >
                   Get the Guide - $49.99
-                </a>
+                </GuideCheckoutLink>
               </div>
 
               <div className="mt-8 grid grid-cols-1 gap-3 sm:mt-10 sm:gap-4 sm:grid-cols-3">
@@ -439,12 +439,11 @@ export default function Home() {
               />
 
               <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center">
-                <a
-                  href={siteConfig.links.guideCheckout}
+                <GuideCheckoutLink
                   className="btn-primary btn-guide-glow"
                 >
                   {siteConfig.guideOffer.ctaLabel}
-                </a>
+                </GuideCheckoutLink>
 
                 <p className="text-sm leading-6 text-[var(--muted)]">
                   {siteConfig.guideOffer.statusNote}

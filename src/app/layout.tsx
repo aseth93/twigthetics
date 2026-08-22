@@ -4,6 +4,8 @@ import {
   Instrument_Sans,
   Oswald,
 } from "next/font/google";
+import { MarketingConsentBanner } from "@/components/marketing-consent-banner";
+import { MetaPixel } from "@/components/meta-pixel";
 import "./globals.css";
 
 const bodyFont = Instrument_Sans({
@@ -51,7 +53,11 @@ export default function RootLayout({
       lang="en"
       className={`${bodyFont.variable} ${displayFont.variable} ${serifFont.variable}`}
     >
-      <body>{children}</body>
+      <body>
+        {children}
+        <MetaPixel />
+        <MarketingConsentBanner />
+      </body>
     </html>
   );
 }

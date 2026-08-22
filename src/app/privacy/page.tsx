@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { MarketingPreferencesButton } from "@/components/marketing-consent-banner";
 
 export const metadata = {
   title: "Privacy | Twigthetics",
@@ -27,6 +28,17 @@ export default function PrivacyPage() {
             account identifiers needed to verify access, but does not store full card
             details. Personalized guide copies include the buyer&apos;s account email and
             order reference.
+          </p>
+          <p>
+            If you allow advertising cookies, Twigthetics uses the Meta Pixel and
+            Conversions API to measure page visits, checkout activity, and guide
+            purchases connected to advertising. Meta may receive browser identifiers,
+            purchase details, and hashed contact information for attribution and ad
+            optimization. Declining optional advertising cookies does not affect site
+            access or checkout.
+          </p>
+          <p>
+            <MarketingPreferencesButton />
           </p>
         </div>
 

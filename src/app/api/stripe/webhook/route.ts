@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { getDbReady } from "@/db";
 import { fulfillGuideCheckoutSession } from "@/lib/guide/access";
 import { isGuideCheckoutMetadata } from "@/lib/guide/constants";
+import { sendMetaGuidePurchase } from "@/lib/meta/server";
 import {
   attachCheckoutToExistingUserByEmail,
   syncBillingFromSubscriptionEvent,
@@ -50,7 +51,10 @@ export async function POST(request: Request) {
 
     await upsertStripeCheckoutSessionRecord(session);
     if (isGuideCheckoutMetadata(session.metadata)) {
-      await fulfillGuideCheckoutSession(session);
+      const purchase = await fulfillGuideCheckoutSession(session);
+      if (purchase) {
+        await sendMetaGuidePurchase(session, event.created);
+      }
     } else {
       await attachCheckoutToExistingUserByEmail(session);
     }
@@ -60,7 +64,10 @@ export async function POST(request: Request) {
     const session = event.data.object as Stripe.Checkout.Session;
 
     if (isGuideCheckoutMetadata(session.metadata)) {
-      await fulfillGuideCheckoutSession(session);
+      const purchase = await fulfillGuideCheckoutSession(session);
+      if (purchase) {
+        await sendMetaGuidePurchase(session, event.created);
+      }
     }
   }
 

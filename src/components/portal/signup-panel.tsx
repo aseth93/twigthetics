@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { trackMetaEvent } from "@/lib/meta/browser";
 
 type SignupPanelProps = {
   sessionId: string;
@@ -36,6 +37,30 @@ export function SignupPanel({
 
   const canSubmit = valid && !existingUserExists && !alreadyClaimed;
   const isGuidePurchase = purchaseType === "guide";
+
+  useEffect(() => {
+    if (!isGuidePurchase || !valid || !sessionId) {
+      return;
+    }
+
+    const storageKey = `twig-meta-purchase-${sessionId}`;
+    if (window.sessionStorage.getItem(storageKey)) {
+      return;
+    }
+
+    trackMetaEvent(
+      "Purchase",
+      {
+        currency: "USD",
+        value: 49.99,
+        content_name: "The Lean, Athletic Physique Guide",
+        content_ids: ["lean-athletic-physique-guide"],
+        content_type: "product",
+      },
+      sessionId,
+    );
+    window.sessionStorage.setItem(storageKey, "1");
+  }, [isGuidePurchase, sessionId, valid]);
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();

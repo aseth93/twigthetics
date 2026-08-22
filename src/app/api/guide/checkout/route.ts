@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { getAuthSession } from "@/lib/auth";
 import {
   GUIDE_CURRENCY,
@@ -13,7 +13,7 @@ import { upsertStripeCheckoutSessionRecord } from "@/lib/portal/billing";
 import { getSiteOrigin } from "@/lib/portal/env";
 import { getStripeClient } from "@/lib/portal/stripe";
 
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
   const origin = getSiteOrigin(new Headers(request.headers));
   const stripe = getStripeClient();
 
@@ -35,6 +35,19 @@ export async function GET(request: Request) {
   }
 
   try {
+    const marketingConsent = request.cookies.get("tw_marketing_consent")?.value;
+    const metaAttribution =
+      marketingConsent === "granted"
+        ? {
+            metaTrackingConsent: "granted",
+            ...(request.cookies.get("_fbp")?.value
+              ? { fbp: request.cookies.get("_fbp")!.value }
+              : {}),
+            ...(request.cookies.get("_fbc")?.value
+              ? { fbc: request.cookies.get("_fbc")!.value }
+              : {}),
+          }
+        : {};
     const checkoutSession = await stripe.checkout.sessions.create({
       mode: "payment",
       submit_type: "pay",
@@ -62,6 +75,7 @@ export async function GET(request: Request) {
         guideId: GUIDE_ID,
         guideVersion: GUIDE_VERSION,
         priceId: `guide:${GUIDE_ID}:v${GUIDE_VERSION}`,
+        ...metaAttribution,
       },
       payment_intent_data: {
         metadata: {
