@@ -85,7 +85,7 @@ export async function GET(request: NextRequest) {
           guideVersion: GUIDE_VERSION,
         },
       },
-      success_url: `${origin}/signup?session_id={CHECKOUT_SESSION_ID}`,
+      success_url: `${origin}/signup?session_id={CHECKOUT_SESSION_ID}&purchase=guide`,
       cancel_url: `${origin}/?guide_checkout=cancelled#guide`,
     });
 

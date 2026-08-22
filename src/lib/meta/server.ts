@@ -76,7 +76,7 @@ export async function sendMetaGuidePurchase(
             event_name: "Purchase",
             event_time: eventTime,
             event_id: session.id,
-            event_source_url: `${siteUrl}/signup?session_id=${encodeURIComponent(session.id)}`,
+            event_source_url: `${siteUrl}/signup?session_id=${encodeURIComponent(session.id)}&purchase=guide`,
             action_source: "website",
             user_data: userData,
             custom_data: {
