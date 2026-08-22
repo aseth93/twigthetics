@@ -241,12 +241,12 @@ export default function Home() {
                 <CoachingIntakeButton className="btn-primary btn-home-cta w-full text-white sm:w-auto">
                   Join the waitlist
                 </CoachingIntakeButton>
-                <Link
-                  href="#guide"
+                <a
+                  href={siteConfig.links.guideCheckout}
                   className="btn-secondary btn-guide-glow w-full sm:w-auto"
                 >
                   Get the Guide - $49.99
-                </Link>
+                </a>
               </div>
 
               <div className="mt-8 grid grid-cols-1 gap-3 sm:mt-10 sm:gap-4 sm:grid-cols-3">
@@ -439,12 +439,12 @@ export default function Home() {
               />
 
               <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center">
-                <Link
+                <a
                   href={siteConfig.links.guideCheckout}
                   className="btn-primary btn-guide-glow"
                 >
                   {siteConfig.guideOffer.ctaLabel}
-                </Link>
+                </a>
 
                 <p className="text-sm leading-6 text-[var(--muted)]">
                   {siteConfig.guideOffer.statusNote}
