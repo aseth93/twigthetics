@@ -59,7 +59,7 @@ export const siteConfig: SiteConfig = {
       "Execution beats theatrics. The process is not built around hacks, punishment, or panic changes.",
       "You should want oversight. If you only need a reference framework, the guide is the better entry point.",
     ],
-    ctaLabel: "Join the waitlist",
+    ctaLabel: "Sign up for coaching",
   },
   guideOffer: {
     title: "The Lean, Athletic Physique Guide",
@@ -300,7 +300,7 @@ export const siteConfig: SiteConfig = {
   ],
   process: [
     {
-      title: "Waitlist",
+      title: "Apply",
       description:
         "Submit the full intake and the details that show how you train, eat, and recover right now. Current progress pictures are highly recommended.",
     },

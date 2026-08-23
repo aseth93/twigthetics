@@ -16,7 +16,7 @@ const navItems = [
   { href: "#coaching", label: "Coaching" },
   { href: "#guide", label: "Guide" },
   { href: "#faq", label: "FAQ" },
-  { href: "#apply", label: "Waitlist" },
+  { href: "#apply", label: "Apply" },
 ];
 
 const approachPoints = [
@@ -196,7 +196,7 @@ export default function Home() {
   ];
   const heroHeadlineWords = siteConfig.brand.headline.split(" ");
   const primaryCtaHref = "#apply";
-  const primaryCtaLabel = "Join the waitlist";
+  const primaryCtaLabel = "Sign up for coaching";
 
   return (
     <CoachingIntakeProvider
@@ -240,7 +240,7 @@ export default function Home() {
 
               <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
                 <CoachingIntakeButton className="btn-primary btn-home-cta w-full text-white sm:w-auto">
-                  Join the waitlist
+                  Sign up for coaching
                 </CoachingIntakeButton>
                 <GuideCheckoutLink
                   className="btn-secondary btn-guide-glow w-full sm:w-auto"
@@ -489,7 +489,7 @@ export default function Home() {
               <SectionHeading
                 eyebrow="Process"
                 title="Clear structure. Tight feedback. No wasted motion."
-                description="The waitlist flow is intentionally simple: submit the intake, qualify the fit, and get contacted when coaching spots open."
+                description="The coaching flow is intentionally simple: qualify the fit, build the plan, and tighten the execution week after week."
               />
           </div>
 
@@ -627,9 +627,9 @@ export default function Home() {
           <div className="page-reveal mx-auto max-w-4xl">
             <div className="surface-panel p-6 sm:p-8 md:p-10">
               <SectionHeading
-                eyebrow="Waitlist"
-                title="Join the waitlist with real context."
-                description="The waitlist intake covers your goals, current training, food structure, recovery, schedule, and any progress photos you include so the coaching decision starts with actual information."
+                eyebrow="Apply"
+                title="Sign up once. Start from real context."
+                description="The intake covers your goals, current training, food structure, recovery, schedule, and any progress photos you include so the coaching decision starts with actual information."
               />
 
               <div className="mt-8 rounded-[1.5rem] border border-[var(--line)] bg-white/50 p-5 text-sm leading-7 text-[var(--muted)] sm:p-6 sm:text-base">
@@ -650,7 +650,7 @@ export default function Home() {
                 </div>
                 <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
                   <CoachingIntakeButton className="btn-primary btn-home-cta text-white">
-                    Join the waitlist
+                    Sign up for coaching
                   </CoachingIntakeButton>
                   <a
                     href={siteConfig.links.instagram}

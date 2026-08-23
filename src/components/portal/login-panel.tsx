@@ -133,7 +133,7 @@ export function LoginPanel({ authConfigured, nextPath, notice }: LoginPanelProps
           </div>
 
           <Link href="/#apply" className="btn-ghost">
-            Join the waitlist
+            Sign up for coaching
           </Link>
 
           <p className="text-xs leading-6 text-white/60">
@@ -154,7 +154,7 @@ export function LoginPanel({ authConfigured, nextPath, notice }: LoginPanelProps
           Back to the front page
         </Link>
         <Link href="/#apply" className="quiet-link">
-          Join the coaching waitlist
+          Apply for coaching
         </Link>
       </div>
     </div>
