@@ -13,10 +13,12 @@ export function GuideCheckoutLink({
   className,
 }: GuideCheckoutLinkProps) {
   const [checkoutHref, setCheckoutHref] = useState("/api/guide/checkout");
+  const [metaEventId, setMetaEventId] = useState<string>();
 
   useEffect(() => {
     const landingParams = new URLSearchParams(window.location.search);
     const checkoutParams = new URLSearchParams();
+    const eventId = window.crypto.randomUUID();
 
     for (const key of [
       "utm_source",
@@ -34,6 +36,8 @@ export function GuideCheckoutLink({
     }
 
     checkoutParams.set("landing_path", window.location.pathname);
+    checkoutParams.set("meta_event_id", eventId);
+    setMetaEventId(eventId);
     setCheckoutHref(`/api/guide/checkout?${checkoutParams.toString()}`);
   }, []);
 
@@ -49,7 +53,7 @@ export function GuideCheckoutLink({
           content_category: "Digital fitness guide",
           content_ids: ["lean-athletic-physique-guide"],
           content_type: "product",
-        })
+        }, metaEventId)
       }
     >
       {children}

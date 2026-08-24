@@ -10,6 +10,7 @@ import {
 } from "@/lib/guide/constants";
 import { getGuidePurchaseForMember } from "@/lib/guide/access";
 import { upsertStripeCheckoutSessionRecord } from "@/lib/portal/billing";
+import { sendMetaGuideInitiateCheckout } from "@/lib/meta/server";
 import { getSiteOrigin } from "@/lib/portal/env";
 import { getStripeClient } from "@/lib/portal/stripe";
 
@@ -61,10 +62,17 @@ export async function GET(request: NextRequest) {
         : {}),
     };
     const marketingConsent = request.cookies.get("tw_marketing_consent")?.value;
+    const metaInitiateCheckoutEventId = request.nextUrl.searchParams
+      .get("meta_event_id")
+      ?.trim()
+      .slice(0, 200);
     const metaAttribution =
       marketingConsent === "granted"
         ? {
             metaTrackingConsent: "granted",
+            ...(metaInitiateCheckoutEventId
+              ? { metaInitiateCheckoutEventId }
+              : {}),
             ...(request.cookies.get("_fbp")?.value
               ? { fbp: request.cookies.get("_fbp")!.value }
               : {}),
@@ -117,6 +125,10 @@ export async function GET(request: NextRequest) {
     });
 
     await upsertStripeCheckoutSessionRecord(checkoutSession);
+    await sendMetaGuideInitiateCheckout(
+      checkoutSession,
+      `${origin}/guide${request.nextUrl.search}`,
+    );
 
     return NextResponse.redirect(checkoutSession.url!, 303);
   } catch {
