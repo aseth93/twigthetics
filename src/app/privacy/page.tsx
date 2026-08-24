@@ -26,8 +26,10 @@ export default function PrivacyPage() {
           <p>
             Stripe processes payments. Twigthetics stores the resulting purchase and
             account identifiers needed to verify access, but does not store full card
-            details. Personalized guide copies include the buyer&apos;s account email and
-            order reference.
+            details. Campaign parameters included in a landing-page URL may be stored
+            with a checkout so Twigthetics can measure which promotion produced a sale.
+            Personalized guide copies include the buyer&apos;s account email and order
+            reference.
           </p>
           <p>
             If you allow advertising cookies, Twigthetics uses the Meta Pixel and

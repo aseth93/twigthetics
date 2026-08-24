@@ -35,6 +35,31 @@ export async function GET(request: NextRequest) {
   }
 
   try {
+    const readAttribution = (key: string) =>
+      request.nextUrl.searchParams.get(key)?.trim().slice(0, 200) || undefined;
+    const checkoutAttribution = {
+      ...(readAttribution("utm_source")
+        ? { attributionSource: readAttribution("utm_source")! }
+        : {}),
+      ...(readAttribution("utm_medium")
+        ? { attributionMedium: readAttribution("utm_medium")! }
+        : {}),
+      ...(readAttribution("utm_campaign")
+        ? { attributionCampaign: readAttribution("utm_campaign")! }
+        : {}),
+      ...(readAttribution("utm_content")
+        ? { attributionContent: readAttribution("utm_content")! }
+        : {}),
+      ...(readAttribution("utm_term")
+        ? { attributionTerm: readAttribution("utm_term")! }
+        : {}),
+      ...(readAttribution("fbclid")
+        ? { attributionFbclid: readAttribution("fbclid")! }
+        : {}),
+      ...(readAttribution("landing_path")
+        ? { attributionLandingPath: readAttribution("landing_path")! }
+        : {}),
+    };
     const marketingConsent = request.cookies.get("tw_marketing_consent")?.value;
     const metaAttribution =
       marketingConsent === "granted"
@@ -75,6 +100,7 @@ export async function GET(request: NextRequest) {
         guideId: GUIDE_ID,
         guideVersion: GUIDE_VERSION,
         priceId: `guide:${GUIDE_ID}:v${GUIDE_VERSION}`,
+        ...checkoutAttribution,
         ...metaAttribution,
       },
       payment_intent_data: {
@@ -83,6 +109,7 @@ export async function GET(request: NextRequest) {
           productType: GUIDE_PRODUCT_TYPE,
           guideId: GUIDE_ID,
           guideVersion: GUIDE_VERSION,
+          ...checkoutAttribution,
         },
       },
       success_url: `${origin}/signup?session_id={CHECKOUT_SESSION_ID}&purchase=guide`,

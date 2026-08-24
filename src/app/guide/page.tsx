@@ -26,9 +26,32 @@ const outcomes = [
   "Transition into maintenance without immediately giving back the result.",
 ];
 
+const guidePreviews = [
+  {
+    src: "/images/guide/previews/macro-setup.png",
+    alt: "Macro setup page showing protein, fat, and carbohydrate calculation guidance.",
+    label: "Calculate your targets",
+  },
+  {
+    src: "/images/guide/previews/meal-templates.png",
+    alt: "Sample meal templates page for cutting and gaining muscle.",
+    label: "Build repeatable meals",
+  },
+  {
+    src: "/images/guide/previews/training-routine.png",
+    alt: "Five-day physique training routine from the guide.",
+    label: "Follow complete routines",
+  },
+  {
+    src: "/images/guide/previews/personal-calculator.png",
+    alt: "Personal calorie and macro calculator worksheet from the guide.",
+    label: "Turn the plan into your plan",
+  },
+];
+
 export default function GuidePage() {
   return (
-    <main className="grain min-h-screen overflow-hidden">
+    <main className="grain min-h-screen overflow-hidden pb-24 lg:pb-0">
       <GuideViewTracker />
 
       <header className="border-b border-[var(--line)] bg-[rgba(246,239,230,0.9)] backdrop-blur-xl">
@@ -64,6 +87,20 @@ export default function GuidePage() {
               </p>
             </div>
 
+            <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-xs font-semibold uppercase tracking-[0.1em] text-[var(--forest)]">
+              <span>Instant access</span>
+              <span>Secure Stripe checkout</span>
+              <span>Satisfaction guarantee</span>
+            </div>
+
+            <a
+              href="/downloads/twigthetics-guide-preview.pdf"
+              download
+              className="mt-5 inline-flex text-sm font-semibold text-[var(--ink)] underline decoration-[var(--accent)] decoration-2 underline-offset-4"
+            >
+              Download the free 5-page preview
+            </a>
+
             <div className="mt-8 grid grid-cols-3 gap-3">
               {[
                 ["43", "Practical pages"],
@@ -97,6 +134,55 @@ export default function GuidePage() {
             <div className="absolute -bottom-5 -left-3 rounded-full border border-[var(--line)] bg-[#fffaf3] px-5 py-3 text-xs font-semibold uppercase tracking-[0.16em] text-[var(--forest)] shadow-xl sm:left-5">
               By IFBB Pro Abe Seth
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="section-shell pt-0">
+        <div className="surface-panel overflow-hidden p-5 sm:p-8 lg:p-10">
+          <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <p className="eyebrow">Preview the actual guide</p>
+              <h2 className="mt-3 max-w-3xl text-3xl font-semibold text-[var(--ink)] sm:text-4xl">
+                See the calculators, meal systems, and routines before you buy.
+              </h2>
+            </div>
+            <a
+              href="/downloads/twigthetics-guide-preview.pdf"
+              download
+              className="btn-secondary w-full shrink-0 sm:w-auto"
+            >
+              Free 5-page preview
+            </a>
+          </div>
+
+          <div className="mt-8 grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4">
+            {guidePreviews.map((preview) => (
+              <figure key={preview.src} className="group min-w-0">
+                <div className="overflow-hidden rounded-[1rem] border border-[var(--line)] bg-[#f6efe6] shadow-[0_18px_45px_rgba(38,30,21,0.12)] sm:rounded-[1.35rem]">
+                  <Image
+                    src={preview.src}
+                    alt={preview.alt}
+                    width={893}
+                    height={1155}
+                    sizes="(max-width: 640px) 45vw, (max-width: 1024px) 22vw, 280px"
+                    className="h-auto w-full transition duration-500 group-hover:scale-[1.025]"
+                  />
+                </div>
+                <figcaption className="mt-3 text-[0.68rem] font-semibold uppercase tracking-[0.12em] text-[var(--muted)] sm:text-xs">
+                  {preview.label}
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+
+          <div className="mt-8 flex flex-col gap-3 border-t border-[var(--line)] pt-6 sm:flex-row sm:items-center sm:justify-between">
+            <p className="max-w-2xl text-sm leading-6 text-[var(--muted)]">
+              Get all 43 pages, every goal pathway, the complete worksheets, and permanent account access.
+            </p>
+            <GuideCheckoutLink className="btn-primary btn-guide-glow w-full sm:w-auto">
+              Get the complete guide - $49.99
+            </GuideCheckoutLink>
           </div>
         </div>
       </section>
@@ -183,6 +269,18 @@ export default function GuidePage() {
       <footer className="border-t border-[var(--line)] px-4 py-8 text-center text-xs uppercase tracking-[0.16em] text-[var(--muted)]">
         Twigthetics · Abe Seth · IFBB Pro
       </footer>
+
+      <div className="fixed inset-x-0 bottom-0 z-50 border-t border-white/10 bg-[rgba(25,23,19,0.96)] px-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3 shadow-[0_-16px_40px_rgba(22,18,13,0.28)] backdrop-blur-xl lg:hidden">
+        <div className="mx-auto flex max-w-xl items-center gap-3">
+          <div className="min-w-0 flex-1 text-white">
+            <p className="text-sm font-semibold">Complete guide</p>
+            <p className="text-[0.68rem] text-white/60">Instant access · one payment</p>
+          </div>
+          <GuideCheckoutLink className="btn-guide-glow min-h-12 shrink-0 px-5 text-[0.7rem]">
+            Get it - $49.99
+          </GuideCheckoutLink>
+        </div>
+      </div>
     </main>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import type { ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { trackMetaEvent } from "@/lib/meta/browser";
 
 type GuideCheckoutLinkProps = {
@@ -12,9 +12,34 @@ export function GuideCheckoutLink({
   children,
   className,
 }: GuideCheckoutLinkProps) {
+  const [checkoutHref, setCheckoutHref] = useState("/api/guide/checkout");
+
+  useEffect(() => {
+    const landingParams = new URLSearchParams(window.location.search);
+    const checkoutParams = new URLSearchParams();
+
+    for (const key of [
+      "utm_source",
+      "utm_medium",
+      "utm_campaign",
+      "utm_content",
+      "utm_term",
+      "fbclid",
+    ]) {
+      const value = landingParams.get(key)?.trim();
+
+      if (value) {
+        checkoutParams.set(key, value.slice(0, 200));
+      }
+    }
+
+    checkoutParams.set("landing_path", window.location.pathname);
+    setCheckoutHref(`/api/guide/checkout?${checkoutParams.toString()}`);
+  }, []);
+
   return (
     <a
-      href="/api/guide/checkout"
+      href={checkoutHref}
       className={className}
       onClick={() =>
         trackMetaEvent("InitiateCheckout", {
