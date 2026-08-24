@@ -89,9 +89,6 @@ export async function GET(request: NextRequest) {
       customer_creation: "always",
       customer_email: sessionUser?.email || undefined,
       billing_address_collection: "auto",
-      consent_collection: {
-        promotions: "auto",
-      },
       after_expiration: {
         recovery: {
           enabled: true,
@@ -133,14 +130,23 @@ export async function GET(request: NextRequest) {
       cancel_url: `${origin}/guide?checkout=cancelled`,
     });
 
-    await upsertStripeCheckoutSessionRecord(checkoutSession);
-    await sendMetaGuideInitiateCheckout(
-      checkoutSession,
-      `${origin}/guide${request.nextUrl.search}`,
-    );
+    const checkoutSideEffects = await Promise.allSettled([
+      upsertStripeCheckoutSessionRecord(checkoutSession),
+      sendMetaGuideInitiateCheckout(
+        checkoutSession,
+        `${origin}/guide${request.nextUrl.search}`,
+      ),
+    ]);
+
+    for (const result of checkoutSideEffects) {
+      if (result.status === "rejected") {
+        console.error("Guide checkout side effect failed", result.reason);
+      }
+    }
 
     return NextResponse.redirect(checkoutSession.url!, 303);
-  } catch {
+  } catch (error) {
+    console.error("Guide checkout creation failed", error);
     return NextResponse.redirect(new URL("/?guide_checkout=error#guide", origin), 303);
   }
 }
