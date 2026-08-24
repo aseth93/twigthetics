@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { getDbReady } from "@/db";
 import { fulfillGuideCheckoutSession } from "@/lib/guide/access";
 import { isGuideCheckoutMetadata } from "@/lib/guide/constants";
+import { recoverExpiredGuideCheckout } from "@/lib/guide/recovery";
 import { sendMetaGuidePurchase } from "@/lib/meta/server";
 import {
   attachCheckoutToExistingUserByEmail,
@@ -68,6 +69,15 @@ export async function POST(request: Request) {
       if (purchase) {
         await sendMetaGuidePurchase(session, event.created);
       }
+    }
+  }
+
+  if (event.type === "checkout.session.expired") {
+    const session = event.data.object as Stripe.Checkout.Session;
+    const storedSession = await upsertStripeCheckoutSessionRecord(session);
+
+    if (storedSession && isGuideCheckoutMetadata(session.metadata)) {
+      await recoverExpiredGuideCheckout(session, storedSession.metadata);
     }
   }
 

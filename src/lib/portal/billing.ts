@@ -84,6 +84,15 @@ export async function upsertStripeCheckoutSessionRecord(session: Stripe.Checkout
   const stripeSubscriptionId =
     typeof session.subscription === "string" ? session.subscription : null;
   const completedAt = session.status === "complete" ? new Date() : null;
+  const [existingSession] = await db
+    .select({ metadata: stripeCheckoutSessions.metadata })
+    .from(stripeCheckoutSessions)
+    .where(eq(stripeCheckoutSessions.id, session.id))
+    .limit(1);
+  const metadata = {
+    ...(existingSession?.metadata || {}),
+    ...(session.metadata || {}),
+  };
 
   await db
     .insert(stripeCheckoutSessions)
@@ -98,7 +107,7 @@ export async function upsertStripeCheckoutSessionRecord(session: Stripe.Checkout
       status: session.status || "open",
       mode: session.mode,
       priceId,
-      metadata: session.metadata || {},
+      metadata,
       rawPayload: serializeStripeObject(session),
       completedAt,
       createdAt: new Date(),
@@ -116,7 +125,7 @@ export async function upsertStripeCheckoutSessionRecord(session: Stripe.Checkout
         status: session.status || "open",
         mode: session.mode,
         priceId,
-        metadata: session.metadata || {},
+        metadata,
         rawPayload: serializeStripeObject(session),
         completedAt,
         updatedAt: new Date(),

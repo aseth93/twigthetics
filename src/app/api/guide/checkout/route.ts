@@ -84,10 +84,19 @@ export async function GET(request: NextRequest) {
     const checkoutSession = await stripe.checkout.sessions.create({
       mode: "payment",
       submit_type: "pay",
+      expires_at: Math.floor(Date.now() / 1000) + 2 * 60 * 60,
       payment_method_types: ["card"],
       customer_creation: "always",
       customer_email: sessionUser?.email || undefined,
       billing_address_collection: "auto",
+      consent_collection: {
+        promotions: "auto",
+      },
+      after_expiration: {
+        recovery: {
+          enabled: true,
+        },
+      },
       line_items: [
         {
           price_data: {
