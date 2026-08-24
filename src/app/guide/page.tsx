@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { GuideCheckoutLink } from "@/components/guide-checkout-link";
+import { GuideCheckoutRecovery } from "@/components/guide-checkout-recovery";
 import { GuideViewTracker } from "@/components/guide-view-tracker";
 import { siteConfig } from "@/content/site-config";
 
@@ -49,6 +50,21 @@ const guidePreviews = [
   },
 ];
 
+const resultProof = [
+  {
+    src: "/images/client-transformations/previews/aaron-progress.jpg",
+    alt: "Aaron's client physique transformation.",
+  },
+  {
+    src: "/images/client-transformations/previews/maxwell-12-weeks.jpg",
+    alt: "Maxwell's 12-week client physique transformation.",
+  },
+  {
+    src: "/images/client-transformations/previews/kelly-results.jpg",
+    alt: "Kelly's client physique transformation.",
+  },
+];
+
 export default function GuidePage() {
   return (
     <main className="grain min-h-screen overflow-hidden pb-24 lg:pb-0">
@@ -64,6 +80,8 @@ export default function GuidePage() {
           </GuideCheckoutLink>
         </div>
       </header>
+
+      <GuideCheckoutRecovery />
 
       <section className="section-shell py-10 sm:py-16 lg:py-20">
         <div className="grid items-center gap-10 lg:grid-cols-[1.08fr_0.92fr] lg:gap-16">
@@ -133,6 +151,73 @@ export default function GuidePage() {
             </div>
             <div className="absolute -bottom-5 -left-3 rounded-full border border-[var(--line)] bg-[#fffaf3] px-5 py-3 text-xs font-semibold uppercase tracking-[0.16em] text-[var(--forest)] shadow-xl sm:left-5">
               By IFBB Pro Abe Seth
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="section-shell pt-0">
+        <div className="dark-panel overflow-hidden p-5 sm:p-8 lg:p-10">
+          <div className="grid gap-7 lg:grid-cols-[0.72fr_1.28fr] lg:items-center">
+            <div className="grid grid-cols-[0.42fr_0.58fr] gap-4 lg:grid-cols-1">
+              <div className="overflow-hidden rounded-[1.25rem] border border-white/10 bg-white/[0.04]">
+                <Image
+                  src="/images/coach/coach-stage-checkin.jpg"
+                  alt="IFBB Pro Abe Seth in competition condition."
+                  width={900}
+                  height={1200}
+                  sizes="(max-width: 1024px) 38vw, 330px"
+                  className="h-full min-h-44 w-full object-cover object-top lg:aspect-[4/5]"
+                />
+              </div>
+              <div className="flex flex-col justify-center">
+                <p className="eyebrow text-white/55">Built from experience</p>
+                <h2 className="mt-3 text-2xl font-semibold leading-tight text-white sm:text-3xl">
+                  Written by IFBB Pro Abe Seth.
+                </h2>
+                <p className="mt-3 text-sm leading-6 text-white/65">
+                  The same principles used to build high-level condition and real client results, organized so you can apply them yourself.
+                </p>
+              </div>
+            </div>
+
+            <div>
+              <div className="flex items-end justify-between gap-4">
+                <div>
+                  <p className="eyebrow text-white/55">Real-world proof</p>
+                  <p className="mt-2 text-lg font-semibold text-white sm:text-xl">
+                    The system is built around outcomes, not theory alone.
+                  </p>
+                </div>
+                <span className="hidden text-xs uppercase tracking-[0.14em] text-white/45 sm:block">
+                  Client transformations
+                </span>
+              </div>
+              <div className="mt-5 grid grid-cols-3 gap-2 sm:gap-4">
+                {resultProof.map((result) => (
+                  <div
+                    key={result.src}
+                    className="overflow-hidden rounded-[0.9rem] border border-white/10 bg-white sm:rounded-[1.2rem]"
+                  >
+                    <Image
+                      src={result.src}
+                      alt={result.alt}
+                      width={720}
+                      height={900}
+                      sizes="(max-width: 640px) 29vw, (max-width: 1024px) 30vw, 270px"
+                      className="aspect-[4/5] h-auto w-full object-contain"
+                    />
+                  </div>
+                ))}
+              </div>
+              <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <p className="text-sm leading-6 text-white/60">
+                  43 practical pages. Exact calculations. Complete routines. One payment.
+                </p>
+                <GuideCheckoutLink className="btn-primary btn-guide-glow min-h-12 w-full shrink-0 px-5 sm:w-auto">
+                  Get the guide - $49.99
+                </GuideCheckoutLink>
+              </div>
             </div>
           </div>
         </div>
@@ -258,7 +343,7 @@ export default function GuidePage() {
               <p className="mt-3 text-sm leading-6 text-white/70">
                 Create your account after checkout and access your copy immediately.
               </p>
-              <GuideCheckoutLink className="btn-guide-glow mt-6 min-h-[3.5rem] w-full px-6">
+              <GuideCheckoutLink className="btn-primary btn-guide-glow mt-6 min-h-[3.5rem] w-full px-6">
                 Get instant access - $49.99
               </GuideCheckoutLink>
             </div>
@@ -276,7 +361,7 @@ export default function GuidePage() {
             <p className="text-sm font-semibold">Complete guide</p>
             <p className="text-[0.68rem] text-white/60">Instant access · one payment</p>
           </div>
-          <GuideCheckoutLink className="btn-guide-glow min-h-12 shrink-0 px-5 text-[0.7rem]">
+          <GuideCheckoutLink className="btn-primary btn-guide-glow min-h-12 shrink-0 px-5 text-[0.7rem]">
             Get it - $49.99
           </GuideCheckoutLink>
         </div>
