@@ -14,12 +14,26 @@ import { sendMetaGuideInitiateCheckout } from "@/lib/meta/server";
 import { getSiteOrigin } from "@/lib/portal/env";
 import { getStripeClient } from "@/lib/portal/stripe";
 
-export async function GET(request: NextRequest) {
+type CheckoutResponseMode = "json" | "redirect";
+
+function checkoutResponse(url: string, mode: CheckoutResponseMode) {
+  return mode === "json"
+    ? NextResponse.json({ url })
+    : NextResponse.redirect(url, 303);
+}
+
+async function createGuideCheckout(
+  request: NextRequest,
+  mode: CheckoutResponseMode,
+) {
   const origin = getSiteOrigin(new Headers(request.headers));
   const stripe = getStripeClient();
 
   if (!stripe) {
-    return NextResponse.redirect(new URL("/?guide_checkout=unavailable#guide", origin));
+    return checkoutResponse(
+      new URL("/?guide_checkout=unavailable#guide", origin).toString(),
+      mode,
+    );
   }
 
   const authSession = await getAuthSession();
@@ -31,7 +45,7 @@ export async function GET(request: NextRequest) {
     const existingPurchase = await getGuidePurchaseForMember(sessionUser.id);
 
     if (existingPurchase) {
-      return NextResponse.redirect(new URL("/member/guide", origin));
+      return checkoutResponse(new URL("/member/guide", origin).toString(), mode);
     }
   }
 
@@ -144,9 +158,30 @@ export async function GET(request: NextRequest) {
       }
     }
 
-    return NextResponse.redirect(checkoutSession.url!, 303);
+    return checkoutResponse(checkoutSession.url!, mode);
   } catch (error) {
     console.error("Guide checkout creation failed", error);
-    return NextResponse.redirect(new URL("/?guide_checkout=error#guide", origin), 303);
+    return checkoutResponse(
+      new URL("/?guide_checkout=error#guide", origin).toString(),
+      mode,
+    );
   }
+}
+
+export async function POST(request: NextRequest) {
+  return createGuideCheckout(request, "json");
+}
+
+export async function GET(request: NextRequest) {
+  // Old cached pages used a GET link. Only honor hydrated links carrying both
+  // browser-generated values; bare crawler requests return to the guide page.
+  if (
+    !request.nextUrl.searchParams.has("landing_path") ||
+    !request.nextUrl.searchParams.has("meta_event_id")
+  ) {
+    const origin = getSiteOrigin(new Headers(request.headers));
+    return NextResponse.redirect(new URL("/guide", origin), 303);
+  }
+
+  return createGuideCheckout(request, "redirect");
 }
