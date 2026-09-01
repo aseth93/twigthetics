@@ -37,7 +37,12 @@ export function GuidePreviewForm() {
         }),
       });
       const result = (await response.json().catch(() => null)) as
-        | { error?: string; leadId?: string; downloadUrl?: string }
+        | {
+            error?: string;
+            leadId?: string;
+            downloadUrl?: string;
+            emailDelivered?: boolean;
+          }
         | null;
 
       if (!response.ok || !result?.downloadUrl) {
@@ -49,7 +54,11 @@ export function GuidePreviewForm() {
       }
 
       setDownloadUrl(result.downloadUrl);
-      setStatus("The preview is in your inbox and ready below.");
+      setStatus(
+        result.emailDelivered
+          ? "The preview is in your inbox and ready below."
+          : "Your preview is unlocked and ready below.",
+      );
     } catch (error) {
       setStatus(error instanceof Error ? error.message : "Unable to send the preview.");
     } finally {
