@@ -27,10 +27,10 @@ export function GuideCheckoutRecovery() {
         </div>
         <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
           <a
-            href="/downloads/twigthetics-guide-preview.pdf"
+            href="#free-preview"
             className="btn-secondary min-h-12"
           >
-            View free preview
+            Get free preview
           </a>
           <GuideCheckoutLink className="btn-primary btn-guide-glow min-h-12 px-5">
             Return to checkout

@@ -331,6 +331,80 @@ export const guidePurchases = pgTable(
   ],
 );
 
+export const guideLeads = pgTable(
+  "guide_leads",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    email: varchar("email", { length: 255 }).notNull(),
+    firstName: varchar("first_name", { length: 100 }),
+    marketingConsent: boolean("marketing_consent").notNull().default(false),
+    status: varchar("status", { length: 32 }).notNull().default("preview_only"),
+    unsubscribeToken: varchar("unsubscribe_token", { length: 120 }).notNull(),
+    previewDeliveredAt: timestamp("preview_delivered_at", { withTimezone: true }),
+    unsubscribedAt: timestamp("unsubscribed_at", { withTimezone: true }),
+    sequenceEmailIds: jsonb("sequence_email_ids").$type<string[]>().notNull().default([]),
+    attribution: jsonb("attribution")
+      .$type<Record<string, string>>()
+      .notNull()
+      .default({}),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [
+    uniqueIndex("uniq_guide_leads_email").on(table.email),
+    uniqueIndex("uniq_guide_leads_unsubscribe_token").on(table.unsubscribeToken),
+    index("idx_guide_leads_created_at").on(table.createdAt),
+  ],
+);
+
+export const guideFunnelEvents = pgTable(
+  "guide_funnel_events",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    eventName: varchar("event_name", { length: 64 }).notNull(),
+    visitorId: varchar("visitor_id", { length: 120 }),
+    leadId: uuid("lead_id").references(() => guideLeads.id, { onDelete: "set null" }),
+    email: varchar("email", { length: 255 }),
+    stripeCheckoutSessionId: varchar("stripe_checkout_session_id", { length: 255 }),
+    path: text("path"),
+    attribution: jsonb("attribution")
+      .$type<Record<string, string>>()
+      .notNull()
+      .default({}),
+    metadata: jsonb("metadata")
+      .$type<Record<string, string | number | boolean | null>>()
+      .notNull()
+      .default({}),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [
+    index("idx_guide_funnel_event_name").on(table.eventName),
+    index("idx_guide_funnel_created_at").on(table.createdAt),
+    index("idx_guide_funnel_visitor_id").on(table.visitorId),
+    index("idx_guide_funnel_session_id").on(table.stripeCheckoutSessionId),
+  ],
+);
+
+export const guideTestimonials = pgTable(
+  "guide_testimonials",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    memberId: uuid("member_id").references(() => users.id, { onDelete: "set null" }),
+    email: varchar("email", { length: 255 }),
+    displayName: varchar("display_name", { length: 120 }).notNull(),
+    quote: text("quote").notNull(),
+    rating: integer("rating"),
+    source: varchar("source", { length: 40 }).notNull().default("customer"),
+    status: varchar("status", { length: 32 }).notNull().default("pending"),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [
+    index("idx_guide_testimonials_status").on(table.status),
+    index("idx_guide_testimonials_created_at").on(table.createdAt),
+  ],
+);
+
 export const passwordResetTokens = pgTable(
   "password_reset_tokens",
   {

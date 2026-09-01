@@ -4,7 +4,7 @@ import { getDbReady } from "@/db";
 import { billingAccounts, stripeCheckoutSessions } from "@/db/schema";
 import {
   GUIDE_CURRENCY,
-  GUIDE_PRICE_CENTS,
+  isAcceptedGuideCheckoutAmount,
   isGuideCheckoutMetadata,
 } from "@/lib/guide/constants";
 import { getStripeClient } from "./stripe";
@@ -330,6 +330,7 @@ export async function getStripeSignupContext(sessionId: string) {
       existingUserExists: false,
       alreadyClaimed: false,
       purchaseType: null,
+      amountTotal: null,
       message: "Stripe checkout is not connected.",
     };
   }
@@ -364,6 +365,7 @@ export async function getStripeSignupContext(sessionId: string) {
         existingUserExists: false,
         alreadyClaimed: false,
         purchaseType,
+        amountTotal: session.amount_total,
         message: "Stripe checkout did not return an email address.",
       };
     }
@@ -373,7 +375,7 @@ export async function getStripeSignupContext(sessionId: string) {
       session.mode === "payment" &&
       session.status === "complete" &&
       session.payment_status !== "unpaid" &&
-      session.amount_total === GUIDE_PRICE_CENTS &&
+      isAcceptedGuideCheckoutAmount(session.amount_total, session.metadata) &&
       session.currency === GUIDE_CURRENCY;
     const isEligibleCoachingPurchase =
       purchaseType === "coaching" &&
@@ -388,6 +390,7 @@ export async function getStripeSignupContext(sessionId: string) {
         existingUserExists: Boolean(existingUser),
         alreadyClaimed: Boolean(localSession?.claimedByUserId),
         purchaseType,
+        amountTotal: session.amount_total,
         message: "That checkout is not complete yet.",
       };
     }
@@ -399,6 +402,7 @@ export async function getStripeSignupContext(sessionId: string) {
       existingUserExists: Boolean(existingUser),
       alreadyClaimed: Boolean(localSession?.claimedByUserId),
       purchaseType,
+      amountTotal: session.amount_total,
       message: null,
     };
   } catch {
@@ -409,6 +413,7 @@ export async function getStripeSignupContext(sessionId: string) {
       existingUserExists: false,
       alreadyClaimed: false,
       purchaseType: null,
+      amountTotal: null,
       message: "That checkout session could not be verified.",
     };
   }

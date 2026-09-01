@@ -4,6 +4,7 @@ import { getDbReady } from "@/db";
 import { fulfillGuideCheckoutSession } from "@/lib/guide/access";
 import { isGuideCheckoutMetadata } from "@/lib/guide/constants";
 import { recoverExpiredGuideCheckout } from "@/lib/guide/recovery";
+import { recordGuideFunnelEvent } from "@/lib/guide/funnel";
 import { sendMetaGuidePurchase } from "@/lib/meta/server";
 import {
   attachCheckoutToExistingUserByEmail,
@@ -54,7 +55,27 @@ export async function POST(request: Request) {
     if (isGuideCheckoutMetadata(session.metadata)) {
       const purchase = await fulfillGuideCheckoutSession(session);
       if (purchase) {
-        await sendMetaGuidePurchase(session, event.created);
+        await Promise.allSettled([
+          sendMetaGuidePurchase(session, event.created),
+          recordGuideFunnelEvent({
+            eventName: "purchase",
+            visitorId: session.metadata?.visitorId,
+            leadId: session.metadata?.leadId,
+            email: purchase.email,
+            stripeCheckoutSessionId: session.id,
+            path: "/signup",
+            attribution: {
+              source: session.metadata?.attributionSource,
+              medium: session.metadata?.attributionMedium,
+              campaign: session.metadata?.attributionCampaign,
+              content: session.metadata?.attributionContent,
+              term: session.metadata?.attributionTerm,
+              fbclid: session.metadata?.attributionFbclid,
+              landingPath: session.metadata?.attributionLandingPath,
+            },
+            metadata: { amountTotal: purchase.amountTotal },
+          }),
+        ]);
       }
     } else {
       await attachCheckoutToExistingUserByEmail(session);
@@ -67,7 +88,27 @@ export async function POST(request: Request) {
     if (isGuideCheckoutMetadata(session.metadata)) {
       const purchase = await fulfillGuideCheckoutSession(session);
       if (purchase) {
-        await sendMetaGuidePurchase(session, event.created);
+        await Promise.allSettled([
+          sendMetaGuidePurchase(session, event.created),
+          recordGuideFunnelEvent({
+            eventName: "purchase",
+            visitorId: session.metadata?.visitorId,
+            leadId: session.metadata?.leadId,
+            email: purchase.email,
+            stripeCheckoutSessionId: session.id,
+            path: "/signup",
+            attribution: {
+              source: session.metadata?.attributionSource,
+              medium: session.metadata?.attributionMedium,
+              campaign: session.metadata?.attributionCampaign,
+              content: session.metadata?.attributionContent,
+              term: session.metadata?.attributionTerm,
+              fbclid: session.metadata?.attributionFbclid,
+              landingPath: session.metadata?.attributionLandingPath,
+            },
+            metadata: { amountTotal: purchase.amountTotal },
+          }),
+        ]);
       }
     }
   }

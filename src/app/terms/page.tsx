@@ -32,6 +32,11 @@ export default function TermsPage() {
             order reference to enforce that license.
           </p>
           <p>
+            Guide buyers may request a refund within 14 calendar days of purchase by
+            replying to the purchase email or messaging @twigthetics. Refund requests
+            received after that period are handled at Twigthetics&apos; discretion.
+          </p>
+          <p>
             Coaching applications are reviewed for fit before onboarding. Coaching and
             guide purchases are separate products.
           </p>

@@ -1,9 +1,12 @@
 import { GuideCheckoutLink } from "@/components/guide-checkout-link";
+import { GuideFeedbackForm } from "@/components/guide-feedback-form";
 import { requirePortalViewer } from "@/lib/portal/auth";
 import { getGuidePurchaseForMember } from "@/lib/guide/access";
 import { GUIDE_TITLE } from "@/lib/guide/constants";
+import { getGuideOffer } from "@/lib/guide/constants";
 
 export default async function MemberGuidePage() {
+  const offer = getGuideOffer();
   const viewer = await requirePortalViewer({
     role: "member",
     returnTo: "/member/guide",
@@ -24,8 +27,8 @@ export default async function MemberGuidePage() {
               progress tracking, and evidence-based adjustments.
             </p>
           </div>
-          <GuideCheckoutLink className="btn-primary">
-            Buy once - $49.99
+          <GuideCheckoutLink className="btn-primary" priceCents={offer.priceCents}>
+            Buy once - {offer.formattedPrice}
           </GuideCheckoutLink>
         </div>
       </section>
@@ -73,6 +76,8 @@ export default async function MemberGuidePage() {
         This is a personal-use license. Each served copy contains the purchaser&apos;s
         account email and order reference.
       </p>
+
+      <GuideFeedbackForm displayName={viewer.profile.fullName} />
     </div>
   );
 }

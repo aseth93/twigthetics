@@ -1,16 +1,24 @@
 "use client";
 
 import { useState, type ReactNode } from "react";
+import {
+  getGuideAttribution,
+  getGuideVisitorId,
+  GUIDE_LEAD_STORAGE_KEY,
+} from "@/lib/guide/browser";
+import { getGuideOffer } from "@/lib/guide/constants";
 import { trackMetaEvent } from "@/lib/meta/browser";
 
 type GuideCheckoutLinkProps = {
   children: ReactNode;
   className?: string;
+  priceCents?: number;
 };
 
 export function GuideCheckoutLink({
   children,
   className,
+  priceCents = getGuideOffer().priceCents,
 }: GuideCheckoutLinkProps) {
   const [isOpening, setIsOpening] = useState(false);
 
@@ -24,6 +32,8 @@ export function GuideCheckoutLink({
     const landingParams = new URLSearchParams(window.location.search);
     const checkoutParams = new URLSearchParams();
     const eventId = window.crypto.randomUUID();
+    const visitorId = getGuideVisitorId();
+    const leadId = window.localStorage.getItem(GUIDE_LEAD_STORAGE_KEY);
 
     for (const key of [
       "utm_source",
@@ -42,12 +52,26 @@ export function GuideCheckoutLink({
 
     checkoutParams.set("landing_path", window.location.pathname);
     checkoutParams.set("meta_event_id", eventId);
+    checkoutParams.set("visitor_id", visitorId);
+
+    if (leadId) {
+      checkoutParams.set("lead_id", leadId);
+    }
+
+    const attribution = getGuideAttribution();
+    for (const [key, value] of Object.entries(attribution)) {
+      const queryKey = key === "landingPath" ? "landing_path" : `utm_${key}`;
+
+      if (key !== "fbclid" && !checkoutParams.has(queryKey)) {
+        checkoutParams.set(queryKey, value);
+      }
+    }
 
     trackMetaEvent(
       "InitiateCheckout",
       {
         currency: "USD",
-        value: 49.99,
+        value: priceCents / 100,
         content_name: "The Lean, Athletic Physique Guide",
         content_category: "Digital fitness guide",
         content_ids: ["lean-athletic-physique-guide"],

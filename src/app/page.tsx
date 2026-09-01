@@ -9,7 +9,10 @@ import { GuideCheckoutLink } from "@/components/guide-checkout-link";
 import { SectionHeading } from "@/components/section-heading";
 import { SiteHeader } from "@/components/site-header";
 import { siteConfig } from "@/content/site-config";
+import { getGuideOffer } from "@/lib/guide/constants";
 import type { ClientTransformation, Transformation } from "@/types/site";
+
+export const dynamic = "force-dynamic";
 
 const navItems = [
   { href: "#proof", label: "Proof" },
@@ -189,6 +192,7 @@ function ClientTransformationCard({
 }
 
 export default function Home() {
+  const guideOffer = getGuideOffer();
   const featuredClientTransformations = siteConfig.clientTransformations.slice(0, 4);
   const desktopHeroTransformations = [
     ...featuredClientTransformations,
@@ -244,8 +248,9 @@ export default function Home() {
                 </CoachingIntakeButton>
                 <GuideCheckoutLink
                   className="btn-secondary btn-guide-glow w-full sm:w-auto"
+                  priceCents={guideOffer.priceCents}
                 >
-                  Get the Guide - $49.99
+                  Get the Guide - {guideOffer.formattedPrice}
                 </GuideCheckoutLink>
               </div>
 
@@ -441,12 +446,15 @@ export default function Home() {
               <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center">
                 <GuideCheckoutLink
                   className="btn-primary btn-guide-glow"
+                  priceCents={guideOffer.priceCents}
                 >
-                  {siteConfig.guideOffer.ctaLabel}
+                  Get instant access - {guideOffer.formattedPrice}
                 </GuideCheckoutLink>
 
                 <p className="text-sm leading-6 text-[var(--muted)]">
-                  {siteConfig.guideOffer.statusNote}
+                  {guideOffer.isLaunchOfferActive
+                    ? `${guideOffer.formattedListPrice} normally. Launch price ends September 7.`
+                    : `${guideOffer.formattedPrice} once. Permanent account access.`}
                 </p>
               </div>
 

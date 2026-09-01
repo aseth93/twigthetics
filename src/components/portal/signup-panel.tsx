@@ -14,6 +14,7 @@ type SignupPanelProps = {
   existingUserExists: boolean;
   alreadyClaimed: boolean;
   purchaseType: "coaching" | "guide" | null;
+  amountTotal: number | null;
   message: string | null;
 };
 
@@ -25,6 +26,7 @@ export function SignupPanel({
   existingUserExists,
   alreadyClaimed,
   purchaseType,
+  amountTotal,
   message,
 }: SignupPanelProps) {
   const router = useRouter();
@@ -52,7 +54,7 @@ export function SignupPanel({
       "Purchase",
       {
         currency: "USD",
-        value: 49.99,
+        value: (amountTotal || 4999) / 100,
         content_name: "The Lean, Athletic Physique Guide",
         content_ids: ["lean-athletic-physique-guide"],
         content_type: "product",
@@ -60,7 +62,7 @@ export function SignupPanel({
       sessionId,
     );
     window.sessionStorage.setItem(storageKey, "1");
-  }, [isGuidePurchase, sessionId, valid]);
+  }, [amountTotal, isGuidePurchase, sessionId, valid]);
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();

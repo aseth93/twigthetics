@@ -25,6 +25,7 @@ export default async function SignupPage({ searchParams }: SignupPageProps) {
         existingUserExists: false,
         alreadyClaimed: false,
         purchaseType: null,
+        amountTotal: null,
         message: "Complete checkout first, then return here from Stripe.",
       };
 

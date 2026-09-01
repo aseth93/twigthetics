@@ -16,6 +16,7 @@ import {
   GUIDE_ID,
   GUIDE_PRICE_CENTS,
   GUIDE_VERSION,
+  isAcceptedGuideCheckoutAmount,
   isGuideCheckoutMetadata,
 } from "./constants";
 
@@ -34,7 +35,7 @@ export function isPaidGuideCheckout(session: Stripe.Checkout.Session) {
     session.mode === "payment" &&
     session.status === "complete" &&
     session.payment_status !== "unpaid" &&
-    session.amount_total === GUIDE_PRICE_CENTS &&
+    isAcceptedGuideCheckoutAmount(session.amount_total, session.metadata) &&
     session.currency === GUIDE_CURRENCY
   );
 }

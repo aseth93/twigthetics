@@ -3,12 +3,13 @@ import { getAuthSession } from "@/lib/auth";
 import {
   GUIDE_CURRENCY,
   GUIDE_ID,
-  GUIDE_PRICE_CENTS,
   GUIDE_PRODUCT_TYPE,
   GUIDE_TITLE,
   GUIDE_VERSION,
+  getGuideOffer,
 } from "@/lib/guide/constants";
 import { getGuidePurchaseForMember } from "@/lib/guide/access";
+import { recordGuideFunnelEvent } from "@/lib/guide/funnel";
 import { upsertStripeCheckoutSessionRecord } from "@/lib/portal/billing";
 import { sendMetaGuideInitiateCheckout } from "@/lib/meta/server";
 import { getSiteOrigin } from "@/lib/portal/env";
@@ -28,6 +29,7 @@ async function createGuideCheckout(
 ) {
   const origin = getSiteOrigin(new Headers(request.headers));
   const stripe = getStripeClient();
+  const offer = getGuideOffer();
 
   if (!stripe) {
     return checkoutResponse(
@@ -75,6 +77,17 @@ async function createGuideCheckout(
         ? { attributionLandingPath: readAttribution("landing_path")! }
         : {}),
     };
+    const funnelAttribution = {
+      source: readAttribution("utm_source"),
+      medium: readAttribution("utm_medium"),
+      campaign: readAttribution("utm_campaign"),
+      content: readAttribution("utm_content"),
+      term: readAttribution("utm_term"),
+      fbclid: readAttribution("fbclid"),
+      landingPath: readAttribution("landing_path"),
+    };
+    const visitorId = readAttribution("visitor_id");
+    const leadId = readAttribution("lead_id");
     const marketingConsent = request.cookies.get("tw_marketing_consent")?.value;
     const metaInitiateCheckoutEventId = request.nextUrl.searchParams
       .get("meta_event_id")
@@ -112,7 +125,7 @@ async function createGuideCheckout(
         {
           price_data: {
             currency: GUIDE_CURRENCY,
-            unit_amount: GUIDE_PRICE_CENTS,
+            unit_amount: offer.priceCents,
             product_data: {
               name: GUIDE_TITLE,
               description:
@@ -128,6 +141,12 @@ async function createGuideCheckout(
         guideId: GUIDE_ID,
         guideVersion: GUIDE_VERSION,
         priceId: `guide:${GUIDE_ID}:v${GUIDE_VERSION}`,
+        listPriceCents: String(offer.listPriceCents),
+        chargedPriceCents: String(offer.priceCents),
+        offerCode: offer.offerCode || "standard",
+        offerEndsAt: offer.offerEndsAt,
+        ...(visitorId ? { visitorId } : {}),
+        ...(leadId ? { leadId } : {}),
         ...checkoutAttribution,
         ...metaAttribution,
       },
@@ -137,6 +156,8 @@ async function createGuideCheckout(
           productType: GUIDE_PRODUCT_TYPE,
           guideId: GUIDE_ID,
           guideVersion: GUIDE_VERSION,
+          chargedPriceCents: String(offer.priceCents),
+          offerCode: offer.offerCode || "standard",
           ...checkoutAttribution,
         },
       },
@@ -150,6 +171,18 @@ async function createGuideCheckout(
         checkoutSession,
         `${origin}/guide${request.nextUrl.search}`,
       ),
+      recordGuideFunnelEvent({
+        eventName: "checkout_started",
+        visitorId,
+        leadId,
+        stripeCheckoutSessionId: checkoutSession.id,
+        path: readAttribution("landing_path") || "/guide",
+        attribution: funnelAttribution,
+        metadata: {
+          priceCents: offer.priceCents,
+          offerCode: offer.offerCode || "standard",
+        },
+      }),
     ]);
 
     for (const result of checkoutSideEffects) {

@@ -1,4 +1,5 @@
 import { Resend } from "resend";
+import { getGuideOffer } from "@/lib/guide/constants";
 import { getPortalRuntime } from "./env";
 
 let resendClient: Resend | null = null;
@@ -59,6 +60,7 @@ export async function sendGuideCheckoutRecoveryEmail(options: {
   }
 
   const greeting = options.firstName ? `Hi ${options.firstName},` : "Hi,";
+  const offer = getGuideOffer();
 
   await resend.emails.send({
     from,
@@ -71,7 +73,7 @@ You started checkout for The Lean, Athletic Physique Guide but did not finish.
 Complete your secure checkout here:
 ${options.recoveryUrl}
 
-The guide is $49.99 once and includes permanent account access. If you read it and are dissatisfied, reply or DM @twigthetics for a refund.
+The guide is ${offer.formattedPrice} once and includes permanent account access. If you read it and are dissatisfied within 14 days, reply or DM @twigthetics for a refund.
 
 If you no longer want the guide, you can ignore this email. This is the only checkout reminder we will send.`,
   });

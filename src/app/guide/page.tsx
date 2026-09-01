@@ -3,8 +3,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { GuideCheckoutLink } from "@/components/guide-checkout-link";
 import { GuideCheckoutRecovery } from "@/components/guide-checkout-recovery";
+import { GuidePreviewForm } from "@/components/guide-preview-form";
 import { GuideViewTracker } from "@/components/guide-view-tracker";
 import { siteConfig } from "@/content/site-config";
+import { getGuideOffer } from "@/lib/guide/constants";
+import { getPublishedGuideTestimonials } from "@/lib/guide/funnel";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "The Lean, Athletic Physique Guide | Twigthetics",
@@ -65,23 +70,42 @@ const resultProof = [
   },
 ];
 
-export default function GuidePage() {
+export default async function GuidePage() {
+  const offer = getGuideOffer();
+  const testimonials = await getPublishedGuideTestimonials();
+
   return (
     <main className="grain min-h-screen overflow-hidden pb-24 lg:pb-0">
-      <GuideViewTracker />
+      <GuideViewTracker priceCents={offer.priceCents} />
 
       <header className="border-b border-[var(--line)] bg-[rgba(246,239,230,0.9)] backdrop-blur-xl">
         <div className="mx-auto flex w-full max-w-[84rem] items-center justify-between gap-4 px-4 py-4 sm:px-6">
           <Link href="/" className="type-display text-2xl uppercase text-[var(--ink)]">
             Twigthetics
           </Link>
-          <GuideCheckoutLink className="btn-primary btn-guide-glow min-h-[2.8rem] px-4 text-[0.72rem] sm:text-[0.8rem]">
-            Get the guide - $49.99
+          <GuideCheckoutLink
+            className="btn-primary btn-guide-glow min-h-[2.8rem] px-4 text-[0.72rem] sm:text-[0.8rem]"
+            priceCents={offer.priceCents}
+          >
+            Get the guide - {offer.formattedPrice}
           </GuideCheckoutLink>
         </div>
       </header>
 
       <GuideCheckoutRecovery />
+
+      {offer.isLaunchOfferActive ? (
+        <section className="section-shell pb-0 pt-5">
+          <div className="flex flex-col gap-3 rounded-[1.35rem] border border-[rgba(77,151,82,0.34)] bg-[rgba(45,105,53,0.1)] px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
+            <p className="font-semibold text-[var(--forest)]">
+              Launch offer: {offer.formattedPrice} instead of {offer.formattedListPrice}
+            </p>
+            <p className="text-sm text-[var(--muted)]">
+              Ends September 7 at 11:59 PM Pacific. Then the price returns to {offer.formattedListPrice}.
+            </p>
+          </div>
+        </section>
+      ) : null}
 
       <section className="section-shell py-10 sm:py-16 lg:py-20">
         <div className="grid items-center gap-10 lg:grid-cols-[1.08fr_0.92fr] lg:gap-16">
@@ -97,8 +121,11 @@ export default function GuidePage() {
             </p>
 
             <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
-              <GuideCheckoutLink className="btn-primary btn-guide-glow w-full sm:w-auto">
-                Get instant access - $49.99
+              <GuideCheckoutLink
+                className="btn-primary btn-guide-glow w-full sm:w-auto"
+                priceCents={offer.priceCents}
+              >
+                Get instant access - {offer.formattedPrice}
               </GuideCheckoutLink>
               <p className="text-sm leading-6 text-[var(--muted)]">
                 One payment. Permanent account access.
@@ -108,22 +135,21 @@ export default function GuidePage() {
             <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-xs font-semibold uppercase tracking-[0.1em] text-[var(--forest)]">
               <span>Instant access</span>
               <span>Secure Stripe checkout</span>
-              <span>Satisfaction guarantee</span>
+              <span>14-day satisfaction guarantee</span>
             </div>
 
             <a
-              href="/downloads/twigthetics-guide-preview.pdf"
-              download
+              href="#free-preview"
               className="mt-5 inline-flex text-sm font-semibold text-[var(--ink)] underline decoration-[var(--accent)] decoration-2 underline-offset-4"
             >
-              Download the free 5-page preview
+              Get the free 5-page preview
             </a>
 
             <div className="mt-8 grid grid-cols-3 gap-3">
               {[
                 ["43", "Practical pages"],
                 ["3", "Goal pathways"],
-                ["$49.99", "One time"],
+                [offer.formattedPrice, "One time"],
               ].map(([value, label]) => (
                 <div key={label} className="stat-chip">
                   <p className="type-display text-xl uppercase text-[var(--ink)] sm:text-2xl">
@@ -214,8 +240,11 @@ export default function GuidePage() {
                 <p className="text-sm leading-6 text-white/60">
                   43 practical pages. Exact calculations. Complete routines. One payment.
                 </p>
-                <GuideCheckoutLink className="btn-primary btn-guide-glow min-h-12 w-full shrink-0 px-5 sm:w-auto">
-                  Get the guide - $49.99
+                <GuideCheckoutLink
+                  className="btn-primary btn-guide-glow min-h-12 w-full shrink-0 px-5 sm:w-auto"
+                  priceCents={offer.priceCents}
+                >
+                  Get the guide - {offer.formattedPrice}
                 </GuideCheckoutLink>
               </div>
             </div>
@@ -233,11 +262,10 @@ export default function GuidePage() {
               </h2>
             </div>
             <a
-              href="/downloads/twigthetics-guide-preview.pdf"
-              download
+              href="#free-preview"
               className="btn-secondary w-full shrink-0 sm:w-auto"
             >
-              Free 5-page preview
+              Email me the preview
             </a>
           </div>
 
@@ -261,16 +289,61 @@ export default function GuidePage() {
             ))}
           </div>
 
-          <div className="mt-8 flex flex-col gap-3 border-t border-[var(--line)] pt-6 sm:flex-row sm:items-center sm:justify-between">
+          <div
+            id="free-preview"
+            className="mt-8 grid gap-6 border-t border-[var(--line)] pt-7 lg:grid-cols-[0.8fr_1.2fr] lg:items-start"
+          >
+            <div>
+              <p className="eyebrow">Free five-page preview</p>
+              <h3 className="mt-3 text-2xl font-semibold text-[var(--ink)]">
+                Read real pages before paying.
+              </h3>
+              <p className="mt-3 text-sm leading-6 text-[var(--muted)]">
+                Enter your email and I will send the preview immediately. The full guide includes all 43 pages, every goal pathway, complete worksheets, and permanent account access.
+              </p>
+            </div>
+            <GuidePreviewForm />
+          </div>
+
+          <div className="mt-7 flex flex-col gap-3 border-t border-[var(--line)] pt-6 sm:flex-row sm:items-center sm:justify-between">
             <p className="max-w-2xl text-sm leading-6 text-[var(--muted)]">
-              Get all 43 pages, every goal pathway, the complete worksheets, and permanent account access.
+              One payment. Immediate account access. No subscription.
             </p>
-            <GuideCheckoutLink className="btn-primary btn-guide-glow w-full sm:w-auto">
-              Get the complete guide - $49.99
+            <GuideCheckoutLink
+              className="btn-primary btn-guide-glow w-full sm:w-auto"
+              priceCents={offer.priceCents}
+            >
+              Get the complete guide - {offer.formattedPrice}
             </GuideCheckoutLink>
           </div>
         </div>
       </section>
+
+      {testimonials.length ? (
+        <section className="section-shell pt-0">
+          <div className="surface-panel p-6 sm:p-8 lg:p-10">
+            <p className="eyebrow">Guide feedback</p>
+            <h2 className="mt-3 text-3xl font-semibold text-[var(--ink)] sm:text-4xl">
+              What readers say after using it.
+            </h2>
+            <div className="mt-7 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+              {testimonials.map((testimonial) => (
+                <blockquote
+                  key={testimonial.id}
+                  className="rounded-[1.25rem] border border-[var(--line)] bg-white/60 p-5"
+                >
+                  <p className="text-sm leading-7 text-[var(--muted)]">
+                    &ldquo;{testimonial.quote}&rdquo;
+                  </p>
+                  <footer className="mt-4 font-semibold text-[var(--ink)]">
+                    {testimonial.displayName}
+                  </footer>
+                </blockquote>
+              ))}
+            </div>
+          </div>
+        </section>
+      ) : null}
 
       <section className="section-shell pt-0">
         <div className="dark-panel p-6 sm:p-10 lg:p-12">
@@ -329,12 +402,13 @@ export default function GuidePage() {
             <div>
               <p className="eyebrow">Straightforward guarantee</p>
               <h2 className="mt-4 text-3xl font-semibold text-[var(--ink)] sm:text-4xl">
-                If you are dissatisfied, message me.
+                Try it for 14 days.
               </h2>
               <p className="mt-5 text-base leading-8 text-[var(--muted)]">
                 Achieving and maintaining a good physique is not complicated when
                 the principles are organized clearly. Read the guide, apply it, and
-                if you are dissatisfied with the purchase, DM @twigthetics.
+                if you are dissatisfied within 14 days of purchase, reply to your
+                purchase email or DM @twigthetics for a refund.
               </p>
             </div>
 
@@ -343,8 +417,11 @@ export default function GuidePage() {
               <p className="mt-3 text-sm leading-6 text-white/70">
                 Create your account after checkout and access your copy immediately.
               </p>
-              <GuideCheckoutLink className="btn-primary btn-guide-glow mt-6 min-h-[3.5rem] w-full px-6">
-                Get instant access - $49.99
+              <GuideCheckoutLink
+                className="btn-primary btn-guide-glow mt-6 min-h-[3.5rem] w-full px-6"
+                priceCents={offer.priceCents}
+              >
+                Get instant access - {offer.formattedPrice}
               </GuideCheckoutLink>
             </div>
           </div>
@@ -361,8 +438,11 @@ export default function GuidePage() {
             <p className="text-sm font-semibold">Complete guide</p>
             <p className="text-[0.68rem] text-white/60">Instant access · one payment</p>
           </div>
-          <GuideCheckoutLink className="btn-primary btn-guide-glow min-h-12 shrink-0 px-5 text-[0.7rem]">
-            Get it - $49.99
+          <GuideCheckoutLink
+            className="btn-primary btn-guide-glow min-h-12 shrink-0 px-5 text-[0.7rem]"
+            priceCents={offer.priceCents}
+          >
+            Get it - {offer.formattedPrice}
           </GuideCheckoutLink>
         </div>
       </div>

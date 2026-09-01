@@ -32,6 +32,17 @@ export default function PrivacyPage() {
             reference.
           </p>
           <p>
+            When you request the free guide preview, Twigthetics stores your name,
+            email address, consent choice, and campaign attribution. The preview email
+            is transactional. Optional follow-up emails are only sent when you select
+            the consent box, and every follow-up includes an unsubscribe option.
+          </p>
+          <p>
+            Twigthetics also stores first-party guide funnel events such as guide page
+            views, preview requests, checkout starts, and completed purchases. These
+            records are used to understand conversion performance and improve the site.
+          </p>
+          <p>
             If you allow advertising cookies, Twigthetics uses the Meta Pixel and
             Conversions API to measure page visits, checkout activity, and guide
             purchases connected to advertising. Meta may receive browser identifiers,

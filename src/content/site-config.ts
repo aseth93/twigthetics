@@ -65,9 +65,9 @@ export const siteConfig: SiteConfig = {
     title: "The Lean, Athletic Physique Guide",
     summary:
       "A complete, science-based system for getting lean, building muscle, or doing both together - with calculators, clear instructions, sample routines, and practical nutrition tools.",
-    statusNote: "$49.99 once. Permanent access through your private account.",
-    ctaLabel: "Get instant access - $49.99",
-    placeholderLabel: "Get instant access - $49.99",
+    statusNote: "One payment. Permanent access through your private account.",
+    ctaLabel: "Get instant access",
+    placeholderLabel: "Get instant access",
     features: [
       "Plug-in formulas for estimating calories, protein, macros, and a realistic starting target for your goal.",
       "Step-by-step fat-loss, muscle-gain, and recomposition systems built for complete beginners through experienced lifters.",
